@@ -1,184 +1,448 @@
-.counter {
+/* =====================================================
+   FOOD SAVER AI — NGO FINDER
+   ===================================================== */
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ================================
+   Main Container
+   ================================ */
+
+.ngo-finder {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(236, 242, 235, 0.8),
+      transparent 35%
+    ),
+    var(--cream);
+
+  padding: 45px 6%;
+}
+
+/* ================================
+   Header
+   ================================ */
+
+.ngo-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 42px;
+}
+
+.ngo-header h1 {
+  color: var(--primary-green);
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.ngo-header h1::after {
+  content: " 🌿";
+}
+
+.ngo-header p {
+  color: var(--text-muted);
   font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ================================
+   Location Section
+   ================================ */
+
+.location-section {
+  max-width: 1100px;
+  margin: 0 auto 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 24px;
+
+  background: var(--white);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.location-section p {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+/* ================================
+   Location Button
+   ================================ */
+
+.location-btn {
+  padding: 12px 22px;
+
+  border: 1px solid var(--main-green);
+  border-radius: 30px;
+
+  background: var(--white);
+  color: var(--main-green);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.25s ease;
+}
+
+.location-btn:hover {
+  background: var(--main-green);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ================================
+   Search
+   ================================ */
+
+.ngo-search {
+  max-width: 700px;
+  margin: 0 auto 45px;
+
+  display: flex;
+
+  background: var(--white);
+
+  border: 1px solid var(--border-green);
+  border-radius: 40px;
+
+  overflow: hidden;
+
+  box-shadow: var(--shadow-sm);
+
+  transition: all 0.25s ease;
+}
+
+.ngo-search:focus-within {
+  border-color: var(--accent-green);
+  box-shadow:
+    0 0 0 4px rgba(102, 168, 79, 0.12);
+}
+
+.ngo-search input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  padding: 16px 22px;
+
+  background: transparent;
+
+  color: var(--text-dark);
+
+  font-size: 15px;
+}
+
+.ngo-search input::placeholder {
+  color: #9BA897;
+}
+
+.ngo-search button {
+  width: 58px;
+
+  border: none;
+
+  background: var(--primary-green);
+  color: var(--white);
+
+  font-size: 18px;
+
+  transition: background 0.25s ease;
+}
+
+.ngo-search button:hover {
+  background: var(--main-green);
+}
+
+/* ================================
+   NGO Section
+   ================================ */
+
+.ngo-section {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.ngo-section h2 {
+  color: var(--primary-green);
+
+  font-size: 25px;
+  font-weight: 600;
+
+  margin-bottom: 22px;
+}
+
+/* Small decorative line */
+
+.ngo-section h2::after {
+  content: "";
+  display: block;
+
+  width: 45px;
+  height: 3px;
+
+  margin-top: 8px;
+
+  border-radius: 10px;
+
+  background: var(--accent-green);
+}
+
+/* ================================
+   NGO Grid
+   ================================ */
+
+.ngo-list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(290px, 1fr));
+
+  gap: 24px;
+}
+
+/* ================================
+   NGO Card
+   ================================ */
+
+.ngo-card {
+  position: relative;
+
+  padding: 26px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border-green);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.ngo-card:hover {
+  transform: translateY(-6px);
+
+  border-color: #BFD2B8;
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* ================================
+   Card Header
+   ================================ */
+
+.ngo-card-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.ngo-card-header h3 {
+  color: var(--primary-green);
+
+  font-size: 19px;
+  font-weight: 600;
+}
+
+/* ================================
+   Verified Badge
+   ================================ */
+
+.verified-badge {
+  flex-shrink: 0;
+
   padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+  border-radius: 20px;
+
+  background: var(--light-green);
+  color: var(--main-green);
+
+  font-size: 11px;
+  font-weight: 600;
 }
 
-.hero {
-  position: relative;
+/* ================================
+   Location
+   ================================ */
 
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
+.ngo-location {
+  color: var(--text-muted);
 
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
+  font-size: 14px;
 
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+  margin-bottom: 18px;
 }
 
-#center {
+/* ================================
+   NGO Info
+   ================================ */
+
+.ngo-info {
   display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
 
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  justify-content: space-between;
+
+  padding: 12px 14px;
+
+  margin-bottom: 20px;
+
+  background: var(--mint-green);
+
+  border-radius: var(--radius-sm);
+
+  color: var(--text-muted);
+
+  font-size: 13px;
 }
 
-#next-steps {
+/* ================================
+   Food Types
+   ================================ */
+
+.ngo-food {
+  color: var(--text-dark);
+
+  font-size: 13px;
+}
+
+.ngo-food strong {
+  font-weight: 600;
+}
+
+.food-tags {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
 
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
+  flex-wrap: wrap;
 
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
+  gap: 7px;
 
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  margin-top: 10px;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
+.food-tag {
+  padding: 6px 11px;
 
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+  border-radius: 20px;
+
+  background: var(--light-green);
+
+  color: var(--main-green);
+
+  font-size: 11px;
+  font-weight: 500;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
+/* ================================
+   View Details Button
+   ================================ */
 
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+.view-details-btn {
   width: 100%;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+  margin-top: 22px;
+
+  padding: 13px 18px;
+
+  border: none;
+
+  border-radius: 30px;
+
+  background: var(--primary-green);
+
+  color: var(--white);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.25s ease;
+}
+
+.view-details-btn:hover {
+  background: var(--main-green);
+
+  transform: translateY(-2px);
+
+  box-shadow: var(--shadow-md);
+}
+
+/* ================================
+   No NGOs
+   ================================ */
+
+.no-ngos {
+  padding: 60px 20px;
+
+  text-align: center;
+
+  background: var(--white);
+
+  border: 1px dashed var(--border-green);
+
+  border-radius: var(--radius-lg);
+}
+
+.no-ngos h3 {
+  color: var(--primary-green);
+
+  margin-bottom: 8px;
+}
+
+.no-ngos p {
+  color: var(--text-muted);
+
+  font-size: 14px;
+}
+
+/* ================================
+   Responsive
+   ================================ */
+
+@media (max-width: 700px) {
+
+  .ngo-finder {
+    padding: 30px 18px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .ngo-header h1 {
+    font-size: 32px;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+  .location-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .location-btn {
+    width: 100%;
+  }
+
+  .ngo-list {
+    grid-template-columns: 1fr;
   }
 }
