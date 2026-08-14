@@ -1,39 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
-  /* ===== FoodSaver AI Color Palette ===== */
-
   --primary-green: #194A19;
   --main-green: #2E7D32;
   --accent-green: #66A84F;
-
   --light-green: #ECF2EB;
   --mint-green: #F5F6EE;
-
   --cream: #F9F9F6;
   --white: #FFFFFF;
-
   --border-green: #DDE6D9;
-
   --text-dark: #17231B;
   --text-muted: #667B4E;
-
-  --success: #2E7D32;
-  --warning: #C69C3A;
-  --danger: #C94C4C;
-
-  /* ===== Shadows ===== */
-
-  --shadow-sm: 0 2px 8px rgba(25, 74, 25, 0.06);
-  --shadow-md: 0 8px 25px rgba(25, 74, 25, 0.10);
-  --shadow-lg: 0 15px 40px rgba(25, 74, 25, 0.14);
-
-  /* ===== Radius ===== */
-
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
 }
 
 * {
@@ -42,30 +19,8 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background: var(--cream);
   color: var(--text-dark);
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-button,
-input,
-textarea,
-select {
-  font-family: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
