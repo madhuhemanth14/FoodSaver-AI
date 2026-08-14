@@ -1,18 +1,27 @@
 function QuickActions() {
   return (
-    <div className="card">
-      <h2>Quick Actions</h2>
+    <div className="card quick-actions-card">
 
-      <button>Donate Food</button>
-      <br /><br />
+      <button>
+        <span>🍱</span>
+        Donate Food
+      </button>
 
-      <button>Analyze Food</button>
-      <br /><br />
+      <button>
+        <span>🤖</span>
+        Analyze Food
+      </button>
 
-      <button>Find NGO</button>
-      <br /><br />
+      <button>
+        <span>📍</span>
+        Find NGO
+      </button>
 
-      <button>History</button>
+      <button>
+        <span>📜</span>
+        History
+      </button>
+
     </div>
   );
 }
