@@ -1,0 +1,125 @@
+.notifications-page {
+  min-height: 100vh;
+  background: #f5f8f5;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.notifications-header h1 {
+  margin: 0;
+  color: #2e7d32;
+}
+
+.notifications-header p {
+  margin-top: 6px;
+  color: #666;
+}
+
+.notifications-header button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.notification-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.notification-filters button {
+  background: white;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+  padding: 9px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.notification-filters button.active {
+  background: #2e7d32;
+  color: white;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-item {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.notification-item.unread {
+  border-left: 4px solid #2e7d32;
+}
+
+.notification-item.read {
+  opacity: 0.75;
+}
+
+.notification-content h4 {
+  margin: 0 0 6px;
+  color: #263238;
+}
+
+.notification-content p {
+  margin: 0 0 8px;
+  color: #555;
+}
+
+.notification-content span {
+  font-size: 13px;
+  color: #888;
+}
+
+.notification-item button {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.empty-state {
+  background: white;
+  padding: 40px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.empty-state h3 {
+  color: #2e7d32;
+}
+
+@media (max-width: 600px) {
+  .notifications-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .notification-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
