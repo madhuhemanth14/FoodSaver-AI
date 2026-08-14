@@ -1,89 +1,451 @@
-/* =====================================================
-   FOOD SAVER AI — NGO FINDER
-   ===================================================== */
+/* =================================
+   NGO DETAILS
+   ================================= */
 
-#root {
+.ngo-details-page {
   min-height: 100vh;
-  width: 100%;
+  padding: 40px 6%;
+  background: var(--cream);
 }
 
-/* ================================
-   Main Container
-   ================================ */
-
-.ngo-finder {
-  min-height: 100vh;
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(236, 242, 235, 0.8),
-      transparent 35%
-    ),
-    var(--cream);
-
-  padding: 45px 6%;
+.back-btn {
+  border: none;
+  background: transparent;
+  color: var(--main-green);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 25px;
 }
 
-/* ================================
-   Header
-   ================================ */
-
-.ngo-header {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto 42px;
+.ngo-details-card {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 40px;
+  background: var(--white);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
 }
 
-.ngo-header h1 {
+.ngo-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.ngo-details-header h1 {
   color: var(--primary-green);
-  font-size: 42px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 34px;
   margin-bottom: 12px;
 }
 
-.ngo-header h1::after {
-  content: " 🌿";
+.ngo-rating {
+  padding: 10px 15px;
+  border-radius: 25px;
+  background: var(--mint-green);
+  color: var(--primary-green);
+  font-weight: 600;
 }
 
-.ngo-header p {
+.ngo-details-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.detail-box {
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+  background: var(--light-green);
+  border-radius: var(--radius-md);
+}
+
+.detail-box > span {
+  font-size: 22px;
+}
+
+.detail-box strong {
+  color: var(--primary-green);
+  font-size: 13px;
+}
+
+.detail-box p {
   color: var(--text-muted);
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 13px;
+  margin-top: 4px;
 }
 
-/* ================================
-   Location Section
-   ================================ */
+.accepted-food-section,
+.ngo-description {
+  margin-bottom: 30px;
+}
 
-.location-section {
-  max-width: 1100px;
-  margin: 0 auto 25px;
+.accepted-food-section h2,
+.ngo-description h2 {
+  color: var(--primary-green);
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.ngo-description p {
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.schedule-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: var(--primary-green);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.25s;
+}
+
+.schedule-btn:hover {
+  background: var(--main-green);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .ngo-details-card {
+    padding: 25px;
+  }
+
+  .ngo-details-header {
+    flex-direction: column;
+  }
+
+  .ngo-details-info {
+    grid-template-columns: 1fr;
+  }
+}
+/* =================================
+   PICKUP
+   ================================= */
+
+.pickup-page {
+  min-height: 100vh;
+  padding: 40px 6%;
+  background: var(--cream);
+}
+
+.pickup-container {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.pickup-header {
+  text-align: center;
+  margin: 25px 0 35px;
+}
+
+.pickup-header h1 {
+  color: var(--primary-green);
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.pickup-header p {
+  color: var(--text-muted);
+}
+
+.pickup-form {
+  padding: 35px;
+  background: var(--white);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  color: var(--primary-green);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: var(--mint-green);
+  color: var(--text-dark);
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(102, 168, 79, 0.1);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 600px) {
+  .pickup-form {
+    padding: 22px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+/* =================================
+   TRACKING
+   ================================= */
+
+.tracking-container {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.tracking-header {
+  text-align: center;
+  margin: 25px 0 35px;
+}
+
+.tracking-header h1 {
+  color: var(--primary-green);
+  font-size: 34px;
+}
+
+.tracking-header p {
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.tracking-card {
+  padding: 35px;
+  background: var(--white);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.tracking-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.tracking-summary div {
+  padding: 18px;
+  background: var(--light-green);
+  border-radius: var(--radius-md);
+}
+
+.tracking-summary span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.tracking-summary strong {
+  color: var(--primary-green);
+}
+
+.timeline {
+  position: relative;
+  margin: 20px 0 35px;
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: 18px;
+  min-height: 85px;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 35px;
+  width: 2px;
+  height: 55px;
+  background: var(--border-green);
+}
+
+.timeline-item.completed:not(:last-child)::before {
+  background: var(--accent-green);
+}
+
+.timeline-dot {
+  position: relative;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
-  padding: 20px 24px;
+  border-radius: 50%;
+
+  background: var(--mint-green);
+  border: 2px solid var(--border-green);
+
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.timeline-item.completed .timeline-dot {
+  background: var(--main-green);
+  border-color: var(--main-green);
+  color: white;
+}
+
+.timeline-content h3 {
+  color: var(--primary-green);
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.timeline-content p {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 650px) {
+  .tracking-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-card {
+    padding: 22px;
+  }
+}
+/* =================================
+   HISTORY
+   ================================= */
+
+.history-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.history-header {
+  text-align: center;
+  margin: 25px 0 35px;
+}
+
+.history-header h1 {
+  color: var(--primary-green);
+  font-size: 34px;
+}
+
+.history-header p {
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-card {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  align-items: center;
+  gap: 20px;
+
+  padding: 22px;
 
   background: var(--white);
+
   border: 1px solid var(--border-green);
-  border-radius: var(--radius-lg);
+
+  border-radius: var(--radius-md);
 
   box-shadow: var(--shadow-sm);
 }
 
-.location-section p {
-  color: var(--text-dark);
-  font-weight: 500;
+.history-label {
+  display: block;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+
+  margin-bottom: 5px;
+
+  text-transform: uppercase;
 }
 
-/* ================================
-   Location Button
-   ================================ */
+.history-card h3 {
+  color: var(--primary-green);
+  font-size: 16px;
+}
 
-.location-btn {
-  padding: 12px 22px;
+.history-card p {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.history-status {
+  padding: 7px 12px;
+
+  border-radius: 20px;
+
+  background: var(--light-green);
+
+  color: var(--main-green);
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+@media (max-width: 750px) {
+
+  .history-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .history-status {
+    justify-self: start;
+  }
+
+}
+.demo-status-btn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
 
   border: 1px solid var(--main-green);
   border-radius: 30px;
@@ -91,358 +453,15 @@
   background: var(--white);
   color: var(--main-green);
 
-  font-size: 14px;
   font-weight: 600;
-
-  transition: all 0.25s ease;
+  cursor: pointer;
 }
 
-.location-btn:hover {
-  background: var(--main-green);
-  color: var(--white);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* ================================
-   Search
-   ================================ */
-
-.ngo-search {
-  max-width: 700px;
-  margin: 0 auto 45px;
-
-  display: flex;
-
-  background: var(--white);
-
-  border: 1px solid var(--border-green);
-  border-radius: 40px;
-
-  overflow: hidden;
-
-  box-shadow: var(--shadow-sm);
-
-  transition: all 0.25s ease;
-}
-
-.ngo-search:focus-within {
-  border-color: var(--accent-green);
-  box-shadow:
-    0 0 0 4px rgba(102, 168, 79, 0.12);
-}
-
-.ngo-search input {
-  flex: 1;
-
-  border: none;
-  outline: none;
-
-  padding: 16px 22px;
-
-  background: transparent;
-
-  color: var(--text-dark);
-
-  font-size: 15px;
-}
-
-.ngo-search input::placeholder {
-  color: #9BA897;
-}
-
-.ngo-search button {
-  width: 58px;
-
-  border: none;
-
-  background: var(--primary-green);
-  color: var(--white);
-
-  font-size: 18px;
-
-  transition: background 0.25s ease;
-}
-
-.ngo-search button:hover {
-  background: var(--main-green);
-}
-
-/* ================================
-   NGO Section
-   ================================ */
-
-.ngo-section {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.ngo-section h2 {
-  color: var(--primary-green);
-
-  font-size: 25px;
-  font-weight: 600;
-
-  margin-bottom: 22px;
-}
-
-/* Small decorative line */
-
-.ngo-section h2::after {
-  content: "";
-  display: block;
-
-  width: 45px;
-  height: 3px;
-
-  margin-top: 8px;
-
-  border-radius: 10px;
-
-  background: var(--accent-green);
-}
-
-/* ================================
-   NGO Grid
-   ================================ */
-
-.ngo-list {
-  display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(290px, 1fr));
-
-  gap: 24px;
-}
-
-/* ================================
-   NGO Card
-   ================================ */
-
-.ngo-card {
-  position: relative;
-
-  padding: 26px;
-
-  background: var(--white);
-
-  border: 1px solid var(--border-green);
-
-  border-radius: var(--radius-lg);
-
-  box-shadow: var(--shadow-sm);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.ngo-card:hover {
-  transform: translateY(-6px);
-
-  border-color: #BFD2B8;
-
-  box-shadow: var(--shadow-lg);
-}
-
-/* ================================
-   Card Header
-   ================================ */
-
-.ngo-card-header {
-  display: flex;
-
-  align-items: flex-start;
-  justify-content: space-between;
-
-  gap: 12px;
-
-  margin-bottom: 12px;
-}
-
-.ngo-card-header h3 {
-  color: var(--primary-green);
-
-  font-size: 19px;
-  font-weight: 600;
-}
-
-/* ================================
-   Verified Badge
-   ================================ */
-
-.verified-badge {
-  flex-shrink: 0;
-
-  padding: 5px 10px;
-
-  border-radius: 20px;
-
+.demo-status-btn:hover {
   background: var(--light-green);
-  color: var(--main-green);
-
-  font-size: 11px;
-  font-weight: 600;
 }
 
-/* ================================
-   Location
-   ================================ */
-
-.ngo-location {
-  color: var(--text-muted);
-
-  font-size: 14px;
-
-  margin-bottom: 18px;
-}
-
-/* ================================
-   NGO Info
-   ================================ */
-
-.ngo-info {
-  display: flex;
-
-  justify-content: space-between;
-
-  padding: 12px 14px;
-
-  margin-bottom: 20px;
-
-  background: var(--mint-green);
-
-  border-radius: var(--radius-sm);
-
-  color: var(--text-muted);
-
-  font-size: 13px;
-}
-
-/* ================================
-   Food Types
-   ================================ */
-
-.ngo-food {
-  color: var(--text-dark);
-
-  font-size: 13px;
-}
-
-.ngo-food strong {
-  font-weight: 600;
-}
-
-.food-tags {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 7px;
-
-  margin-top: 10px;
-}
-
-.food-tag {
-  padding: 6px 11px;
-
-  border-radius: 20px;
-
-  background: var(--light-green);
-
-  color: var(--main-green);
-
-  font-size: 11px;
-  font-weight: 500;
-}
-
-/* ================================
-   View Details Button
-   ================================ */
-
-.view-details-btn {
-  width: 100%;
-
-  margin-top: 22px;
-
-  padding: 13px 18px;
-
-  border: none;
-
-  border-radius: 30px;
-
-  background: var(--primary-green);
-
-  color: var(--white);
-
-  font-size: 14px;
-  font-weight: 600;
-
-  transition: all 0.25s ease;
-}
-
-.view-details-btn:hover {
-  background: var(--main-green);
-
-  transform: translateY(-2px);
-
-  box-shadow: var(--shadow-md);
-}
-
-/* ================================
-   No NGOs
-   ================================ */
-
-.no-ngos {
-  padding: 60px 20px;
-
-  text-align: center;
-
-  background: var(--white);
-
-  border: 1px dashed var(--border-green);
-
-  border-radius: var(--radius-lg);
-}
-
-.no-ngos h3 {
-  color: var(--primary-green);
-
-  margin-bottom: 8px;
-}
-
-.no-ngos p {
-  color: var(--text-muted);
-
-  font-size: 14px;
-}
-
-/* ================================
-   Responsive
-   ================================ */
-
-@media (max-width: 700px) {
-
-  .ngo-finder {
-    padding: 30px 18px;
-  }
-
-  .ngo-header h1 {
-    font-size: 32px;
-  }
-
-  .location-section {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-
-  .location-btn {
-    width: 100%;
-  }
-
-  .ngo-list {
-    grid-template-columns: 1fr;
-  }
+.demo-status-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

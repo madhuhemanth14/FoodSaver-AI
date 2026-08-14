@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import NGOList from "../../components/ngo/NGOList";
 import NGOSearch from "../../components/ngo/NGOSearch";
@@ -49,6 +50,8 @@ const dummyNGOs = [
 
 function NGOFinder() {
 
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredNGOs = dummyNGOs.filter((ngo) =>
@@ -58,7 +61,9 @@ function NGOFinder() {
   );
 
   const handleViewDetails = (ngo) => {
-    console.log("Selected NGO:", ngo);
+    navigate("/ngos/details", {
+      state: { ngo }
+    });
   };
 
   const handleUseLocation = () => {
