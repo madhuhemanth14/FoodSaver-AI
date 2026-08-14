@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import NotificationItem from "../../components/notifications/NotificationItem";
 import "./Notifications.css";
 
@@ -53,15 +55,17 @@ function Notifications() {
   const [filter, setFilter] = useState("All");
 
   const markAsRead = (id) => {
-    setNotifications((current) =>
-      current.map((notification) =>
-        notification.id === id
-          ? { ...notification, read: true }
-          : notification
-      )
-    );
-  };
-
+  setNotifications((current) =>
+    current.map((notification) =>
+      notification.id === id
+        ? {
+            ...notification,
+            read: true,
+          }
+        : notification
+    )
+  );
+};
   const markAllAsRead = () => {
     setNotifications((current) =>
       current.map((notification) => ({
@@ -91,6 +95,17 @@ function Notifications() {
 
   return (
     <div className="notifications-page">
+      <div className="page-topbar">
+  <button
+    className="back-button"
+    onClick={() => navigate("/dashboard")}
+  >
+    <ArrowLeft size={18} />
+    Back
+  </button>
+
+  <h1>Notifications</h1>
+</div>
       <div className="notifications-header">
         <div>
           <h1>Notifications</h1>

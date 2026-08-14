@@ -11,11 +11,17 @@ function NotificationItem({ notification, onMarkAsRead }) {
         <span>{notification.time}</span>
       </div>
 
-      {!notification.read && (
-        <button onClick={() => onMarkAsRead(notification.id)}>
-          Mark as read
-        </button>
-      )}
+      {notification.read ? (
+  <span className="read-label">
+    Read
+  </span>
+) : (
+  <button
+    onClick={() => onMarkAsRead(notification.id)}
+  >
+    Mark as read
+  </button>
+)}
     </div>
   );
 }
