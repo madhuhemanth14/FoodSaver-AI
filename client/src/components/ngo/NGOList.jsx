@@ -1,6 +1,6 @@
 import NGOCard from "./NGOCard";
 
-function NGOList({ ngos, onViewDetails }) {
+function NGOList({ ngos = [], onViewDetails }) {
 
   if (ngos.length === 0) {
     return (
@@ -8,7 +8,8 @@ function NGOList({ ngos, onViewDetails }) {
         <h3>No NGOs Found</h3>
 
         <p>
-          Try changing your search or expanding your search radius.
+          Try changing your search or expanding your
+          search radius.
         </p>
       </div>
     );

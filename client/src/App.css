@@ -822,3 +822,51 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* =================================
+   NGO MAP
+   ================================= */
+
+.ngo-map-wrapper {
+  width: 100%;
+  height: 450px;
+
+  margin: 30px auto;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border-green);
+
+  border-radius: var(--radius-xl);
+
+  box-shadow: var(--shadow-md);
+
+  background: var(--light-green);
+}
+
+.ngo-map-wrapper > div {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 700px) {
+  .ngo-map-wrapper {
+    height: 350px;
+  }
+}
+.ngo-loading,
+.ngo-empty {
+  text-align: center;
+  padding: 30px;
+  margin-top: 20px;
+
+  background: var(--white);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-md);
+
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.ngo-loading {
+  color: var(--primary-green);
+}
