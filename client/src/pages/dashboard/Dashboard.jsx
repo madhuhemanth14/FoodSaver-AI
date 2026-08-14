@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
 import WelcomeCard from "../../components/dashboard/WelcomeCard";
@@ -10,6 +11,7 @@ import NotificationBell from "../../components/notifications/NotificationBell";
 import NotificationPanel from "../../components/notifications/NotificationPanel";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
 
   const [notifications, setNotifications] = useState([
@@ -145,7 +147,10 @@ function Dashboard() {
       <section className="section-block">
         <div className="section-heading">
           <h2>Recent Activity</h2>
-          <button className="view-all-btn">View All</button>
+          <button
+          className="view-all-btn"
+          onClick={() => navigate("/activity")}
+          >View All</button>        
         </div>
 
         <RecentActivity />
@@ -166,25 +171,39 @@ function Dashboard() {
 
       {/* BOTTOM NAVIGATION */}
       <nav className="bottom-navigation">
-        <button className="nav-item active">
-          <span>⌂</span>
-          <small>Home</small>
-        </button>
 
-        <button className="nav-item">
-          <span>🍱</span>
-          <small>Donations</small>
-        </button>
+       <button
+       className="nav-item active"
+       onClick={() => navigate("/dashboard")}
+       >
+       <span>⌂</span>
+       <small>Home</small>
+       </button>
 
-        <button className="nav-item">
-          <span>🔔</span>
-          <small>Alerts</small>
-        </button>
+       <button
+       className="nav-item"
+       onClick={() => navigate("/activity")}
+       >
+       <span>🍱</span>
+       <small>Donations</small>
+       </button>
 
-        <button className="nav-item">
-          <span>👤</span>
-          <small>Profile</small>
-        </button>
+       <button
+       className="nav-item"
+       onClick={() => navigate("/notifications")}
+       >
+       <span>🔔</span>
+       <small>Alerts</small>
+       </button>
+
+       <button
+       className="nav-item"
+       onClick={() => navigate("/profile")}
+       >
+       <span>👤</span>
+       <small>Profile</small>
+       </button>
+
       </nav>
 
     </div>
