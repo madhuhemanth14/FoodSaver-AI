@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import "./Dashboard.css";
+import { getUnreadCount } from "../../services/notificationService";
 
 const initialNotifications = [
   {
@@ -66,9 +67,7 @@ function getInitialNotifications() {
 function Dashboard() {
   const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState(
-    getInitialNotifications
-  );
+  const [unreadCount, setUnreadCount] = useState(0);
   const [stats, setStats] = useState({
   totalDonations: 0,
   mealsServed: 0,
@@ -77,16 +76,21 @@ function Dashboard() {
   co2Saved: 0,
   });
 
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read
-  ).length;
-
   useEffect(() => {
-    localStorage.setItem(
-      "foodsaver_notifications",
-      JSON.stringify(notifications)
-    );
-  }, [notifications]);
+  const fetchUnreadCount = async () => {
+    try {
+      const count = await getUnreadCount();
+      setUnreadCount(count);
+    } catch (error) {
+      console.error(
+        "Failed to fetch unread notification count:",
+        error
+      );
+    }
+  };
+
+  fetchUnreadCount();
+   }, []);
 
   useEffect(() => {
   const fetchStats = async () => {
