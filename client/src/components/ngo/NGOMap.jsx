@@ -1,331 +1,197 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import "../../styles/ngo-map.css";
 
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Pin,
-  useMap,
-} from "@vis.gl/react-google-maps";
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-const defaultCenter = {
-  lat: 15.5057,
-  lng: 80.0499,
-};
+let googleMapsScriptPromise = null;
 
-function NearbyPlaces({ userLocation, onPlacesFound }) {
-  const map = useMap();
+/**
+ * Loads the Google Maps JS SDK exactly once per page, regardless of how
+ * many NGOMap instances mount. Resolves with `window.google`.
+ */
+function loadGoogleMaps() {
+  if (window.google?.maps) return Promise.resolve(window.google);
+  if (googleMapsScriptPromise) return googleMapsScriptPromise;
 
+  googleMapsScriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=marker`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve(window.google);
+    script.onerror = () => reject(new Error("Failed to load Google Maps script."));
+    document.head.appendChild(script);
+  });
+
+  return googleMapsScriptPromise;
+}
+
+/**
+ * NGOMap
+ *
+ * Renders NGO locations (and, if available, the donor's current location)
+ * on a Google Map. Falls back to a friendly message instead of crashing
+ * when VITE_GOOGLE_MAPS_API_KEY is missing or the script fails to load.
+ *
+ * Props:
+ *  - ngos: Array<{ id, name, latitude, longitude, address }>
+ *  - userLocation: { latitude, longitude } | null
+ *  - selectedNGO: object | null
+ *  - onNGOSelect: (ngo) => void
+ */
+export default function NGOMap({ ngos = [], userLocation, selectedNGO, onNGOSelect }) {
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markersRef = useRef([]);
+  const infoWindowRef = useRef(null);
+  const [status, setStatus] = useState(GOOGLE_MAPS_API_KEY ? "loading" : "no-key");
+
+  // Initialize the map once.
   useEffect(() => {
-    if (!map || !userLocation) {
+    if (!GOOGLE_MAPS_API_KEY) {
+      setStatus("no-key");
       return;
     }
 
     let cancelled = false;
 
-    const findNearbyPlaces = async () => {
-      try {
-        console.log("Searching near:", userLocation);
+    loadGoogleMaps()
+      .then((google) => {
+        if (cancelled || !mapContainerRef.current) return;
 
-        const { Place } =
-          await google.maps.importLibrary("places");
+        const center = userLocation
+          ? { lat: userLocation.latitude, lng: userLocation.longitude }
+          : ngos[0]
+          ? { lat: ngos[0].latitude, lng: ngos[0].longitude }
+          : { lat: 20.5937, lng: 78.9629 }; // India, sensible default
 
-        const request = {
-          fields: [
-            "displayName",
-            "location",
-            "formattedAddress",
-            "rating",
-            "id",
-          ],
+        mapRef.current = new google.maps.Map(mapContainerRef.current, {
+          center,
+          zoom: userLocation ? 12 : 5,
+          disableDefaultUI: false,
+          fullscreenControl: false,
+          streetViewControl: false,
+          mapId: "FOODSAVER_NGO_MAP",
+        });
 
-          locationRestriction: {
-            center: userLocation,
-            radius: 5000,
-          },
-
-          includedTypes: [
-            "non_profit_organization",
-            "association_or_organization",
-          ],
-
-          maxResultCount: 20,
-
-          rankPreference: "DISTANCE",
-        };
-
-        console.log("Nearby search request:", request);
-
-        const { places = [] } =
-          await Place.searchNearby(request);
-
-        console.log(
-          "Google Places results:",
-          places
-        );
-
-        if (cancelled) {
-          return;
-        }
-
-        const ngos = places
-          .filter((place) => place.location)
-          .map((place, index) => {
-            const latitude =
-              place.location.lat();
-
-            const longitude =
-              place.location.lng();
-
-            return {
-              id:
-                place.id ||
-                `google-place-${index}`,
-
-              name:
-                place.displayName ||
-                "Unnamed Organization",
-
-              location:
-                place.formattedAddress ||
-                "Address unavailable",
-
-              latitude,
-              longitude,
-
-              rating:
-                place.rating || 0,
-
-              distance:
-                calculateDistance(
-                  userLocation.lat,
-                  userLocation.lng,
-                  latitude,
-                  longitude
-                ),
-
-              verified: false,
-
-              acceptedFoodTypes: [
-                "Food Donations",
-              ],
-            };
-          });
-
-        console.log(
-          "FoodSaver NGO results:",
-          ngos
-        );
-
-        onPlacesFound(ngos);
-
-      } catch (error) {
-
-        console.error(
-          "❌ Nearby Places error:",
-          error
-        );
-
-        if (!cancelled) {
-          onPlacesFound([]);
-        }
-      }
-    };
-
-    findNearbyPlaces();
+        infoWindowRef.current = new google.maps.InfoWindow();
+        setStatus("ready");
+      })
+      .catch(() => setStatus("error"));
 
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  }, [map, userLocation, onPlacesFound]);
+  // Redraw markers whenever the NGO list, user location, or selection changes.
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !window.google) return;
+    const google = window.google;
 
-  return null;
-}
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
 
+    if (userLocation) {
+      const donorMarker = new google.maps.Marker({
+        position: { lat: userLocation.latitude, lng: userLocation.longitude },
+        map: mapRef.current,
+        title: "Your location",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#2E7D32",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
+      markersRef.current.push(donorMarker);
+    }
 
-// ========================================
-// DISTANCE CALCULATION
-// ========================================
+    ngos.forEach((ngo) => {
+      if (typeof ngo.latitude !== "number" || typeof ngo.longitude !== "number") return;
 
-function calculateDistance(
-  lat1,
-  lon1,
-  lat2,
-  lon2
-) {
-  if (
-    lat1 == null ||
-    lon1 == null ||
-    lat2 == null ||
-    lon2 == null
-  ) {
-    return 0;
+      const isSelected = selectedNGO?.id === ngo.id;
+      const marker = new google.maps.Marker({
+        position: { lat: ngo.latitude, lng: ngo.longitude },
+        map: mapRef.current,
+        title: ngo.name,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: isSelected ? 11 : 8,
+          fillColor: isSelected ? "#66BB6A" : "#2E7D32",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
+
+      marker.addListener("click", () => {
+        onNGOSelect?.(ngo);
+        if (infoWindowRef.current) {
+          infoWindowRef.current.setContent(
+            `<div class="ngo-map__info-window"><strong>${ngo.name}</strong>${
+              ngo.address ? ngo.address : ""
+            }</div>`
+          );
+          infoWindowRef.current.open(mapRef.current, marker);
+        }
+      });
+
+      markersRef.current.push(marker);
+    });
+  }, [status, ngos, userLocation, selectedNGO, onNGOSelect]);
+
+  // Pan to the selected NGO.
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !selectedNGO) return;
+    mapRef.current.panTo({ lat: selectedNGO.latitude, lng: selectedNGO.longitude });
+    mapRef.current.setZoom(13);
+  }, [status, selectedNGO]);
+
+  if (status === "no-key") {
+    return (
+      <div className="ngo-map">
+        <div className="ngo-map__fallback">
+          <span className="ngo-map__fallback-icon" role="img" aria-label="Map unavailable">
+            🗺️
+          </span>
+          <p className="ngo-map__fallback-title">Map isn't configured yet</p>
+          <p className="ngo-map__fallback-text">
+            Add a Google Maps API key to <code>VITE_GOOGLE_MAPS_API_KEY</code> in your
+            <code>.env</code> file to see NGOs plotted on the map.
+          </p>
+        </div>
+      </div>
+    );
   }
 
-  const R = 6371;
-
-  const dLat =
-    ((lat2 - lat1) * Math.PI) / 180;
-
-  const dLon =
-    ((lon2 - lon1) * Math.PI) / 180;
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(
-      (lat1 * Math.PI) / 180
-    ) *
-      Math.cos(
-        (lat2 * Math.PI) / 180
-      ) *
-      Math.sin(dLon / 2) ** 2;
-
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1 - a)
+  if (status === "error") {
+    return (
+      <div className="ngo-map">
+        <div className="ngo-map__fallback">
+          <span className="ngo-map__fallback-icon" role="img" aria-label="Map error">
+            ⚠️
+          </span>
+          <p className="ngo-map__fallback-title">Map couldn't load</p>
+          <p className="ngo-map__fallback-text">
+            Please check your internet connection or API key restrictions and try again.
+          </p>
+        </div>
+      </div>
     );
-
-  return Number(
-    (R * c).toFixed(1)
-  );
-}
-
-
-// ========================================
-// MAP CONTENT
-// ========================================
-
-function MapContent({
-  userLocation,
-  ngos,
-}) {
-  const center =
-    userLocation || defaultCenter;
+  }
 
   return (
-    <Map
-      defaultCenter={defaultCenter}
-      center={center}
-      defaultZoom={13}
-      gestureHandling="greedy"
-      disableDefaultUI={false}
-      mapId="DEMO_MAP_ID"
-    >
-
-      {/* USER LOCATION */}
-
-      {userLocation && (
-        <AdvancedMarker
-          position={userLocation}
-          title="Your Location"
-        >
-          <Pin
-            background="#2E7D32"
-            borderColor="#194A19"
-            glyphColor="#FFFFFF"
-          />
-        </AdvancedMarker>
-      )}
-
-
-      {/* NGO MARKERS */}
-
-      {ngos.map((ngo) => {
-
-        if (
-          ngo.latitude == null ||
-          ngo.longitude == null
-        ) {
-          return null;
-        }
-
-        return (
-          <AdvancedMarker
-            key={ngo.id}
-            position={{
-              lat: ngo.latitude,
-              lng: ngo.longitude,
-            }}
-            title={ngo.name}
-          >
-
-            <Pin
-              background="#66A84F"
-              borderColor="#194A19"
-              glyphColor="#FFFFFF"
-            />
-
-          </AdvancedMarker>
-        );
-
-      })}
-
-    </Map>
-  );
-}
-
-
-// ========================================
-// MAIN NGO MAP
-// ========================================
-
-function NGOMap({
-  userLocation,
-  ngos = [],
-  onPlacesFound,
-}) {
-  const [placesNGOs, setPlacesNGOs] =
-    useState([]);
-
-  const displayedNGOs =
-    placesNGOs.length > 0
-      ? placesNGOs
-      : ngos;
-
-  const handlePlacesFound = (results) => {
-
-    console.log(
-      "NGOMap received:",
-      results
-    );
-
-    setPlacesNGOs(results);
-
-    if (onPlacesFound) {
-      onPlacesFound(results);
-    }
-  };
-
-  return (
-    <div className="ngo-map-wrapper">
-
-      <APIProvider
-        apiKey={
-          import.meta.env
-            .VITE_GOOGLE_MAPS_API_KEY
-        }
-        libraries={["places"]}
-      >
-
-        <NearbyPlaces
-          userLocation={userLocation}
-          onPlacesFound={
-            handlePlacesFound
-          }
-        />
-
-        <MapContent
-          userLocation={userLocation}
-          ngos={displayedNGOs}
-        />
-
-      </APIProvider>
-
+    <div className="ngo-map">
+      <div
+        ref={mapContainerRef}
+        className="ngo-map__canvas"
+        role="region"
+        aria-label="Map showing nearby NGOs"
+      />
     </div>
   );
 }
-
-export default NGOMap;

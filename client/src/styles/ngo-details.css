@@ -1,0 +1,165 @@
+.ngo-details-page {
+  --fs-primary: #2e7d32;
+  --fs-primary-dark: #1f5c24;
+  --fs-secondary: #66bb6a;
+  --fs-bg: #f8faf8;
+  --fs-white: #ffffff;
+  --fs-text: #1c2b1e;
+  --fs-text-muted: #5c6b5e;
+  --fs-border: #e1ebe1;
+
+  font-family: "Poppins", sans-serif;
+  background: var(--fs-bg);
+  min-height: 100vh;
+  padding: 32px clamp(16px, 4vw, 56px) 64px;
+  color: var(--fs-text);
+}
+
+.ngo-details-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--fs-text-muted);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 18px;
+  padding: 0;
+}
+
+.ngo-details-page__back:hover {
+  color: var(--fs-primary);
+}
+
+.ngo-details-page__card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--fs-white);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(46, 125, 50, 0.1);
+  max-width: 980px;
+}
+
+@media (max-width: 800px) {
+  .ngo-details-page__card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ngo-details-page__image {
+  background: linear-gradient(135deg, var(--fs-primary) 0%, var(--fs-secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  color: var(--fs-white);
+  font-size: 3.5rem;
+}
+
+.ngo-details-page__body {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ngo-details-page__title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ngo-details-page__name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--fs-primary-dark);
+}
+
+.ngo-details-page__rating {
+  font-size: 0.95rem;
+  color: #c98a12;
+  font-weight: 600;
+}
+
+.ngo-details-page__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+
+@media (max-width: 480px) {
+  .ngo-details-page__info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ngo-details-page__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--fs-text-muted);
+}
+
+.ngo-details-page__info-item strong {
+  display: block;
+  color: var(--fs-text);
+  font-weight: 500;
+}
+
+.ngo-details-page__section-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fs-text-muted);
+  margin: 0 0 8px;
+}
+
+.ngo-details-page__food-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ngo-details-page__food-item {
+  font-size: 0.85rem;
+  color: var(--fs-primary-dark);
+  background: #eef6ee;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.ngo-details-page__cta {
+  margin-top: 8px;
+  align-self: flex-start;
+  background: var(--fs-primary);
+  color: var(--fs-white);
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 13px 26px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.ngo-details-page__cta:hover {
+  background: var(--fs-primary-dark);
+  transform: translateY(-1px);
+}
+
+.ngo-details-page__map {
+  margin-top: 28px;
+  max-width: 980px;
+}

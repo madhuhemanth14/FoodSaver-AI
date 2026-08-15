@@ -1,50 +1,67 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
 
 import NGOFinder from "./pages/ngo/NGOFinder";
 import NGODetails from "./pages/ngo/NGODetails";
+import NGOMap from "./pages/map/NGOMapPage";
+
 import PickupRequest from "./pages/pickup/PickupRequest";
 import PickupTracking from "./pages/pickup/PickupTracking";
 import PickupHistory from "./pages/pickup/PickupHistory";
 
 function App() {
   return (
-    <BrowserRouter>
+    <div className="app">
 
-      <Routes>
+      {/* GLOBAL NAVBAR */}
+      <Navbar />
 
-        <Route
-          path="/"
-          element={<Navigate to="/ngos" replace />}
-        />
+      {/* PAGE CONTENT */}
+      <main className="app-content">
+        <Routes>
 
-        <Route
-          path="/ngos"
-          element={<NGOFinder />}
-        />
+          {/* NGO */}
+          <Route
+            path="/ngos"
+            element={<NGOFinder />}
+          />
 
-        <Route
-          path="/ngos/details"
-          element={<NGODetails />}
-        />
+          <Route
+            path="/ngos/details"
+            element={<NGODetails />}
+          />
 
-        <Route
-          path="/pickup/request"
-          element={<PickupRequest />}
-        />
+          {/* MAP */}
+          <Route
+            path="/map"
+            element={<NGOMap />}
+          />
 
-        <Route
-          path="/pickup/tracking"
-          element={<PickupTracking />}
-        />
+          {/* PICKUP */}
+          <Route
+            path="/pickup/request"
+            element={<PickupRequest />}
+          />
 
-        <Route
-          path="/pickup/history"
-          element={<PickupHistory />}
-        />
+          <Route
+            path="/pickup/tracking"
+            element={<PickupTracking />}
+          />
 
-      </Routes>
+          <Route
+            path="/pickup/history"
+            element={<PickupHistory />}
+          />
 
-    </BrowserRouter>
+        </Routes>
+      </main>
+
+      {/* GLOBAL FOOTER — ONLY ONE */}
+      <Footer />
+
+    </div>
   );
 }
 
