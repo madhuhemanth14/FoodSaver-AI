@@ -1,0 +1,57 @@
+.admin-dashboard__welcome {
+  margin-bottom: 22px;
+}
+
+.admin-dashboard__welcome h1 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  color: #1b3a1d;
+}
+
+.admin-dashboard__welcome p {
+  margin: 0;
+  color: #5b6b5c;
+  font-size: 0.92rem;
+}
+
+.admin-dashboard__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.admin-dashboard__stats-loading {
+  padding: 40px;
+  text-align: center;
+  color: #5b6b5c;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 125, 50, 0.1);
+  margin-bottom: 28px;
+}
+
+.admin-dashboard__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.admin-dashboard__section-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #1b3a1d;
+}
+
+@media (max-width: 1100px) {
+  .admin-dashboard__stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard__stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
