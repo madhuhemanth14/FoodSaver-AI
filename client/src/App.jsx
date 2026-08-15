@@ -1,68 +1,185 @@
-import { Routes, Route } from "react-router-dom";
+import React from "react";
 
-import Navbar from "./components/common/Navbar";
-import Footer from "./components/common/Footer";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+
+
+/* =========================
+   COMMON COMPONENTS
+========================= */
+
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+
+/* =========================
+   HOME COMPONENTS
+========================= */
+
+import Hero from "./components/Hero";
+import About from "./components/About";
+import HowItWorks from "./components/HowItWorks";
+import Stats from "./components/Stats";
+import WhyItMatters from "./components/WhyItMatters";
+import CTA from "./components/CTA";
+
+
+/* =========================
+   AUTH PAGES
+========================= */
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+
+/* =========================
+   NGO PAGES
+========================= */
 
 import NGOFinder from "./pages/ngo/NGOFinder";
 import NGODetails from "./pages/ngo/NGODetails";
+
+
+/* =========================
+   MAP
+========================= */
+
 import NGOMap from "./pages/map/NGOMapPage";
+
+
+/* =========================
+   PICKUP PAGES
+========================= */
 
 import PickupRequest from "./pages/pickup/PickupRequest";
 import PickupTracking from "./pages/pickup/PickupTracking";
 import PickupHistory from "./pages/pickup/PickupHistory";
 
-function App() {
-  return (
-    <div className="app">
 
-      {/* GLOBAL NAVBAR */}
+/* =========================
+   HOME PAGE
+========================= */
+
+const Home = () => {
+  return (
+    <>
       <Navbar />
 
-      {/* PAGE CONTENT */}
-      <main className="app-content">
-        <Routes>
+      <main>
 
-          {/* NGO */}
-          <Route
-            path="/ngos"
-            element={<NGOFinder />}
-          />
+        {/* Hero Section */}
+        <Hero />
 
-          <Route
-            path="/ngos/details"
-            element={<NGODetails />}
-          />
+        {/* About Section */}
+        <About />
 
-          {/* MAP */}
-          <Route
-            path="/map"
-            element={<NGOMap />}
-          />
+        {/* How It Works */}
+        <HowItWorks />
 
-          {/* PICKUP */}
-          <Route
-            path="/pickup/request"
-            element={<PickupRequest />}
-          />
+        {/* Statistics */}
+        <Stats />
 
-          <Route
-            path="/pickup/tracking"
-            element={<PickupTracking />}
-          />
+        {/* Why It Matters */}
+        <WhyItMatters />
 
-          <Route
-            path="/pickup/history"
-            element={<PickupHistory />}
-          />
+        {/* Call To Action */}
+        <CTA />
 
-        </Routes>
       </main>
 
-      {/* GLOBAL FOOTER — ONLY ONE */}
       <Footer />
-
-    </div>
+    </>
   );
-}
+};
+
+
+/* =========================
+   APP
+========================= */
+
+const App = () => {
+  return (
+    <BrowserRouter>
+
+      <Routes>
+
+        {/* =========================
+            HOME
+        ========================= */}
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+
+        {/* =========================
+            AUTHENTICATION
+        ========================= */}
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Register />}
+        />
+
+
+        {/* =========================
+            NGO
+        ========================= */}
+
+        <Route
+          path="/ngos"
+          element={<NGOFinder />}
+        />
+
+        <Route
+          path="/ngos/details"
+          element={<NGODetails />}
+        />
+
+
+        {/* =========================
+            MAP
+        ========================= */}
+
+        <Route
+          path="/map"
+          element={<NGOMap />}
+        />
+
+
+        {/* =========================
+            PICKUP
+        ========================= */}
+
+        <Route
+          path="/pickup/request"
+          element={<PickupRequest />}
+        />
+
+        <Route
+          path="/pickup/tracking"
+          element={<PickupTracking />}
+        />
+
+        <Route
+          path="/pickup/history"
+          element={<PickupHistory />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
+  );
+};
+
 
 export default App;
