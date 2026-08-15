@@ -65,7 +65,7 @@ function Notifications() {
 
   const unreadCount = useMemo(() => {
     return notifications.filter(
-      (notification) => !notification.read
+      (notification) => !notification.isRead
     ).length;
   }, [notifications]);
 
@@ -76,7 +76,7 @@ function Notifications() {
 
     if (filter === "unread") {
       return notifications.filter(
-        (notification) => !notification.read
+        (notification) => !notification.isRead
       );
     }
 
@@ -219,9 +219,9 @@ function Notifications() {
             filteredNotifications.map(
               (notification) => (
                 <article
-                  key={notification.id}
+                  key={notification._id}
                   className={
-                    notification.read
+                    notification.isRead
                       ? "full-notification read"
                       : "full-notification unread"
                   }
@@ -240,7 +240,7 @@ function Notifications() {
                         {notification.title}
                       </h3>
 
-                      {!notification.read && (
+                      {!notification.isRead && (
                         <span className="unread-dot" />
                       )}
                     </div>
@@ -255,13 +255,13 @@ function Notifications() {
 
                   </div>
 
-                  {!notification.read ? (
+                  {!notification.isRead ? (
                     <button
                       type="button"
                       className="single-read-button"
                       onClick={() =>
                         handleMarkAsRead(
-                          notification.id
+                          notification._id
                         )
                       }
                     >

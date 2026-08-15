@@ -69,6 +69,13 @@ function Dashboard() {
   const [notifications, setNotifications] = useState(
     getInitialNotifications
   );
+  const [stats, setStats] = useState({
+  totalDonations: 0,
+  mealsServed: 0,
+  activeDonations: 0,
+  pendingPickups: 0,
+  co2Saved: 0,
+  });
 
   const unreadCount = notifications.filter(
     (notification) => !notification.read
@@ -80,6 +87,27 @@ function Dashboard() {
       JSON.stringify(notifications)
     );
   }, [notifications]);
+
+  useEffect(() => {
+  const fetchStats = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/dashboard/stats"
+      );
+
+      const data = await response.json();
+
+      setStats(data);
+    } catch (error) {
+      console.error(
+        "Failed to fetch dashboard stats:",
+        error
+      );
+    }
+  };
+
+  fetchStats();
+   }, []);
 
   return (
     <div className="dashboard-layout">
@@ -268,7 +296,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>25</h2>
+                <h2>{stats.totalDonations}</h2>
                 <p>Total Donations</p>
               </div>
             </div>
@@ -279,7 +307,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>1,240</h2>
+                <h2>{stats.mealsServed}</h2>
                 <p>Meals Served</p>
               </div>
             </div>
@@ -290,7 +318,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>6</h2>
+                <h2>{stats.activeDonations}</h2>
                 <p>Active Donations</p>
               </div>
             </div>
@@ -301,7 +329,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>3</h2>
+                <h2>{stats.pendingPickups}</h2>
                 <p>Pending Pickups</p>
               </div>
             </div>
@@ -312,7 +340,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>256</h2>
+                <h2>{stats.co2Saved}</h2>
                 <p>CO₂ Saved (kg)</p>
               </div>
             </div>

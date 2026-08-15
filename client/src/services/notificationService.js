@@ -42,48 +42,57 @@ function saveNotifications(notifications) {
 }
 
 export async function getNotifications() {
-  return getStoredNotifications();
+  const response = await fetch(
+    "http://localhost:5000/api/notifications"
+  );
+
+  const data = await response.json();
+
+  return data.notifications || [];
 }
 
 export async function getUnreadCount() {
-  const notifications = getStoredNotifications();
+  const response = await fetch(
+    "http://localhost:5000/api/notifications/unread-count"
+  );
 
-  return notifications.filter(
-    (notification) => !notification.read
-  ).length;
+  const data = await response.json();
+
+  return data.count || 0;
 }
 
 export async function markAsRead(id) {
-  const notifications = getStoredNotifications();
-
-  const updatedNotifications = notifications.map(
-    (notification) =>
-      notification.id === id
-        ? {
-            ...notification,
-            read: true,
-          }
-        : notification
+  await fetch(
+    `http://localhost:5000/api/notifications/${id}/read`,
+    {
+      method: "PATCH",
+    }
   );
 
-  saveNotifications(updatedNotifications);
+  const response = await fetch(
+    "http://localhost:5000/api/notifications"
+  );
 
-  return updatedNotifications;
+  const data = await response.json();
+
+  return data.notifications || [];
 }
 
 export async function markAllAsRead() {
-  const notifications = getStoredNotifications();
-
-  const updatedNotifications = notifications.map(
-    (notification) => ({
-      ...notification,
-      read: true,
-    })
+  await fetch(
+    "http://localhost:5000/api/notifications/read-all",
+    {
+      method: "PATCH",
+    }
   );
 
-  saveNotifications(updatedNotifications);
+  const response = await fetch(
+    "http://localhost:5000/api/notifications"
+  );
 
-  return updatedNotifications;
+  const data = await response.json();
+
+  return data.notifications || [];
 }
 
 export async function resetNotifications() {
