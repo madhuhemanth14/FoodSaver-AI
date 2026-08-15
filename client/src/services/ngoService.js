@@ -1,64 +1,51 @@
-const dummyNGOs = [
-  {
-    id: 1,
-    name: "Helping Hands",
-    location: "Ongole",
-    latitude: 15.5057,
-    longitude: 80.0499,
-    distance: 2.3,
-    rating: 4.6,
-    verified: true,
-    acceptedFoodTypes: [
-      "Rice",
-      "Vegetables",
-      "Fruits",
-    ],
-  },
+import { mockNGOs } from "../data/mockNGOs.js";
 
-  {
-    id: 2,
-    name: "Food For All",
-    location: "Ongole",
-    latitude: 15.5035,
-    longitude: 80.0520,
-    distance: 4.1,
-    rating: 4.4,
-    verified: true,
-    acceptedFoodTypes: [
-      "Cooked Food",
-      "Bread",
-      "Fruits",
-    ],
-  },
-
-  {
-    id: 3,
-    name: "Care Foundation",
-    location: "Ongole",
-    latitude: 15.5090,
-    longitude: 80.0470,
-    distance: 5.7,
-    rating: 4.2,
-    verified: true,
-    acceptedFoodTypes: [
-      "Rice",
-      "Dal",
-      "Vegetables",
-    ],
-  },
-];
-
-/*
- * Temporary fallback.
- * We will replace this with Google Places results
- * in the next step.
+/**
+ * Get all NGOs
  */
-export const getNearbyNGOs = async () => {
-  return dummyNGOs;
+export const getNGOs = async () => {
+  return [...mockNGOs];
 };
 
+/**
+ * Get nearby NGOs
+ */
+export const getNearbyNGOs = async (
+  latitude = 17.385,
+  longitude = 78.4867,
+  radius = 10
+) => {
+  // Mock implementation for frontend development.
+  // Later this will call:
+  // GET /api/ngos/nearby?lat=...&lng=...
+
+  return mockNGOs.filter((ngo) => ngo.distance <= radius);
+};
+
+/**
+ * Get NGO by ID
+ */
 export const getNGOById = async (id) => {
-  return dummyNGOs.find(
-    (ngo) => ngo.id === Number(id)
-  );
+  return mockNGOs.find((ngo) => String(ngo.id) === String(id)) || null;
+};
+
+/**
+ * Search NGOs
+ */
+export const searchNGOs = async (searchTerm = "") => {
+  const term = searchTerm.toLowerCase().trim();
+
+  if (!term) {
+    return [...mockNGOs];
+  }
+
+  return mockNGOs.filter((ngo) => {
+    return (
+      ngo.name.toLowerCase().includes(term) ||
+      ngo.address.toLowerCase().includes(term) ||
+      ngo.acceptedFood.some((food) =>
+        food.toLowerCase().includes(term)
+      )
+    );
+  });
 };
