@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/ngo-map-page.css";
+import "../../styles/ngo-map.css";
 import NGOMap from "../../components/ngo/NGOMap";
 import NGO_DATA from "../../data/mockNGOs";
 

@@ -43,7 +43,7 @@ import NGODetails from "./pages/ngo/NGODetails";
    MAP
 ========================= */
 
-import NGOMap from "./pages/map/NGOMapPage";
+import NGOMap from "./pages/map/NGOMappage";
 
 /* =========================
    PICKUP PAGES
