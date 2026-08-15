@@ -4,8 +4,8 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
-
 
 /* =========================
    COMMON COMPONENTS
@@ -13,7 +13,6 @@ import {
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 
 /* =========================
    HOME COMPONENTS
@@ -26,14 +25,12 @@ import Stats from "./components/Stats";
 import WhyItMatters from "./components/WhyItMatters";
 import CTA from "./components/CTA";
 
-
 /* =========================
    AUTH PAGES
 ========================= */
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
 
 /* =========================
    NGO PAGES
@@ -42,13 +39,11 @@ import Register from "./pages/Register";
 import NGOFinder from "./pages/ngo/NGOFinder";
 import NGODetails from "./pages/ngo/NGODetails";
 
-
 /* =========================
    MAP
 ========================= */
 
 import NGOMap from "./pages/map/NGOMapPage";
-
 
 /* =========================
    PICKUP PAGES
@@ -58,6 +53,19 @@ import PickupRequest from "./pages/pickup/PickupRequest";
 import PickupTracking from "./pages/pickup/PickupTracking";
 import PickupHistory from "./pages/pickup/PickupHistory";
 
+/* =========================
+   MEMBER 5 - DASHBOARD
+========================= */
+
+import Dashboard from "./pages/dashboard/Dashboard";
+import Notifications from "./pages/dashboard/Notifications";
+import Activity from "./pages/dashboard/Activity";
+
+/*
+  Profile is intentionally not imported here yet.
+  Your authentication/profile teammate will provide
+  the final Profile implementation during integration.
+*/
 
 /* =========================
    HOME PAGE
@@ -69,32 +77,18 @@ const Home = () => {
       <Navbar />
 
       <main>
-
-        {/* Hero Section */}
         <Hero />
-
-        {/* About Section */}
         <About />
-
-        {/* How It Works */}
         <HowItWorks />
-
-        {/* Statistics */}
         <Stats />
-
-        {/* Why It Matters */}
         <WhyItMatters />
-
-        {/* Call To Action */}
         <CTA />
-
       </main>
 
       <Footer />
     </>
   );
 };
-
 
 /* =========================
    APP
@@ -103,7 +97,6 @@ const Home = () => {
 const App = () => {
   return (
     <BrowserRouter>
-
       <Routes>
 
         {/* =========================
@@ -115,6 +108,57 @@ const App = () => {
           element={<Home />}
         />
 
+        {/* =========================
+            MEMBER 5 DASHBOARD
+        ========================= */}
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/notifications"
+          element={<Notifications />}
+        />
+
+        <Route
+          path="/activity"
+          element={<Activity />}
+        />
+
+        {/* =========================
+            PROFILE PLACEHOLDER
+            Final profile route will be
+            connected during auth integration.
+        ========================= */}
+
+        <Route
+          path="/profile"
+          element={
+            <div
+              style={{
+                minHeight: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: "Arial, sans-serif",
+                color: "#2e7d32",
+                background: "#f6f8f6",
+                padding: "20px",
+                textAlign: "center",
+              }}
+            >
+              <div>
+                <h2>Profile</h2>
+                <p>
+                  Profile will be connected through the
+                  authentication module during team integration.
+                </p>
+              </div>
+            </div>
+          }
+        />
 
         {/* =========================
             AUTHENTICATION
@@ -130,7 +174,6 @@ const App = () => {
           element={<Register />}
         />
 
-
         {/* =========================
             NGO
         ========================= */}
@@ -145,7 +188,6 @@ const App = () => {
           element={<NGODetails />}
         />
 
-
         {/* =========================
             MAP
         ========================= */}
@@ -154,7 +196,6 @@ const App = () => {
           path="/map"
           element={<NGOMap />}
         />
-
 
         {/* =========================
             PICKUP
@@ -175,11 +216,18 @@ const App = () => {
           element={<PickupHistory />}
         />
 
-      </Routes>
+        {/* =========================
+            SAFETY FALLBACK
+        ========================= */}
 
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+
+      </Routes>
     </BrowserRouter>
   );
 };
-
 
 export default App;
