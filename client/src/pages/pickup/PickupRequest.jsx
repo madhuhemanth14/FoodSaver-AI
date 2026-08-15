@@ -1,206 +1,255 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
+import "../../styles/pickup-request.css";
 
-function PickupRequest() {
+const ngos = [
+  "Helping Hands Foundation",
+  "Annapurna Seva Trust",
+  "Green Plate Initiative",
+  "Nourish Community Kitchen",
+  "Sunrise Orphan Care Home",
+];
 
-  const location = useLocation();
-  const navigate = useNavigate();
+const foodTypes = [
+  "Cooked Food",
+  "Rice",
+  "Vegetables",
+  "Fruits",
+  "Bread",
+  "Dairy",
+];
 
-  const ngo = location.state?.ngo;
-
-  const [formData, setFormData] = useState({
+export default function PickupRequest() {
+  const [form, setForm] = useState({
+    ngo: "",
     foodType: "",
+    date: "",
+    time: "",
     quantity: "",
-    pickupDate: "",
-    pickupTime: "",
-    address: "",
-    notes: ""
+    contact: "",
+    instructions: "",
   });
 
-  const handleChange = (e) => {
+  const [message, setMessage] = useState("");
 
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
 
-    const pickup = {
-      id: Date.now(),
-      ngo,
-      ...formData,
-      status: "REQUESTED"
-    };
+    if (
+      !form.ngo ||
+      !form.foodType ||
+      !form.date ||
+      !form.time ||
+      !form.quantity ||
+      !form.contact
+    ) {
+      setMessage("Please fill in all required fields.");
+      return;
+    }
 
-    localStorage.setItem(
-      "activePickup",
-      JSON.stringify(pickup)
-    );
+    setMessage("Pickup request submitted successfully!");
 
-    navigate("/pickup/tracking", {
-      state: { pickup }
-    });
+    console.log("Pickup Request:", form);
   };
 
-  if (!ngo) {
-    return (
-      <div className="pickup-page">
-        <h2>No NGO selected</h2>
+  const handleCancel = () => {
+    setForm({
+      ngo: "",
+      foodType: "",
+      date: "",
+      time: "",
+      quantity: "",
+      contact: "",
+      instructions: "",
+    });
 
-        <button
-          className="schedule-btn"
-          onClick={() => navigate("/ngos")}
-        >
-          Find NGO
-        </button>
-      </div>
-    );
-  }
+    setMessage("");
+  };
 
   return (
-    <main className="pickup-page">
+    <main className="pickup-request-page">
+      <div className="pickup-request-container">
 
-      <div className="pickup-container">
-
-        <button
-          className="back-btn"
-          onClick={() => navigate(-1)}
-        >
-          ← Back
-        </button>
-
-        <div className="pickup-header">
-          <h1>Schedule Food Pickup</h1>
-
-          <p>
-            Schedule a pickup with{" "}
-            <strong>{ngo.name}</strong>
-          </p>
+        <div className="pickup-request-header">
+          <div>
+            <h1>Schedule a Pickup</h1>
+            <p>
+              Tell us what you're donating and we'll match it with the right NGO.
+            </p>
+          </div>
         </div>
 
-        <form
-          className="pickup-form"
-          onSubmit={handleSubmit}
-        >
+        <form className="pickup-request-card" onSubmit={handleSubmit}>
 
-          <div className="form-group">
-            <label>Food Type</label>
+          <div className="pickup-form-grid">
 
-            <select
-              name="foodType"
-              value={formData.foodType}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select food type
-              </option>
+            {/* NGO */}
+            <div className="pickup-field">
+              <label htmlFor="ngo">
+                NGO Selection
+              </label>
 
-              <option value="Cooked Food">
-                Cooked Food
-              </option>
+              <select
+                id="ngo"
+                name="ngo"
+                value={form.ngo}
+                onChange={handleChange}
+              >
+                <option value="">Choose an NGO...</option>
 
-              <option value="Rice">
-                Rice
-              </option>
+                {ngos.map((ngo) => (
+                  <option key={ngo} value={ngo}>
+                    {ngo}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              <option value="Vegetables">
-                Vegetables
-              </option>
+            {/* Food */}
+            <div className="pickup-field">
+              <label htmlFor="foodType">
+                Food Type
+              </label>
 
-              <option value="Fruits">
-                Fruits
-              </option>
+              <select
+                id="foodType"
+                name="foodType"
+                value={form.foodType}
+                onChange={handleChange}
+              >
+                <option value="">Select food type...</option>
 
-              <option value="Bread">
-                Bread
-              </option>
-            </select>
-          </div>
+                {foodTypes.map((food) => (
+                  <option key={food} value={food}>
+                    {food}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div className="form-group">
-            <label>Quantity</label>
-
-            <input
-              type="text"
-              name="quantity"
-              placeholder="Example: 5 kg"
-              value={formData.quantity}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-row">
-
-            <div className="form-group">
-              <label>Pickup Date</label>
+            {/* Date */}
+            <div className="pickup-field">
+              <label htmlFor="date">
+                Pickup Date
+              </label>
 
               <input
+                id="date"
+                name="date"
                 type="date"
-                name="pickupDate"
-                value={formData.pickupDate}
+                value={form.date}
                 onChange={handleChange}
-                required
               />
             </div>
 
-            <div className="form-group">
-              <label>Pickup Time</label>
+            {/* Time */}
+            <div className="pickup-field">
+              <label htmlFor="time">
+                Pickup Time
+              </label>
 
               <input
+                id="time"
+                name="time"
                 type="time"
-                name="pickupTime"
-                value={formData.pickupTime}
+                value={form.time}
                 onChange={handleChange}
-                required
+              />
+            </div>
+
+            {/* Quantity */}
+            <div className="pickup-field">
+              <label htmlFor="quantity">
+                Food Quantity <span>(approx. servings)</span>
+              </label>
+
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min="1"
+                placeholder="e.g. 40"
+                value={form.quantity}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Contact */}
+            <div className="pickup-field">
+              <label htmlFor="contact">
+                Contact Number
+              </label>
+
+              <input
+                id="contact"
+                name="contact"
+                type="tel"
+                placeholder="10-digit mobile number"
+                value={form.contact}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Instructions */}
+            <div className="pickup-field pickup-field-full">
+              <label htmlFor="instructions">
+                Special Instructions <span>(optional)</span>
+              </label>
+
+              <textarea
+                id="instructions"
+                name="instructions"
+                rows="4"
+                placeholder="Gate code, packaging notes, contact person, etc."
+                value={form.instructions}
+                onChange={handleChange}
               />
             </div>
 
           </div>
 
-          <div className="form-group">
-            <label>Pickup Address</label>
+          {message && (
+            <div
+              className={`pickup-message ${
+                message.includes("successfully")
+                  ? "pickup-message-success"
+                  : "pickup-message-error"
+              }`}
+            >
+              {message}
+            </div>
+          )}
 
-            <textarea
-              name="address"
-              placeholder="Enter your pickup address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
+          <div className="pickup-form-actions">
+
+            <button
+              type="button"
+              className="pickup-cancel-button"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="pickup-submit-button"
+            >
+              Schedule Pickup
+            </button>
+
           </div>
-
-          <div className="form-group">
-            <label>Additional Notes</label>
-
-            <textarea
-              name="notes"
-              placeholder="Any special instructions?"
-              value={formData.notes}
-              onChange={handleChange}
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="schedule-btn"
-          >
-            Confirm Pickup Request →
-          </button>
 
         </form>
 
       </div>
-
     </main>
   );
 }
-
-export default PickupRequest;

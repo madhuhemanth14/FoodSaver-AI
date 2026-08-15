@@ -1,274 +1,489 @@
-/* =================================
-   GLOBAL FOOD SAVER NGO FINDER
-   ================================= */
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f8faf8;
+  color: #263238;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
 
 #root {
   min-height: 100vh;
 }
 
-/* NGO FINDER PAGE */
 
-.ngo-finder {
+/* =====================================================
+   APP
+===================================================== */
+
+.app {
   min-height: 100vh;
-  padding: 50px 6%;
-  background: var(--cream);
+  display: flex;
+  flex-direction: column;
 }
 
-/* HEADER */
-
-.ngo-header {
-  max-width: 750px;
-  margin: 0 auto 40px;
-  text-align: center;
+.main-content {
+  flex: 1;
 }
 
-.ngo-header h1 {
-  color: var(--primary-green);
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
 
-.ngo-header p {
-  color: var(--text-muted);
-  font-size: 16px;
-  line-height: 1.7;
-}
+/* =====================================================
+   NAVBAR
+===================================================== */
 
-/* LOCATION */
+.navbar {
+  width: 100%;
+  min-height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
 
-.location-section {
-  max-width: 1100px;
-  margin: 0 auto 25px;
+  padding: 0 5%;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 20px 24px;
-
-  background: var(--white);
-
-  border: 1px solid var(--border-green);
-
-  border-radius: var(--radius-lg);
-
-  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.location-section p {
-  color: var(--primary-green);
-  font-weight: 600;
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #2e7d32;
+  font-size: 22px;
+  font-weight: 700;
+
+  white-space: nowrap;
 }
 
-.location-btn {
-  padding: 11px 22px;
-
-  border: 1px solid var(--main-green);
-
-  border-radius: 30px;
-
-  background: var(--white);
-
-  color: var(--main-green);
-
-  font-family: inherit;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: 0.25s;
+.logo-icon {
+  font-size: 25px;
 }
 
-.location-btn:hover {
-  background: var(--main-green);
-  color: var(--white);
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* SEARCH */
+.nav-link {
+  color: #59636b;
+
+  padding: 11px 15px;
+
+  border-radius: 25px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.nav-link.active {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   NGO FINDER
+===================================================== */
+
+.ngo-finder-page {
+  max-width: 1230px;
+  width: 100%;
+
+  margin: 0 auto;
+
+  padding: 55px 30px 80px;
+}
+
+.ngo-finder-header {
+  margin-bottom: 28px;
+}
+
+.ngo-finder-header h1 {
+  margin: 0 0 10px;
+
+  font-size: 40px;
+  line-height: 1.2;
+
+  color: #1b5e20;
+}
+
+.ngo-finder-header p {
+  margin: 0;
+
+  font-size: 17px;
+  color: #687277;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
 
 .ngo-search {
-  max-width: 700px;
-  margin: 0 auto 45px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.ngo-search-container {
+  width: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+  border-radius: 14px;
 
   display: flex;
+  align-items: center;
 
-  background: var(--white);
+  padding: 0 18px;
+}
 
-  border: 1px solid var(--border-green);
+.ngo-search-container input {
+  width: 100%;
 
-  border-radius: 40px;
+  border: none;
+  outline: none;
 
-  overflow: hidden;
+  padding: 16px 10px;
 
-  box-shadow: var(--shadow-sm);
+  font-size: 15px;
+
+  background: transparent;
 }
 
 .ngo-search input {
-  flex: 1;
+  width: 100%;
 
-  border: none;
+  padding: 16px 20px;
+
+  border: 1px solid #dfe5e1;
+  border-radius: 14px;
 
   outline: none;
 
-  padding: 15px 22px;
+  background: #ffffff;
+
+  font-size: 15px;
+}
+
+.ngo-search input:focus {
+  border-color: #66bb6a;
+}
+
+
+/* =====================================================
+   FILTERS
+===================================================== */
+
+.ngo-filter-panel {
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+  border-radius: 14px;
+
+  padding: 18px;
+
+  display: flex;
+  align-items: flex-end;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.distance-filter,
+.food-filter,
+.accepting-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.distance-filter label,
+.food-filter label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #687277;
+}
+
+.distance-filter select {
+  padding: 10px 14px;
+
+  border: 1px solid #d8dfdb;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  outline: none;
+}
+
+.food-filter {
+  flex: 1;
+}
+
+.food-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.food-filter-chip {
+  border: 1px solid #dfe5e1;
+
+  background: #f8faf8;
+
+  color: #59636b;
+
+  padding: 8px 13px;
+
+  border-radius: 20px;
+
+  font-size: 13px;
+}
+
+.food-filter-chip:hover,
+.food-filter-chip.active {
+  background: #e8f5e9;
+
+  border-color: #81c784;
+
+  color: #2e7d32;
+}
+
+.accepting-filter {
+  flex-direction: row;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  white-space: nowrap;
+}
+
+.reset-filter-btn {
+  border: none;
 
   background: transparent;
 
-  color: var(--text-dark);
+  color: #2e7d32;
 
-  font-family: inherit;
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   RESULT COUNT
+===================================================== */
+
+.ngo-result-count {
+  margin-bottom: 15px;
+
+  color: #687277;
 
   font-size: 14px;
 }
 
-.ngo-search button {
-  width: 58px;
 
-  border: none;
+/* =====================================================
+   NGO GRID
+===================================================== */
 
-  background: var(--primary-green);
-
-  color: var(--white);
-
-  font-size: 18px;
-
-  cursor: pointer;
-
-  transition: 0.25s;
-}
-
-.ngo-search button:hover {
-  background: var(--main-green);
-}
-
-/* NGO SECTION */
-
-.ngo-section {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.ngo-section h2 {
-  color: var(--primary-green);
-
-  font-size: 25px;
-
-  margin-bottom: 22px;
-}
-
-/* NGO LIST */
-
-.ngo-list {
+.ngo-grid {
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(290px, 1fr));
+    repeat(3, minmax(0, 1fr));
 
   gap: 24px;
 }
 
-/* NGO CARD */
+
+/* =====================================================
+   NGO CARD
+===================================================== */
 
 .ngo-card {
-  padding: 25px;
+  background: #ffffff;
 
-  background: var(--white);
+  border: 1px solid #dfe5e1;
 
-  border: 1px solid var(--border-green);
+  border-radius: 14px;
 
-  border-radius: var(--radius-xl);
+  padding: 18px;
 
-  box-shadow: var(--shadow-sm);
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.04);
 
-  transition: all 0.25s ease;
+  transition: 0.2s ease;
 }
 
 .ngo-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 
-  box-shadow: var(--shadow-md);
+  box-shadow:
+    0 8px 24px rgba(46, 125, 50, 0.10);
 }
-
-/* NGO CARD HEADER */
 
 .ngo-card-header {
   display: flex;
 
   align-items: flex-start;
-
   justify-content: space-between;
+
+  gap: 10px;
+}
+
+.ngo-title-section {
+  display: flex;
+
+  align-items: center;
 
   gap: 12px;
 
-  margin-bottom: 12px;
+  min-width: 0;
 }
 
-.ngo-card-header h3 {
-  color: var(--primary-green);
+.ngo-avatar {
+  width: 50px;
+  height: 50px;
 
-  font-size: 19px;
+  min-width: 50px;
 
-  font-weight: 700;
+  border-radius: 9px;
+
+  background: #66bb6a;
+
+  color: white;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: 17px;
+
+  font-weight: 600;
 }
 
-/* VERIFIED */
+.ngo-title-content {
+  min-width: 0;
+}
 
-.verified-badge {
-  padding: 5px 10px;
+.ngo-title-section h3 {
+  margin: 0 0 4px;
 
-  border-radius: 20px;
+  font-size: 18px;
 
-  background: var(--light-green);
+  white-space: nowrap;
 
-  color: var(--main-green);
+  overflow: hidden;
 
-  font-size: 11px;
+  text-overflow: ellipsis;
+}
+
+.ngo-rating {
+  font-size: 14px;
+
+  color: #e6a600;
+}
+
+.ngo-rating span {
+  color: #7c878c;
+}
+
+.ngo-status {
+  padding: 6px 12px;
+
+  border-radius: 18px;
+
+  font-size: 12px;
 
   font-weight: 600;
 
   white-space: nowrap;
 }
 
-/* LOCATION */
+.ngo-status.open {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.ngo-status.closed {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+
+/* =====================================================
+   CARD DETAILS
+===================================================== */
 
 .ngo-location {
-  color: var(--text-muted);
+  color: #687277;
 
   font-size: 14px;
 
-  margin-bottom: 16px;
+  line-height: 1.6;
+
+  margin: 16px 0 10px;
 }
 
-/* NGO INFORMATION */
-
-.ngo-info {
+.ngo-contact-info {
   display: flex;
 
-  justify-content: space-between;
+  gap: 15px;
 
-  padding: 12px 14px;
-
-  margin-bottom: 18px;
-
-  background: var(--mint-green);
-
-  border-radius: var(--radius-md);
-
-  color: var(--text-muted);
+  flex-wrap: wrap;
 
   font-size: 13px;
+
+  color: #687277;
 }
 
-/* ACCEPTED FOOD */
-
-.ngo-card h4 {
-  color: var(--primary-green);
-
-  font-size: 13px;
-
-  margin-bottom: 10px;
+.ngo-food {
+  margin-top: 14px;
 }
 
 .food-tags {
@@ -279,283 +494,1139 @@
   gap: 7px;
 }
 
+.food-status,
 .food-tag {
-  padding: 6px 11px;
+  padding: 6px 10px;
 
-  border-radius: 20px;
+  border-radius: 16px;
 
-  background: var(--light-green);
-
-  color: var(--main-green);
-
-  font-size: 11px;
-
-  font-weight: 500;
+  font-size: 12px;
 }
 
-/* VIEW DETAILS */
+.food-status.accepting {
+  background: #e8f5e9;
 
-.view-details-btn {
+  color: #2e7d32;
+
+  font-weight: 600;
+}
+
+.food-status.not-accepting {
+  background: #f1f3f2;
+
+  color: #777;
+}
+
+.food-tag {
+  background: #f8faf8;
+
+  border: 1px solid #dfe5e1;
+
+  color: #687277;
+}
+
+
+/* =====================================================
+   CAPACITY
+===================================================== */
+
+.ngo-capacity {
+  margin-top: 14px;
+}
+
+.capacity-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  font-size: 13px;
+
+  color: #687277;
+
+  margin-bottom: 7px;
+}
+
+.capacity-bar {
   width: 100%;
 
-  margin-top: 22px;
+  height: 6px;
 
-  padding: 13px;
+  background: #eef1ef;
 
-  border: none;
+  border-radius: 10px;
 
-  border-radius: 30px;
-
-  background: var(--primary-green);
-
-  color: var(--white);
-
-  font-family: inherit;
-
-  font-size: 14px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: 0.25s;
+  overflow: hidden;
 }
 
-.view-details-btn:hover {
-  background: var(--main-green);
+.capacity-progress {
+  height: 100%;
 
-  transform: translateY(-2px);
+  background: #66bb6a;
+
+  border-radius: 10px;
 }
 
-/* MOBILE */
-
-@media (max-width: 700px) {
-
-  .ngo-finder {
-    padding: 35px 5%;
-  }
-
-  .ngo-header h1 {
-    font-size: 32px;
-  }
-
-  .location-section {
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    gap: 15px;
-  }
-
-  .location-btn {
-    width: 100%;
-  }
-
-  .ngo-list {
-    grid-template-columns: 1fr;
-  }
-}
-/* =================================
-   NGO DETAILS
-   ================================= */
-
-.ngo-details-page {
-  min-height: 100vh;
-  padding: 40px 6%;
-  background: var(--cream);
+.capacity-progress.full {
+  background: #d32f2f;
 }
 
-.back-btn {
-  border: none;
-  background: transparent;
-  color: var(--main-green);
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 25px;
-}
 
-.ngo-details-card {
-  max-width: 950px;
-  margin: 0 auto;
-  padding: 40px;
-  background: var(--white);
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
-}
+/* =====================================================
+   NGO ACTIONS
+===================================================== */
 
-.ngo-details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 35px;
-}
-
-.ngo-details-header h1 {
-  color: var(--primary-green);
-  font-size: 34px;
-  margin-bottom: 12px;
-}
-
-.ngo-rating {
-  padding: 10px 15px;
-  border-radius: 25px;
-  background: var(--mint-green);
-  color: var(--primary-green);
-  font-weight: 600;
-}
-
-.ngo-details-info {
+.ngo-actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 35px;
+
+  grid-template-columns:
+    1fr 1fr 1fr;
+
+  gap: 8px;
+
+  margin-top: 16px;
 }
 
-.detail-box {
-  display: flex;
-  gap: 12px;
-  padding: 18px;
-  background: var(--light-green);
-  border-radius: var(--radius-md);
+.ngo-actions button {
+  padding: 10px 8px;
+
+  border-radius: 9px;
+
+  font-size: 12px;
+
+  font-weight: 600;
 }
 
-.detail-box > span {
-  font-size: 22px;
+.view-details-btn {
+  background: white;
+
+  color: #2e7d32;
+
+  border: 1px solid #2e7d32;
 }
 
-.detail-box strong {
-  color: var(--primary-green);
-  font-size: 13px;
-}
+.view-map-btn {
+  background: #e8f5e9;
 
-.detail-box p {
-  color: var(--text-muted);
-  font-size: 13px;
-  margin-top: 4px;
-}
+  color: #2e7d32;
 
-.accepted-food-section,
-.ngo-description {
-  margin-bottom: 30px;
-}
-
-.accepted-food-section h2,
-.ngo-description h2 {
-  color: var(--primary-green);
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-
-.ngo-description p {
-  color: var(--text-muted);
-  line-height: 1.8;
+  border: none;
 }
 
 .schedule-btn {
-  width: 100%;
-  padding: 15px;
-  border: none;
-  border-radius: 30px;
-  background: var(--primary-green);
+  background: #2e7d32;
+
   color: white;
+
+  border: none;
+}
+
+.schedule-btn:disabled {
+  background: #a5c7a7;
+
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.ngo-empty-state {
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+
+  border-radius: 14px;
+
+  padding: 50px;
+
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 35px;
+}
+
+
+/* =====================================================
+   MAP PAGE
+===================================================== */
+
+.map-page {
+  max-width: 1230px;
+
+  margin: 0 auto;
+
+  padding: 45px 30px 70px;
+}
+
+.map-page-header {
+  margin-bottom: 25px;
+}
+
+.map-page-header h1 {
+  margin: 0 0 8px;
+
+  font-size: 38px;
+
+  color: #1b5e20;
+}
+
+.map-page-header p {
+  margin: 0;
+
+  color: #687277;
+
+  font-size: 16px;
+}
+
+.map-container-wrapper {
+  width: 100%;
+
+  height: 600px;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  border: 1px solid #dfe5e1;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.06);
+
+  background: #ffffff;
+}
+
+.ngo-map {
+  width: 100%;
+
+  height: 100%;
+}
+
+.map-popup h3 {
+  margin: 0 0 7px;
+
+  color: #1b5e20;
+}
+
+.map-popup p {
+  margin: 0 0 8px;
+
+  color: #687277;
+
+  font-size: 13px;
+}
+
+.popup-open {
+  color: #2e7d32;
+
   font-weight: 600;
-  font-size: 15px;
-  transition: 0.25s;
 }
 
-.schedule-btn:hover {
-  background: var(--main-green);
-  transform: translateY(-2px);
+.popup-closed {
+  color: #d32f2f;
+
+  font-weight: 600;
 }
 
-@media (max-width: 700px) {
-  .ngo-details-card {
-    padding: 25px;
-  }
 
-  .ngo-details-header {
-    flex-direction: column;
-  }
-
-  .ngo-details-info {
-    grid-template-columns: 1fr;
-  }
-}
-/* =================================
-   PICKUP
-   ================================= */
+/* =====================================================
+   PICKUP COMMON PAGE
+===================================================== */
 
 .pickup-page {
-  min-height: 100vh;
-  padding: 40px 6%;
-  background: var(--cream);
-}
+  max-width: 900px;
 
-.pickup-container {
-  max-width: 750px;
   margin: 0 auto;
+
+  padding: 55px 30px 80px;
 }
 
-.pickup-header {
-  text-align: center;
-  margin: 25px 0 35px;
+.pickup-page-header {
+  margin-bottom: 30px;
 }
 
-.pickup-header h1 {
-  color: var(--primary-green);
-  font-size: 34px;
-  margin-bottom: 10px;
+.pickup-page-header h1 {
+  margin: 0 0 10px;
+
+  color: #1b5e20;
+
+  font-size: 38px;
 }
 
-.pickup-header p {
-  color: var(--text-muted);
+.pickup-page-header p {
+  margin: 0;
+
+  color: #687277;
+
+  font-size: 16px;
+}
+
+
+/* =====================================================
+   PICKUP CARD
+===================================================== */
+
+.pickup-card {
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+
+  border-radius: 16px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .pickup-form {
-  padding: 35px;
-  background: var(--white);
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
+  display: grid;
+
+  gap: 20px;
 }
 
 .form-group {
-  margin-bottom: 22px;
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
 }
 
 .form-group label {
-  display: block;
-  color: var(--primary-green);
-  font-size: 13px;
+  font-size: 14px;
+
   font-weight: 600;
-  margin-bottom: 8px;
+
+  color: #455a64;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 13px 15px;
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-sm);
+
+  padding: 12px 14px;
+
+  border: 1px solid #d8dfdb;
+
+  border-radius: 9px;
+
   outline: none;
-  background: var(--mint-green);
-  color: var(--text-dark);
+
   font-size: 14px;
+
+  background: #ffffff;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  border-color: var(--accent-green);
-  box-shadow: 0 0 0 3px rgba(102, 168, 79, 0.1);
+  border-color: #66bb6a;
 }
 
 .form-group textarea {
   min-height: 100px;
+
   resize: vertical;
+}
+
+.primary-button {
+  border: none;
+
+  background: #2e7d32;
+
+  color: #ffffff;
+
+  padding: 13px 20px;
+
+  border-radius: 9px;
+
+  font-weight: 600;
+}
+
+.primary-button:hover {
+  background: #1b5e20;
+}
+
+
+/* =====================================================
+   TRACKING
+===================================================== */
+
+.tracking-card {
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+
+  border-radius: 16px;
+
+  padding: 28px;
+}
+
+.tracking-status {
+  display: inline-block;
+
+  background: #e8f5e9;
+
+  color: #2e7d32;
+
+  padding: 8px 14px;
+
+  border-radius: 20px;
+
+  font-weight: 600;
+
+  margin-bottom: 20px;
+}
+
+.tracking-timeline {
+  display: grid;
+
+  gap: 18px;
+}
+
+.timeline-item {
+  display: flex;
+
+  gap: 14px;
+
+  align-items: flex-start;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+
+  min-width: 12px;
+
+  margin-top: 5px;
+
+  border-radius: 50%;
+
+  background: #66bb6a;
+}
+
+.timeline-item h4 {
+  margin: 0 0 4px;
+
+  color: #263238;
+}
+
+.timeline-item p {
+  margin: 0;
+
+  color: #687277;
+
+  font-size: 14px;
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+.history-list {
+  display: grid;
+
+  gap: 15px;
+}
+
+.history-item {
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+
+  border-radius: 14px;
+
+  padding: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.history-item h3 {
+  margin: 0 0 6px;
+
+  color: #263238;
+}
+
+.history-item p {
+  margin: 3px 0;
+
+  color: #687277;
+
+  font-size: 13px;
+}
+
+.history-completed {
+  background: #e8f5e9;
+
+  color: #2e7d32;
+
+  padding: 7px 12px;
+
+  border-radius: 18px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+  margin-top: auto;
+
+  background: #1b5e20;
+
+  color: #ffffff;
+
+  padding: 38px 20px;
+
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 900px;
+
+  margin: 0 auto;
+}
+
+.footer-logo {
+  font-size: 20px;
+
+  font-weight: 700;
+
+  margin-bottom: 12px;
+}
+
+.footer-description {
+  max-width: 650px;
+
+  margin: 0 auto 18px;
+
+  color: #c8e6c9;
+
+  line-height: 1.6;
+
+  font-size: 15px;
+}
+
+.footer-copy {
+  margin: 0;
+
+  color: #a5d6a7;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1050px) {
+
+  .navbar {
+    padding: 0 25px;
+  }
+
+  .navbar-links {
+    gap: 2px;
+  }
+
+  .nav-link {
+    padding: 10px 10px;
+    font-size: 13px;
+  }
+
+  .ngo-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  .navbar {
+    min-height: auto;
+
+    padding: 15px 20px;
+
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+  .navbar-links {
+    flex-wrap: wrap;
+
+    justify-content: center;
+  }
+
+  .ngo-filter-panel {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .accepting-filter {
+    justify-content: space-between;
+  }
+
+  .map-container-wrapper {
+    height: 500px;
+  }
+
+}
+
+@media (max-width: 650px) {
+
+  .ngo-finder-page,
+  .map-page,
+  .pickup-page {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .ngo-finder-header h1,
+  .map-page-header h1,
+  .pickup-page-header h1 {
+    font-size: 30px;
+  }
+
+  .ngo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ngo-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .history-item {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .map-container-wrapper {
+    height: 450px;
+  }
+
+}
+/* =====================================================
+   GOOGLE MAP PAGE
+===================================================== */
+
+.map-page {
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 45px 30px 80px;
+}
+
+.map-page-header {
+  margin-bottom: 25px;
+}
+
+.map-page-header h1 {
+  margin: 0 0 8px;
+  font-size: 40px;
+  color: #1b5e20;
+}
+
+.map-page-header p {
+  margin: 0;
+  color: #687277;
+  font-size: 17px;
+}
+
+
+/* GOOGLE MAP */
+
+.map-container-wrapper {
+  width: 100%;
+  height: 550px;
+  overflow: hidden;
+
+  border-radius: 16px;
+  border: 1px solid #dfe5e1;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.06);
+
+  background: #eef5ef;
+}
+
+.ngo-map {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* MAP ERROR */
+
+.map-error {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  padding: 30px;
+}
+
+.map-error-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.map-error h2 {
+  margin: 0 0 10px;
+  color: #1b5e20;
+}
+
+.map-error p {
+  max-width: 600px;
+  color: #687277;
+}
+
+
+/* NGO LIST */
+
+.map-ngo-list {
+  margin-top: 35px;
+}
+
+.map-ngo-list h2 {
+  color: #1b5e20;
+  margin-bottom: 20px;
+}
+
+.map-ngo-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+.map-ngo-card {
+  background: #ffffff;
+
+  border: 1px solid #dfe5e1;
+
+  border-radius: 14px;
+
+  padding: 18px;
+
+  transition: 0.2s ease;
+}
+
+.map-ngo-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 24px
+    rgba(46, 125, 50, 0.1);
+}
+
+.map-ngo-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.map-ngo-avatar {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 10px;
+
+  background: #66bb6a;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.map-ngo-card h3 {
+  margin: 0 0 4px;
+  color: #263238;
+}
+
+.map-ngo-card-top p {
+  margin: 0;
+  color: #e6a600;
+}
+
+.map-ngo-location {
+  color: #687277;
+
+  line-height: 1.5;
+
+  font-size: 14px;
+
+  margin: 15px 0 8px;
+}
+
+.map-ngo-distance {
+  color: #687277;
+
+  font-size: 13px;
+}
+
+.map-status {
+  display: inline-block;
+
+  padding: 6px 10px;
+
+  border-radius: 15px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.map-status.accepting {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.map-status.not-accepting {
+  background: #f1f3f2;
+  color: #777;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+  .map-ngo-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .map-page {
+    padding: 30px 15px 60px;
+  }
+
+  .map-page-header h1 {
+    font-size: 32px;
+  }
+
+  .map-container-wrapper {
+    height: 450px;
+  }
+
+  .map-ngo-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+/* =========================================================
+   SCHEDULE PICKUP - MODERN UI
+========================================================= */
+
+.pickup-page {
+  min-height: 100vh;
+  background: #f5f9f5;
+  color: #263238;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.pickup-hero {
+  max-width: 1230px;
+  margin: 35px auto 0;
+  padding: 45px 55px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(129, 199, 132, 0.35), transparent 35%),
+    linear-gradient(135deg, #e8f5e9, #f8fff8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+.pickup-hero-content {
+  max-width: 700px;
+}
+
+.pickup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  color: #2e7d32;
+  border: 1px solid #d9eadb;
+  border-radius: 30px;
+  padding: 8px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.pickup-hero h1 {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.15;
+  color: #174d21;
+  letter-spacing: -1px;
+}
+
+.pickup-hero h1 span {
+  color: #43a047;
+}
+
+.pickup-hero p {
+  margin: 16px 0 0;
+  color: #617066;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.pickup-hero-illustration {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 75px;
+  box-shadow: 0 15px 40px rgba(46,125,50,0.12);
+}
+
+
+/* =========================================================
+   STEPS
+========================================================= */
+
+.pickup-steps {
+  max-width: 900px;
+  margin: 35px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pickup-step {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #9aa39d;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pickup-step.active {
+  color: #2e7d32;
+}
+
+.step-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e4e9e5;
+  color: #7b8580;
+  font-weight: 700;
+}
+
+.pickup-step.active .step-circle {
+  background: #2e7d32;
+  color: #ffffff;
+}
+
+.step-line {
+  width: 90px;
+  height: 2px;
+  background: #dce3de;
+  margin: 0 14px;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.pickup-container {
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 30px 70px;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.pickup-main-card {
+  display: grid;
+  grid-template-columns: 1.35fr 0.75fr;
+  background: #ffffff;
+  border: 1px solid #e1e8e2;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(46,125,50,0.07);
+}
+
+
+/* =========================================================
+   FORM SECTION
+========================================================= */
+
+.pickup-form-section {
+  padding: 38px 42px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 32px;
+}
+
+.section-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #1b5e20;
+  font-size: 25px;
+}
+
+.section-heading p {
+  margin: 5px 0 0;
+  color: #7a8580;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #37443b;
+}
+
+.form-group label span {
+  color: #e53935;
+}
+
+.form-group label small {
+  margin-left: auto;
+  color: #9aa39d;
+  font-weight: 500;
+}
+
+.input-wrapper,
+.textarea-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  font-size: 17px;
+}
+
+.textarea-icon {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  font-size: 17px;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 0 42px;
+  border: 1px solid #dce5de;
+  border-radius: 12px;
+  background: #fbfdfb;
+  color: #263238;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.input-wrapper select {
+  appearance: auto;
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus,
+.textarea-wrapper textarea:focus,
+.normal-textarea:focus {
+  border-color: #66bb6a;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(102,187,106,0.10);
+}
+
+.input-suffix {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8a958e;
+  font-size: 13px;
 }
 
 .form-row {
@@ -564,168 +1635,739 @@
   gap: 18px;
 }
 
-@media (max-width: 600px) {
-  .pickup-form {
-    padding: 22px;
+.textarea-wrapper textarea,
+.normal-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 1px solid #dce5de;
+  border-radius: 12px;
+  background: #fbfdfb;
+  color: #263238;
+  padding: 14px 15px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.textarea-wrapper textarea {
+  padding-left: 45px;
+}
+
+
+/* =========================================================
+   SUBMIT
+========================================================= */
+
+.schedule-submit-btn {
+  width: 100%;
+  height: 54px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(46,125,50,0.22);
+  transition: 0.2s ease;
+}
+
+.schedule-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(46,125,50,0.28);
+}
+
+.schedule-submit-btn:disabled {
+  background: #66bb6a;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.pickup-summary {
+  background: #f6faf6;
+  border-left: 1px solid #e3ebe4;
+  padding: 34px 28px;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #dfe8e0;
+}
+
+.summary-icon {
+  width: 44px;
+  height: 44px;
+  background: #dff2e0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+}
+
+.summary-header h3 {
+  margin: 0;
+  color: #1b5e20;
+  font-size: 18px;
+}
+
+.summary-header p {
+  margin: 4px 0 0;
+  color: #87918b;
+  font-size: 12px;
+}
+
+.summary-block {
+  padding: 20px 0;
+  border-bottom: 1px solid #e2e9e3;
+}
+
+.summary-label {
+  color: #7a8580;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.selected-ngo,
+.no-ngo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ngo-summary-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #66bb6a;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.selected-ngo strong,
+.no-ngo strong {
+  color: #304037;
+  font-size: 14px;
+}
+
+.selected-ngo p,
+.no-ngo p {
+  margin: 4px 0 0;
+  color: #89938d;
+  font-size: 12px;
+}
+
+.no-ngo > span {
+  font-size: 25px;
+}
+
+.summary-value {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.summary-value strong {
+  color: #334239;
+  font-size: 14px;
+}
+
+.summary-value span {
+  color: #68756d;
+  font-size: 13px;
+}
+
+.summary-address {
+  color: #68756d;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+
+/* =========================================================
+   IMPACT
+========================================================= */
+
+.impact-card {
+  margin-top: 22px;
+  padding: 15px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #e8f5e9, #f5fff5);
+  border: 1px solid #d3e8d5;
+  display: flex;
+  gap: 11px;
+}
+
+.impact-icon {
+  font-size: 25px;
+}
+
+.impact-card strong {
+  color: #2e7d32;
+  font-size: 13px;
+}
+
+.impact-card p {
+  margin: 5px 0 0;
+  color: #66736b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   INFO CARDS
+========================================================= */
+
+.pickup-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.pickup-info-card {
+  background: #ffffff;
+  border: 1px solid #e1e8e2;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  transition: 0.2s ease;
+}
+
+.pickup-info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(46,125,50,0.08);
+}
+
+.info-card-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 11px;
+  background: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.pickup-info-card h3 {
+  margin: 0;
+  color: #2e7d32;
+  font-size: 14px;
+}
+
+.pickup-info-card p {
+  margin: 6px 0 0;
+  color: #77827c;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.pickup-footer {
+  margin-top: 30px;
+  padding: 35px 20px;
+  text-align: center;
+  background: #176522;
+  color: white;
+}
+
+.footer-brand {
+  font-size: 20px;
+}
+
+.pickup-footer p {
+  margin: 10px auto;
+  max-width: 500px;
+  color: #c9e1cc;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pickup-footer span {
+  color: #a9c9ad;
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .pickup-hero {
+    margin: 25px 20px 0;
+    padding: 35px;
+  }
+
+  .pickup-main-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pickup-summary {
+    border-left: none;
+    border-top: 1px solid #e3ebe4;
+  }
+
+  .pickup-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .pickup-hero {
+    margin: 15px;
+    padding: 30px 24px;
+  }
+
+  .pickup-hero h1 {
+    font-size: 32px;
+  }
+
+  .pickup-hero-illustration {
+    display: none;
+  }
+
+  .pickup-steps {
+    padding: 0 15px;
+  }
+
+  .pickup-step span {
+    display: none;
+  }
+
+  .step-line {
+    width: 50px;
+  }
+
+  .pickup-container {
+    padding: 0 15px 50px;
+  }
+
+  .pickup-form-section {
+    padding: 28px 20px;
+  }
+
+  .pickup-summary {
+    padding: 28px 20px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
     gap: 0;
   }
-}
-/* =================================
-   TRACKING
-   ================================= */
 
-.tracking-container {
-  max-width: 850px;
+}
+/* =========================================================
+   PICKUP MODULE
+   Schedule Pickup + Track Pickup + Pickup History
+   Add this BELOW your existing App.css
+========================================================= */
+
+
+/* =========================================================
+   COMMON PICKUP PAGE
+========================================================= */
+
+.pickup-page,
+.pickup-tracking-page,
+.pickup-history-page {
+  min-height: calc(100vh - 80px);
+  padding: 55px 30px 70px;
+  background: #f8faf8;
+}
+
+.pickup-container,
+.tracking-container,
+.history-container {
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-.tracking-header {
-  text-align: center;
-  margin: 25px 0 35px;
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.pickup-header,
+.tracking-header,
+.history-header {
+  margin-bottom: 35px;
 }
 
-.tracking-header h1 {
-  color: var(--primary-green);
-  font-size: 34px;
+.pickup-header h1,
+.tracking-header h1,
+.history-header h1 {
+  margin: 0 0 10px;
+  font-size: 38px;
+  font-weight: 700;
+  color: #1b5e20;
 }
 
-.tracking-header p {
-  color: var(--text-muted);
-  margin-top: 8px;
+.pickup-header p,
+.tracking-header p,
+.history-header p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #687277;
 }
 
-.tracking-card {
+
+/* =========================================================
+   SCHEDULE PICKUP
+========================================================= */
+
+.pickup-form-card {
+  background: #ffffff;
+  border: 1px solid #dfe5e1;
+  border-radius: 20px;
   padding: 35px;
-  background: var(--white);
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 30px rgba(46, 125, 50, 0.08);
 }
 
-.tracking-summary {
+.pickup-form-card h2 {
+  margin: 0 0 8px;
+  color: #263238;
+  font-size: 23px;
+}
+
+.pickup-form-card > p {
+  margin: 0 0 28px;
+  color: #687277;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.pickup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.pickup-form-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
-.tracking-summary div {
-  padding: 18px;
-  background: var(--light-green);
-  border-radius: var(--radius-md);
-}
-
-.tracking-summary span {
-  display: block;
-  color: var(--text-muted);
-  font-size: 12px;
-  margin-bottom: 5px;
-}
-
-.tracking-summary strong {
-  color: var(--primary-green);
-}
-
-.timeline {
-  position: relative;
-  margin: 20px 0 35px;
-}
-
-.timeline-item {
-  position: relative;
+.pickup-form-group {
   display: flex;
-  gap: 18px;
-  min-height: 85px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.timeline-item:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 16px;
-  top: 35px;
-  width: 2px;
-  height: 55px;
-  background: var(--border-green);
+.pickup-form-group.full-width {
+  grid-column: 1 / -1;
 }
 
-.timeline-item.completed:not(:last-child)::before {
-  background: var(--accent-green);
+.pickup-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #37474f;
 }
 
-.timeline-dot {
-  position: relative;
-  z-index: 2;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
+.pickup-form-group input,
+.pickup-form-group select,
+.pickup-form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 15px;
+  border: 1px solid #d8dfdb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #263238;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.pickup-form-group input:focus,
+.pickup-form-group select:focus,
+.pickup-form-group textarea:focus {
+  border-color: #66bb6a;
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.12);
+}
 
-  border-radius: 50%;
+.pickup-form-group textarea {
+  min-height: 110px;
+  resize: vertical;
+}
 
-  background: var(--mint-green);
-  border: 2px solid var(--border-green);
+.pickup-form-group input::placeholder,
+.pickup-form-group textarea::placeholder {
+  color: #9aa3a7;
+}
 
-  color: var(--text-muted);
-  font-size: 12px;
+
+/* =========================================================
+   FOOD TYPE SELECT
+========================================================= */
+
+.food-type-select {
+  width: 100%;
+}
+
+
+/* =========================================================
+   SCHEDULE BUTTON
+========================================================= */
+
+.schedule-pickup-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 11px;
+  background: #2e7d32;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.schedule-pickup-btn:hover {
+  background: #1b5e20;
+  transform: translateY(-1px);
+}
+
+.schedule-pickup-btn:active {
+  transform: translateY(0);
+}
+
+.schedule-pickup-btn:disabled {
+  background: #a5c7a7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.pickup-success {
+  margin-top: 20px;
+  padding: 15px 18px;
+  border-radius: 10px;
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+  font-size: 14px;
   font-weight: 600;
 }
 
-.timeline-item.completed .timeline-dot {
-  background: var(--main-green);
-  border-color: var(--main-green);
-  color: white;
+
+/* =========================================================
+   TRACK PICKUP
+========================================================= */
+
+.tracking-card {
+  background: #ffffff;
+  border: 1px solid #dfe5e1;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(46, 125, 50, 0.07);
 }
 
-.timeline-content h3 {
-  color: var(--primary-green);
+.tracking-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.tracking-card-header h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #263238;
+}
+
+.tracking-status {
+  padding: 8px 15px;
+  border-radius: 20px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   TRACKING INFO
+========================================================= */
+
+.tracking-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.tracking-info-item {
+  padding: 18px;
+  background: #f8faf8;
+  border: 1px solid #e3e9e4;
+  border-radius: 12px;
+}
+
+.tracking-info-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #7a8589;
+  font-size: 12px;
+}
+
+.tracking-info-item strong {
+  color: #263238;
   font-size: 15px;
-  margin-bottom: 5px;
 }
 
-.timeline-content p {
-  color: var(--text-muted);
+
+/* =========================================================
+   TRACKING TIMELINE
+========================================================= */
+
+.tracking-timeline {
+  position: relative;
+  margin-top: 30px;
+  padding-left: 35px;
+}
+
+.tracking-timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 5px;
+  bottom: 5px;
+  width: 2px;
+  background: #dfe5e1;
+}
+
+.tracking-step {
+  position: relative;
+  padding: 0 0 28px 20px;
+}
+
+.tracking-step:last-child {
+  padding-bottom: 0;
+}
+
+.tracking-step::before {
+  content: "";
+  position: absolute;
+  left: -32px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #dfe5e1;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px #dfe5e1;
+}
+
+.tracking-step.completed::before {
+  background: #2e7d32;
+  box-shadow: 0 0 0 1px #2e7d32;
+}
+
+.tracking-step.active::before {
+  background: #66bb6a;
+  box-shadow: 0 0 0 4px #e8f5e9;
+}
+
+.tracking-step h3 {
+  margin: 0 0 5px;
+  color: #263238;
+  font-size: 15px;
+}
+
+.tracking-step p {
+  margin: 0;
+  color: #7a8589;
   font-size: 13px;
 }
 
-@media (max-width: 650px) {
-  .tracking-summary {
-    grid-template-columns: 1fr;
-  }
 
-  .tracking-card {
-    padding: 22px;
-  }
+/* =========================================================
+   DRIVER / PICKUP PERSON CARD
+========================================================= */
+
+.driver-card {
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 14px;
+  background: #f8faf8;
+  border: 1px solid #e1e8e2;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
-/* =================================
+
+.driver-avatar {
+  width: 55px;
+  height: 55px;
+  min-width: 55px;
+  border-radius: 50%;
+  background: #66bb6a;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.driver-info h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  color: #263238;
+}
+
+.driver-info p {
+  margin: 0;
+  color: #687277;
+  font-size: 13px;
+}
+
+
+/* =========================================================
    HISTORY
-   ================================= */
-
-.history-container {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.history-header {
-  text-align: center;
-  margin: 25px 0 35px;
-}
-
-.history-header h1 {
-  color: var(--primary-green);
-  font-size: 34px;
-}
-
-.history-header p {
-  color: var(--text-muted);
-  margin-top: 8px;
-}
+========================================================= */
 
 .history-list {
   display: flex;
@@ -734,139 +2376,233 @@
 }
 
 .history-card {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr auto;
-  align-items: center;
-  gap: 20px;
-
+  background: #ffffff;
+  border: 1px solid #dfe5e1;
+  border-radius: 16px;
   padding: 22px;
-
-  background: var(--white);
-
-  border: 1px solid var(--border-green);
-
-  border-radius: var(--radius-md);
-
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: 0.2s ease;
 }
 
-.history-label {
-  display: block;
+.history-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.08);
+}
 
-  color: var(--text-muted);
-
-  font-size: 11px;
-
-  margin-bottom: 5px;
-
-  text-transform: uppercase;
+.history-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 .history-card h3 {
-  color: var(--primary-green);
-  font-size: 16px;
+  margin: 0 0 5px;
+  color: #263238;
+  font-size: 17px;
 }
 
-.history-card p {
-  color: var(--text-muted);
+.history-date {
+  color: #7a8589;
   font-size: 13px;
 }
 
+
+/* =========================================================
+   HISTORY STATUS
+========================================================= */
+
 .history-status {
-  padding: 7px 12px;
-
-  border-radius: 20px;
-
-  background: var(--light-green);
-
-  color: var(--main-green);
-
-  font-size: 11px;
-
+  padding: 7px 13px;
+  border-radius: 18px;
+  font-size: 12px;
   font-weight: 600;
-
-  white-space: nowrap;
 }
 
-@media (max-width: 750px) {
-
-  .history-card {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .history-status {
-    justify-self: start;
-  }
-
-}
-.demo-status-btn {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-
-  border: 1px solid var(--main-green);
-  border-radius: 30px;
-
-  background: var(--white);
-  color: var(--main-green);
-
-  font-weight: 600;
-  cursor: pointer;
+.history-status.completed {
+  background: #e8f5e9;
+  color: #2e7d32;
 }
 
-.demo-status-btn:hover {
-  background: var(--light-green);
+.history-status.pending {
+  background: #fff8e1;
+  color: #f57c00;
 }
 
-.demo-status-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-/* =================================
-   NGO MAP
-   ================================= */
-
-.ngo-map-wrapper {
-  width: 100%;
-  height: 450px;
-
-  margin: 30px auto;
-
-  overflow: hidden;
-
-  border: 1px solid var(--border-green);
-
-  border-radius: var(--radius-xl);
-
-  box-shadow: var(--shadow-md);
-
-  background: var(--light-green);
+.history-status.cancelled {
+  background: #ffebee;
+  color: #d32f2f;
 }
 
-.ngo-map-wrapper > div {
-  width: 100%;
-  height: 100%;
+
+/* =========================================================
+   HISTORY DETAILS
+========================================================= */
+
+.history-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #edf0ee;
 }
 
-@media (max-width: 700px) {
-  .ngo-map-wrapper {
-    height: 350px;
-  }
+.history-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-.ngo-loading,
-.ngo-empty {
-  text-align: center;
-  padding: 30px;
-  margin-top: 20px;
 
-  background: var(--white);
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-md);
+.history-detail span {
+  color: #899398;
+  font-size: 12px;
+}
 
-  color: var(--text-muted);
+.history-detail strong {
+  color: #37474f;
   font-size: 14px;
 }
 
-.ngo-loading {
-  color: var(--primary-green);
+
+/* =========================================================
+   HISTORY EMPTY STATE
+========================================================= */
+
+.history-empty {
+  background: #ffffff;
+  border: 1px solid #dfe5e1;
+  border-radius: 18px;
+  padding: 60px 30px;
+  text-align: center;
+}
+
+.history-empty-icon {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.history-empty h3 {
+  margin: 0 0 8px;
+  color: #263238;
+}
+
+.history-empty p {
+  margin: 0;
+  color: #7a8589;
+}
+
+
+/* =========================================================
+   COMMON SECONDARY BUTTON
+========================================================= */
+
+.pickup-secondary-btn {
+  padding: 11px 18px;
+  border: 1px solid #2e7d32;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pickup-secondary-btn:hover {
+  background: #e8f5e9;
+}
+
+
+/* =========================================================
+   PICKUP FOOTER SPACING
+========================================================= */
+
+.pickup-page + .footer,
+.pickup-tracking-page + .footer,
+.pickup-history-page + .footer {
+  margin-top: auto;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .pickup-page,
+  .pickup-tracking-page,
+  .pickup-history-page {
+    padding: 40px 20px 60px;
+  }
+
+  .pickup-header h1,
+  .tracking-header h1,
+  .history-header h1 {
+    font-size: 32px;
+  }
+
+  .tracking-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .history-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .pickup-page,
+  .pickup-tracking-page,
+  .pickup-history-page {
+    padding: 30px 15px 50px;
+  }
+
+  .pickup-header h1,
+  .tracking-header h1,
+  .history-header h1 {
+    font-size: 28px;
+  }
+
+  .pickup-header p,
+  .tracking-header p,
+  .history-header p {
+    font-size: 14px;
+  }
+
+  .pickup-form-card,
+  .tracking-card {
+    padding: 22px;
+    border-radius: 15px;
+  }
+
+  .pickup-form-row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .tracking-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-details {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-card-header,
+  .history-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .driver-card {
+    align-items: flex-start;
+  }
 }

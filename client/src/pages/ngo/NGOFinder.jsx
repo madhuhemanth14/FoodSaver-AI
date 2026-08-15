@@ -1,333 +1,370 @@
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../styles/ngo-finder.css";
+import NGO_DATA from "../../data/mockNGOs";
 
-import NGOMap from "../../components/ngo/NGOMap";
-import NGOList from "../../components/ngo/NGOList";
-import NGOSearch from "../../components/ngo/NGOSearch";
-
-
-// ========================================
-// FALLBACK NGO DATA
-// ========================================
-
-const dummyNGOs = [
-  {
-    id: 1,
-    name: "Helping Hands",
-    location: "Ongole",
-
-    latitude: 15.5057,
-    longitude: 80.0499,
-
-    distance: 2.3,
-    rating: 4.6,
-    verified: true,
-
-    acceptedFoodTypes: [
-      "Rice",
-      "Vegetables",
-      "Fruits",
-    ],
-  },
-
-  {
-    id: 2,
-    name: "Food For All",
-    location: "Ongole",
-
-    latitude: 15.5035,
-    longitude: 80.0520,
-
-    distance: 4.1,
-    rating: 4.4,
-    verified: true,
-
-    acceptedFoodTypes: [
-      "Cooked Food",
-      "Bread",
-      "Fruits",
-    ],
-  },
-
-  {
-    id: 3,
-    name: "Care Foundation",
-    location: "Ongole",
-
-    latitude: 15.5090,
-    longitude: 80.0470,
-
-    distance: 5.7,
-    rating: 4.2,
-    verified: true,
-
-    acceptedFoodTypes: [
-      "Rice",
-      "Dal",
-      "Vegetables",
-    ],
-  },
+const FOOD_TYPES = [
+  "Cooked Meals",
+  "Vegetables",
+  "Fruits",
+  "Bakery",
+  "Dairy",
+  "Packaged Food",
 ];
 
-
-// ========================================
-// NGO FINDER
-// ========================================
-
 function NGOFinder() {
-
   const navigate = useNavigate();
 
-  // User's GPS location
-  const [userLocation, setUserLocation] =
-    useState(null);
+  const [search, setSearch] = useState("");
+  const [distance, setDistance] = useState("Any distance");
+  const [rating, setRating] = useState("Any rating");
+  const [capacity, setCapacity] = useState("Any capacity");
+  const [selectedFood, setSelectedFood] = useState([]);
+  const [openNow, setOpenNow] = useState(false);
+  const [acceptingOnly, setAcceptingOnly] = useState(false);
 
-  // NGOs returned by Google Places
-  const [nearbyNGOs, setNearbyNGOs] =
-    useState([]);
+  const filteredNGOs = useMemo(() => {
+    return NGO_DATA.filter((ngo) => {
+      const searchText = search.toLowerCase().trim();
 
-  // Loading state
-  const [loadingNGOs, setLoadingNGOs] =
-    useState(false);
+      const matchesSearch =
+        !searchText ||
+        ngo.name.toLowerCase().includes(searchText) ||
+        ngo.address.toLowerCase().includes(searchText) ||
+        ngo.acceptedFood.some((food) =>
+          food.toLowerCase().includes(searchText)
+        );
 
-  // Search
-  const [searchTerm, setSearchTerm] =
-    useState("");
+      const matchesDistance =
+        distance === "Any distance" ||
+        (distance === "Within 2 km" && ngo.distance <= 2) ||
+        (distance === "Within 5 km" && ngo.distance <= 5) ||
+        (distance === "Within 10 km" && ngo.distance <= 10);
 
+      const matchesRating =
+        rating === "Any rating" ||
+        (rating === "4.5+" && ngo.rating >= 4.5) ||
+        (rating === "4.0+" && ngo.rating >= 4.0);
 
-  // ========================================
-  // DISPLAY DATA
-  // ========================================
+      const matchesCapacity =
+        capacity === "Any capacity" || ngo.capacity === capacity;
 
-  const ngosToDisplay =
-    nearbyNGOs.length > 0
-      ? nearbyNGOs
-      : dummyNGOs;
+      const matchesFood =
+        selectedFood.length === 0 ||
+        selectedFood.some((food) => ngo.acceptedFood.includes(food));
 
+      const matchesOpen = !openNow || ngo.status === "Open";
 
-  // ========================================
-  // SEARCH FILTER
-  // ========================================
+      const matchesAccepting =
+        !acceptingOnly || ngo.acceptedFood.length > 0;
 
-  const filteredNGOs =
-    ngosToDisplay.filter((ngo) =>
-      ngo.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+      return (
+        matchesSearch &&
+        matchesDistance &&
+        matchesRating &&
+        matchesCapacity &&
+        matchesFood &&
+        matchesOpen &&
+        matchesAccepting
+      );
+    });
+  }, [
+    search,
+    distance,
+    rating,
+    capacity,
+    selectedFood,
+    openNow,
+    acceptingOnly,
+  ]);
+
+  const toggleFood = (food) => {
+    setSelectedFood((current) =>
+      current.includes(food)
+        ? current.filter((item) => item !== food)
+        : [...current, food]
     );
-
-
-  // ========================================
-  // GOOGLE PLACES CALLBACK
-  // ========================================
-
-  const handlePlacesFound = (places) => {
-
-    console.log(
-      "NGOs received from Google:",
-      places
-    );
-
-    setNearbyNGOs(places);
-
-    // Google finished searching
-    setLoadingNGOs(false);
   };
 
-
-  // ========================================
-  // VIEW NGO DETAILS
-  // ========================================
+  const resetFilters = () => {
+    setSearch("");
+    setDistance("Any distance");
+    setRating("Any rating");
+    setCapacity("Any capacity");
+    setSelectedFood([]);
+    setOpenNow(false);
+    setAcceptingOnly(false);
+  };
 
   const handleViewDetails = (ngo) => {
-
-    navigate("/ngos/details", {
-      state: {
-        ngo,
-      },
-    });
-
+    navigate(`/ngos/${ngo.id}`);
   };
 
-
-  // ========================================
-  // GET USER LOCATION
-  // ========================================
-
-  const handleUseLocation = () => {
-
-    if (!navigator.geolocation) {
-
-      alert(
-        "Geolocation is not supported by your browser."
-      );
-
-      return;
-    }
-
-
-    // Start loading
-    setLoadingNGOs(true);
-
-
-    navigator.geolocation.getCurrentPosition(
-
-      // SUCCESS
-      (position) => {
-
-        const location = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-
-
-        setUserLocation(location);
-
-
-        console.log(
-          "Latitude:",
-          location.lat
-        );
-
-        console.log(
-          "Longitude:",
-          location.lng
-        );
-
-
-        alert(
-          "Location detected successfully!"
-        );
-
-      },
-
-
-      // ERROR
-      (error) => {
-
-        console.error(
-          "Location error:",
-          error
-        );
-
-
-        setLoadingNGOs(false);
-
-
-        alert(
-          "Unable to access your location. Please allow location permission."
-        );
-
-      }
-
-    );
-
+  const handleSchedule = (ngo) => {
+    navigate(`/pickup/request?ngoId=${ngo.id}`);
   };
-
-
-  // ========================================
-  // UI
-  // ========================================
 
   return (
+    <main className="ngo-page">
+      <div className="ngo-container">
 
-    <main className="ngo-finder">
+        {/* HEADER */}
+        <section className="ngo-page-header">
+          <h1>Nearby NGOs</h1>
 
-
-      {/* ==================================
-          HEADER
-          ================================== */}
-
-      <section className="ngo-header">
-
-        <h1>
-          Find Nearby NGOs
-        </h1>
-
-        <p>
-          Find trusted organizations to donate
-          your surplus food and make an impact.
-        </p>
-
-      </section>
-
-
-      {/* ==================================
-          LOCATION
-          ================================== */}
-
-      <section className="location-section">
-
-        <p>
-          📍 Your Location
-        </p>
-
-
-        <button
-          className="location-btn"
-          onClick={handleUseLocation}
-        >
-          Use My Location
-        </button>
-
-      </section>
-
-
-      {/* ==================================
-          GOOGLE MAP
-          ================================== */}
-
-      <NGOMap
-        userLocation={userLocation}
-        ngos={filteredNGOs}
-        onPlacesFound={handlePlacesFound}
-      />
-
-
-      {/* ==================================
-          SEARCH
-          ================================== */}
-
-      <NGOSearch
-        searchTerm={searchTerm}
-        onSearch={setSearchTerm}
-      />
-
-
-      {/* ==================================
-          NGO LIST
-          ================================== */}
-
-      <section className="ngo-section">
-
-        <h2>
-          Nearby NGOs
-        </h2>
-
-
-        {loadingNGOs ? (
-
-          <p className="ngo-loading">
-            🔍 Finding nearby organizations...
+          <p>
+            Find NGOs and shelters ready to receive surplus food near you.
           </p>
+        </section>
 
-        ) : filteredNGOs.length === 0 ? (
+        {/* SEARCH */}
+        <section className="ngo-search-box">
+          <span className="ngo-search-icon">🔍</span>
 
-          <p className="ngo-empty">
-            No nearby organizations found.
-          </p>
-
-        ) : (
-
-          <NGOList
-            ngos={filteredNGOs}
-            onViewDetails={handleViewDetails}
+          <input
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search by name, area, city, or food type..."
           />
+        </section>
 
+        {/* FILTERS */}
+        <section className="ngo-filter-panel">
+
+          <div className="ngo-filter-group">
+            <label>Distance</label>
+
+            <select
+              value={distance}
+              onChange={(event) => setDistance(event.target.value)}
+            >
+              <option>Any distance</option>
+              <option>Within 2 km</option>
+              <option>Within 5 km</option>
+              <option>Within 10 km</option>
+            </select>
+          </div>
+
+          <div className="ngo-filter-group">
+            <label>Rating</label>
+
+            <select
+              value={rating}
+              onChange={(event) => setRating(event.target.value)}
+            >
+              <option>Any rating</option>
+              <option>4.5+</option>
+              <option>4.0+</option>
+            </select>
+          </div>
+
+          <div className="ngo-filter-group">
+            <label>Capacity</label>
+
+            <select
+              value={capacity}
+              onChange={(event) => setCapacity(event.target.value)}
+            >
+              <option>Any capacity</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </div>
+
+          <div className="ngo-food-filter">
+            <label>Food type accepted</label>
+
+            <div className="ngo-food-options">
+              {FOOD_TYPES.map((food) => (
+                <button
+                  type="button"
+                  key={food}
+                  className={`ngo-food-chip ${
+                    selectedFood.includes(food) ? "selected" : ""
+                  }`}
+                  onClick={() => toggleFood(food)}
+                >
+                  {food}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="ngo-checkboxes">
+
+            <label>
+              <input
+                type="checkbox"
+                checked={openNow}
+                onChange={(event) =>
+                  setOpenNow(event.target.checked)
+                }
+              />
+              <span>Open now</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={acceptingOnly}
+                onChange={(event) =>
+                  setAcceptingOnly(event.target.checked)
+                }
+              />
+              <span>Accepting only</span>
+            </label>
+
+          </div>
+
+          <button
+            type="button"
+            className="ngo-reset-button"
+            onClick={resetFilters}
+          >
+            Reset
+          </button>
+
+        </section>
+
+        {/* RESULTS */}
+        <div className="ngo-results-header">
+          <span>{filteredNGOs.length} NGOs found</span>
+
+          <button
+            type="button"
+            className="ngo-map-link"
+            onClick={() => navigate("/map")}
+          >
+            🗺️ View Map
+          </button>
+        </div>
+        
+
+    
+
+        {/* NGO GRID */}
+        {filteredNGOs.length > 0 ? (
+          <section className="ngo-grid">
+
+            {filteredNGOs.map((ngo) => (
+              <article className="ngo-card" key={ngo.id}>
+
+                <div className="ngo-card-top">
+
+                  <div className="ngo-avatar">
+                    {ngo.shortName}
+                  </div>
+
+                  <div className="ngo-title-section">
+                    <h2>{ngo.name}</h2>
+
+                    <div className="ngo-rating">
+                      <span className="ngo-star">★</span>
+
+                      <span>{ngo.rating}</span>
+
+                      <span className="ngo-review-count">
+                        ({ngo.reviews})
+                      </span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`ngo-open-status ${
+                      ngo.status === "Open" ? "open" : "closed"
+                    }`}
+                  >
+                    {ngo.status}
+                  </span>
+
+                </div>
+
+                <div className="ngo-address">
+                  <span>📍</span>
+                  <span>{ngo.address}</span>
+                </div>
+
+                <div className="ngo-contact-row">
+
+                  <span>
+                    🚚 {ngo.distance} km away
+                  </span>
+
+                  <span>
+                    📞 {ngo.phone}
+                  </span>
+
+                </div>
+
+                <div className="ngo-accepting-section">
+
+                  <span className="ngo-accepting-label">
+                    Accepting Food
+                  </span>
+
+                  <div className="ngo-card-foods">
+                    {ngo.acceptedFood.map((food) => (
+                      <span
+                        className="ngo-card-food-chip"
+                        key={food}
+                      >
+                        {food}
+                      </span>
+                    ))}
+                  </div>
+
+                </div>
+
+                <div className="ngo-card-actions">
+
+                  <button
+                    type="button"
+                    className="ngo-details-button"
+                    onClick={() => handleViewDetails(ngo)}
+                  >
+                    View Details
+                  </button>
+
+                  <button
+                    type="button"
+                    className="ngo-schedule-button"
+                    onClick={() => handleSchedule(ngo)}
+                  >
+                    Schedule Pickup
+                  </button>
+
+                </div>
+
+              </article>
+            ))}
+
+          </section>
+        ) : (
+          <div className="ngo-empty-state">
+
+            <div className="ngo-empty-icon">
+              🔍
+            </div>
+
+            <h2>No NGOs found</h2>
+
+            <p>
+              Try changing your search or filters to find nearby NGOs.
+            </p>
+
+            <button
+              type="button"
+              onClick={resetFilters}
+            >
+              Clear Filters
+            </button>
+
+          </div>
         )}
 
-      </section>
-
+      </div>
     </main>
   );
 }
