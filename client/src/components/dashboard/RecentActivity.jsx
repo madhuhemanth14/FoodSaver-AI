@@ -1,77 +1,57 @@
-const activities = [
+import "./RecentActivity.css";
+
+const mockActivity = [
   {
     id: 1,
-    icon: "🍱",
-    title: "Food Donation Created",
-    description: "Your Veg Pulao donation was submitted successfully.",
-    time: "Today, 10:30 AM",
-    status: "Completed",
-    statusType: "success",
+    title: "Donation accepted",
+    description: "Hope Kitchen NGO accepted your rice donation.",
+    time: "10 minutes ago",
+    icon: "✅",
   },
   {
     id: 2,
-    icon: "🤖",
-    title: "Food Analysis Completed",
-    description: "AI analysis identified your food as fresh.",
-    time: "Today, 10:45 AM",
-    status: "Completed",
-    statusType: "success",
+    title: "Pickup scheduled",
+    description: "Volunteer pickup scheduled for 5:00 PM today.",
+    time: "35 minutes ago",
+    icon: "🚚",
   },
   {
     id: 3,
-    icon: "📦",
-    title: "Donation Accepted",
-    description: "An NGO has accepted your food donation.",
-    time: "Today, 11:15 AM",
-    status: "Accepted",
-    statusType: "accepted",
+    title: "Food analysis completed",
+    description: "AI identified 3.2 kg of surplus vegetables.",
+    time: "1 hour ago",
+    icon: "🤖",
   },
   {
     id: 4,
-    icon: "🚚",
-    title: "Pickup Scheduled",
-    description: "Your donation pickup is scheduled for 4:30 PM.",
-    time: "Today, 12:00 PM",
-    status: "Scheduled",
-    statusType: "scheduled",
-  },
-  {
-    id: 5,
-    icon: "✅",
-    title: "Pickup Completed",
-    description: "Your food donation was successfully picked up.",
-    time: "Yesterday, 4:20 PM",
-    status: "Completed",
-    statusType: "success",
+    title: "Donation delivered",
+    description: "Your donation reached 40 people at Green Earth NGO.",
+    time: "Yesterday",
+    icon: "📦",
   },
 ];
 
-function RecentActivity() {
+/**
+ * Timeline of the user's recent activity.
+ */
+const RecentActivity = () => {
   return (
-    <div className="activity-list">
-      {activities.map((activity) => (
-        <div className="activity-card" key={activity.id}>
-          <div className="activity-icon">
-            {activity.icon}
-          </div>
-
-          <div className="activity-details">
-            <h3>{activity.title}</h3>
-
-            <p>{activity.description}</p>
-
-            <span>{activity.time}</span>
-          </div>
-
-          <div
-            className={`activity-status ${activity.statusType}`}
-          >
-            {activity.status}
-          </div>
-        </div>
-      ))}
+    <div className="recent-activity">
+      <h2 className="recent-activity__title">Recent Activity</h2>
+      <ul className="recent-activity__timeline">
+        {mockActivity.map((item) => (
+          <li key={item.id} className="recent-activity__item">
+            <span className="recent-activity__icon">{item.icon}</span>
+            <div className="recent-activity__body">
+              <p className="recent-activity__item-title">{item.title}</p>
+              <p className="recent-activity__item-desc">{item.description}</p>
+              <span className="recent-activity__time">{item.time}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
 export default RecentActivity;

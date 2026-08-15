@@ -1,61 +1,53 @@
-function Profile() {
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f8faf8",
-        padding: "30px",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <h1 style={{ color: "#2e7d32" }}>
-        My Profile
-      </h1>
+import "./Profile.css";
 
-      <div
-        style={{
-          marginTop: "20px",
-          background: "white",
-          padding: "25px",
-          borderRadius: "18px",
-          boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
-          maxWidth: "500px",
-        }}
-      >
-        <div
-          style={{
-            width: "70px",
-            height: "70px",
-            borderRadius: "50%",
-            background: "#d9efd9",
-            color: "#2e7d32",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "28px",
-            fontWeight: "bold",
-            marginBottom: "20px",
-          }}
-        >
-          S
+const mockUser = {
+  name: "Yamini Sharma",
+  email: "yamini.sharma@example.com",
+  role: "Donor",
+  location: "Bengaluru, India",
+};
+
+/**
+ * Member 5 — Profile page (UI only, no backend integration).
+ */
+const Profile = () => {
+  return (
+    <div className="profile-page">
+      <div className="profile-card">
+        <div className="profile-card__avatar">
+          {mockUser.name.charAt(0).toUpperCase()}
         </div>
 
-        <h2>Sowmya Dasari</h2>
+        <h1 className="profile-card__name">{mockUser.name}</h1>
+        <span className="profile-card__role">{mockUser.role}</span>
 
-        <p>
-          <strong>Email:</strong> dasarisowmya15@gmail.com
-        </p>
+        <div className="profile-card__details">
+          <div className="profile-card__detail-row">
+            <span className="profile-card__detail-label">Email</span>
+            <span className="profile-card__detail-value">
+              {mockUser.email}
+            </span>
+          </div>
+          <div className="profile-card__detail-row">
+            <span className="profile-card__detail-label">Role</span>
+            <span className="profile-card__detail-value">
+              {mockUser.role}
+            </span>
+          </div>
+          <div className="profile-card__detail-row">
+            <span className="profile-card__detail-label">Location</span>
+            <span className="profile-card__detail-value">
+              {mockUser.location}
+            </span>
+          </div>
+        </div>
 
-        <p>
-          <strong>Role:</strong> Donor
-        </p>
-
-        <p>
-          <strong>Location:</strong> Ongole
-        </p>
+        <button type="button" className="profile-card__edit-button">
+          Edit Profile
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default Profile;

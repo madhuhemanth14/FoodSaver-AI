@@ -1,165 +1,118 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import NotificationItem from "../../components/notifications/NotificationItem";
+import {
+  getNotifications,
+  markAsRead,
+  markAllAsRead,
+} from "../../services/notificationService";
 import "./Notifications.css";
 
-const initialNotifications = [
-  {
-    id: 1,
-    title: "Donation Accepted",
-    message: "Your food donation has been accepted by the NGO.",
-    type: "Donation",
-    time: "10 minutes ago",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Pickup Scheduled",
-    message: "Your food pickup is scheduled for 4:30 PM.",
-    type: "Pickup",
-    time: "1 hour ago",
-    read: false,
-  },
-  {
-    id: 3,
-    title: "Food Analysis Complete",
-    message: "Your food analysis has been completed successfully.",
-    type: "AI",
-    time: "2 hours ago",
-    read: true,
-  },
-  {
-    id: 4,
-    title: "Food Expiry Warning",
-    message: "Some of your stored food may expire soon.",
-    type: "Expiry",
-    time: "Yesterday",
-    read: false,
-  },
-  {
-    id: 5,
-    title: "Welcome to FoodSaver AI",
-    message: "Thank you for helping reduce food waste.",
-    type: "System",
-    time: "Yesterday",
-    read: true,
-  },
+const FILTERS = [
+  { key: "all", label: "All" },
+  { key: "unread", label: "Unread" },
+  { key: "donation", label: "Donation" },
+  { key: "pickup", label: "Pickup" },
+  { key: "ai", label: "AI" },
+  { key: "ngo", label: "NGO" },
+  { key: "expiry", label: "Expiry" },
+  { key: "system", label: "System" },
 ];
 
-function Notifications() {
-  const [notifications, setNotifications] = useState(
-    initialNotifications
+/**
+ * Member 5 — Notifications page.
+ * Full list with filtering, mark-as-read, and mark-all-as-read.
+ */
+const Notifications = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getNotifications().then((data) => {
+      setNotifications(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const unreadCount = useMemo(
+    () => notifications.filter((n) => !n.read).length,
+    [notifications]
   );
 
-  const [filter, setFilter] = useState("All");
+  const filteredNotifications = useMemo(() => {
+    if (activeFilter === "all") return notifications;
+    if (activeFilter === "unread") return notifications.filter((n) => !n.read);
+    return notifications.filter((n) => n.type === activeFilter);
+  }, [notifications, activeFilter]);
 
-  const markAsRead = (id) => {
-  setNotifications((current) =>
-    current.map((notification) =>
-      notification.id === id
-        ? {
-            ...notification,
-            read: true,
-          }
-        : notification
-    )
-  );
-};
-  const markAllAsRead = () => {
-    setNotifications((current) =>
-      current.map((notification) => ({
-        ...notification,
-        read: true,
-      }))
-    );
+  const handleMarkAsRead = (id) => {
+    markAsRead(id).then(setNotifications);
   };
 
-  const filteredNotifications = notifications.filter(
-    (notification) => {
-      if (filter === "All") {
-        return true;
-      }
-
-      if (filter === "Unread") {
-        return !notification.read;
-      }
-
-      return notification.type === filter;
-    }
-  );
-
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read
-  ).length;
+  const handleMarkAllAsRead = () => {
+    markAllAsRead().then(setNotifications);
+  };
 
   return (
     <div className="notifications-page">
-      <div className="page-topbar">
-  <button
-    className="back-button"
-    onClick={() => navigate("/dashboard")}
-  >
-    <ArrowLeft size={18} />
-    Back
-  </button>
-
-  <h1>Notifications</h1>
-</div>
-      <div className="notifications-header">
+      <div className="notifications-page__header">
         <div>
-          <h1>Notifications</h1>
-          <p>
-            {unreadCount} unread notification
-            {unreadCount !== 1 ? "s" : ""}
+          <h1 className="notifications-page__title">Notifications</h1>
+          <p className="notifications-page__subtitle">
+            {unreadCount > 0
+              ? `You have ${unreadCount} unread notification${
+                  unreadCount > 1 ? "s" : ""
+                }`
+              : "You're all caught up"}
           </p>
         </div>
-
         {unreadCount > 0 && (
-          <button onClick={markAllAsRead}>
-            Mark all as read
+          <button
+            type="button"
+            className="notifications-page__mark-all"
+            onClick={handleMarkAllAsRead}
+          >
+            Mark All Read
           </button>
         )}
       </div>
 
-      <div className="notification-filters">
-        {[
-          "All",
-          "Unread",
-          "Donation",
-          "Pickup",
-          "AI",
-          "Expiry",
-          "System",
-        ].map((item) => (
+      <div className="notifications-page__filters">
+        {FILTERS.map((filter) => (
           <button
-            key={item}
-            className={filter === item ? "active" : ""}
-            onClick={() => setFilter(item)}
+            key={filter.key}
+            type="button"
+            className={`notifications-page__filter ${
+              activeFilter === filter.key
+                ? "notifications-page__filter--active"
+                : ""
+            }`}
+            onClick={() => setActiveFilter(filter.key)}
           >
-            {item}
+            {filter.label}
           </button>
         ))}
       </div>
 
-      <div className="notifications-list">
-        {filteredNotifications.length === 0 ? (
-          <div className="empty-state">
-            <h3>No notifications found</h3>
-            <p>You're all caught up!</p>
-          </div>
+      <div className="notifications-page__list">
+        {loading ? (
+          <p className="notifications-page__empty">Loading notifications...</p>
+        ) : filteredNotifications.length === 0 ? (
+          <p className="notifications-page__empty">
+            No notifications in this category.
+          </p>
         ) : (
           filteredNotifications.map((notification) => (
             <NotificationItem
               key={notification.id}
               notification={notification}
-              onMarkAsRead={markAsRead}
+              onMarkAsRead={handleMarkAsRead}
             />
           ))
         )}
       </div>
     </div>
   );
-}
+};
 
 export default Notifications;

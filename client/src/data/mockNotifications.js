@@ -1,0 +1,86 @@
+// Mock notification data for the Notification module.
+// Replace with real API data once the backend endpoint is available.
+const mockNotifications = [
+  {
+    id: 1,
+    type: "donation",
+    title: "Donation Accepted",
+    message: "Your rice donation has been accepted by Hope Kitchen NGO.",
+    read: false,
+    createdAt: "10 minutes ago",
+  },
+  {
+    id: 2,
+    type: "pickup",
+    title: "Pickup Scheduled",
+    message: "A volunteer will pick up your donation today at 5:00 PM.",
+    read: false,
+    createdAt: "35 minutes ago",
+  },
+  {
+    id: 3,
+    type: "ai",
+    title: "Food Analysis Completed",
+    message: "AI detected 3.2 kg of surplus vegetables ready to donate.",
+    read: false,
+    createdAt: "1 hour ago",
+  },
+  {
+    id: 4,
+    type: "expiry",
+    title: "Expiry Alert",
+    message: "Bread items in your listing expire in 2 hours.",
+    read: true,
+    createdAt: "2 hours ago",
+  },
+  {
+    id: 5,
+    type: "ngo",
+    title: "NGO Confirmed Pickup",
+    message: "Green Earth NGO confirmed the pickup for your donation.",
+    read: true,
+    createdAt: "3 hours ago",
+  },
+  {
+    id: 6,
+    type: "donation",
+    title: "Donation Delivered",
+    message: "Your donation was successfully delivered to 40 people.",
+    read: true,
+    createdAt: "Yesterday",
+  },
+  {
+    id: 7,
+    type: "system",
+    title: "Profile Updated",
+    message: "Your profile information was updated successfully.",
+    read: true,
+    createdAt: "Yesterday",
+  },
+  {
+    id: 8,
+    type: "pickup",
+    title: "Pickup Delayed",
+    message: "Volunteer pickup has been rescheduled to tomorrow morning.",
+    read: false,
+    createdAt: "2 days ago",
+  },
+  {
+    id: 9,
+    type: "ai",
+    title: "Weekly Insight Ready",
+    message: "Your AI-powered food-saving report for this week is ready.",
+    read: true,
+    createdAt: "3 days ago",
+  },
+  {
+    id: 10,
+    type: "system",
+    title: "Welcome to FoodSaver-AI",
+    message: "Thanks for joining the mission to reduce food waste!",
+    read: true,
+    createdAt: "5 days ago",
+  },
+];
+
+export default mockNotifications;
