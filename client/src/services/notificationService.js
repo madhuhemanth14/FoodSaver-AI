@@ -1,61 +1,99 @@
-// Mock notification service.
-// Swap the internals with real API calls (axios/fetch) once the backend
-// notification endpoints are ready — the method signatures below are
-// designed to match a typical REST API so the swap is a drop-in change.
-
 import mockNotifications from "../data/mockNotifications";
 
-// In-memory copy so read/unread state persists during the session.
-let notifications = mockNotifications.map((n) => ({ ...n }));
+const STORAGE_KEY = "foodsaver_notifications";
 
-const SIMULATED_DELAY = 300;
+function getStoredNotifications() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
 
-const delay = (value) =>
-  new Promise((resolve) => setTimeout(() => resolve(value), SIMULATED_DELAY));
+    if (stored) {
+      const parsed = JSON.parse(stored);
 
-/**
- * Fetch all notifications.
- * @returns {Promise<Array>}
- */
-export const getNotifications = () => {
-  return delay([...notifications]);
-};
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
+  } catch (error) {
+    console.error(
+      "Failed to read notification storage:",
+      error
+    );
+  }
 
-/**
- * Get the count of unread notifications.
- * @returns {Promise<number>}
- */
-export const getUnreadCount = () => {
-  const count = notifications.filter((n) => !n.read).length;
-  return delay(count);
-};
-
-/**
- * Mark a single notification as read.
- * @param {number} id
- * @returns {Promise<Array>}
- */
-export const markAsRead = (id) => {
-  notifications = notifications.map((n) =>
-    n.id === id ? { ...n, read: true } : n
+  const initialData = mockNotifications.map(
+    (notification) => ({
+      ...notification,
+    })
   );
-  return delay([...notifications]);
-};
 
-/**
- * Mark all notifications as read.
- * @returns {Promise<Array>}
- */
-export const markAllAsRead = () => {
-  notifications = notifications.map((n) => ({ ...n, read: true }));
-  return delay([...notifications]);
-};
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(initialData)
+  );
 
-const notificationService = {
-  getNotifications,
-  getUnreadCount,
-  markAsRead,
-  markAllAsRead,
-};
+  return initialData;
+}
 
-export default notificationService;
+function saveNotifications(notifications) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(notifications)
+  );
+}
+
+export async function getNotifications() {
+  return getStoredNotifications();
+}
+
+export async function getUnreadCount() {
+  const notifications = getStoredNotifications();
+
+  return notifications.filter(
+    (notification) => !notification.read
+  ).length;
+}
+
+export async function markAsRead(id) {
+  const notifications = getStoredNotifications();
+
+  const updatedNotifications = notifications.map(
+    (notification) =>
+      notification.id === id
+        ? {
+            ...notification,
+            read: true,
+          }
+        : notification
+  );
+
+  saveNotifications(updatedNotifications);
+
+  return updatedNotifications;
+}
+
+export async function markAllAsRead() {
+  const notifications = getStoredNotifications();
+
+  const updatedNotifications = notifications.map(
+    (notification) => ({
+      ...notification,
+      read: true,
+    })
+  );
+
+  saveNotifications(updatedNotifications);
+
+  return updatedNotifications;
+}
+
+export async function resetNotifications() {
+  const freshNotifications = mockNotifications.map(
+    (notification) => ({
+      ...notification,
+    })
+  );
+
+  saveNotifications(freshNotifications);
+
+  return freshNotifications;
+}

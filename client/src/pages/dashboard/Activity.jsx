@@ -1,91 +1,111 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import {
+  CheckCircle2,
+  Package,
+  Truck,
+} from "lucide-react";
+
+import "./Activity.css";
+
+const activities = [
+  {
+    icon: <Package size={19} />,
+    title: "Listed a new donation",
+    description: "Vegetable Biryani Trays",
+    time: "Today, 10:30 AM",
+    type: "Donation",
+    className: "activity-donation",
+  },
+  {
+    icon: <Truck size={19} />,
+    title: "Pickup Scheduled",
+    description: "Sunrise Bakery · 5:30 PM",
+    time: "Today",
+    type: "Pickup",
+    className: "activity-pickup",
+  },
+  {
+    icon: <CheckCircle2 size={19} />,
+    title: "Donation Completed",
+    description: "Food successfully delivered",
+    time: "Yesterday, 4:20 PM",
+    type: "Completed",
+    className: "activity-complete",
+  },
+  {
+    icon: <Package size={19} />,
+    title: "Donation Accepted",
+    description: "Your food was accepted by an NGO",
+    time: "Yesterday, 1:30 PM",
+    type: "Accepted",
+    className: "activity-accepted",
+  },
+];
 
 function Activity() {
   const navigate = useNavigate();
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f7f9f7",
-        padding: "30px",
-        fontFamily: "Arial, sans-serif",
-        color: "#263238",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "16px",
-          marginBottom: "24px",
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => navigate("/dashboard")}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "7px",
-            padding: "9px 13px",
-            border: "1px solid #dfe7df",
-            background: "white",
-            color: "#2e7d32",
-            borderRadius: "10px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
-          <ArrowLeft size={18} />
-          Back
-        </button>
+    <div className="activity-page">
+      <div className="activity-page-inner">
 
-        <h1 style={{ margin: 0, color: "#2e7d32" }}>
-          Recent Activity
-        </h1>
-      </div>
+        <div className="activity-topbar">
+          <div>
+            <h1>Recent Activity</h1>
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "16px",
-          padding: "20px",
-          marginBottom: "12px",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.04)",
-        }}
-      >
-        <h3>📦 Listed a new donation</h3>
-        <p>Vegetable Biryani Trays</p>
-        <small>Today, 10:30 AM</small>
-      </div>
+            <p>
+              Track your recent FoodSaver AI activity.
+            </p>
+          </div>
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "16px",
-          padding: "20px",
-          marginBottom: "12px",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.04)",
-        }}
-      >
-        <h3>🚚 Pickup scheduled</h3>
-        <p>Sunrise Bakery</p>
-        <small>Today, 5:30 PM</small>
-      </div>
+          <button
+            type="button"
+            className="activity-dashboard-button"
+            onClick={() => navigate("/dashboard")}
+          >
+            Dashboard
+          </button>
+        </div>
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "16px",
-          padding: "20px",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.04)",
-        }}
-      >
-        <h3>✅ Donation completed</h3>
-        <p>Food successfully delivered</p>
-        <small>Yesterday</small>
+        <div className="activity-list-page">
+
+          {activities.map((activity) => (
+            <button
+              type="button"
+              key={activity.title}
+              className={`activity-page-card ${activity.className}`}
+              onClick={() => navigate("/dashboard")}
+            >
+
+              <div className="activity-page-icon">
+                {activity.icon}
+              </div>
+
+              <div className="activity-page-content">
+
+                <strong>
+                  {activity.title}
+                </strong>
+
+                <span>
+                  {activity.description}
+                </span>
+
+                <small>
+                  {activity.time}
+                </small>
+
+              </div>
+
+              <div className="activity-page-type">
+                {activity.type}
+              </div>
+
+            </button>
+          ))}
+
+        </div>
+
       </div>
     </div>
   );
