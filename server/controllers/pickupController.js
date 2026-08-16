@@ -1,60 +1,14 @@
 const mongoose = require("mongoose");
 const Pickup = require("../models/Pickup");
-const NGO = require("../models/NGO");
+
 
 // CREATE PICKUP
 const createPickup = async (req, res) => {
   try {
-    const {
-      ngo,
-      donorName,
-      donorPhone,
-      foodItems,
-      quantity,
-      pickupDate,
-      pickupTime,
-      address,
-      notes,
-    } = req.body;
+    const pickup = await Pickup.create(req.body);
 
-    if (!ngo) {
-      return res.status(400).json({
-        success: false,
-        message: "NGO is required",
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(ngo)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid NGO ID",
-      });
-    }
-
-    const ngoExists = await NGO.findById(ngo);
-
-    if (!ngoExists) {
-      return res.status(404).json({
-        success: false,
-        message: "NGO not found",
-      });
-    }
-
-    const pickup = await Pickup.create({
-      ngo,
-      donorName,
-      donorPhone,
-      foodItems,
-      quantity,
-      pickupDate,
-      pickupTime,
-      address,
-      notes,
-    });
-
-    const populatedPickup = await Pickup.findById(pickup._id).populate(
-      "ngo"
-    );
+    const populatedPickup = await Pickup.findById(pickup._id)
+      .populate("ngo", "name shortName address phone");
 
     res.status(201).json({
       success: true,
@@ -64,19 +18,19 @@ const createPickup = async (req, res) => {
   } catch (error) {
     console.error("Create pickup error:", error);
 
-    res.status(500).json({
+    res.status(400).json({
       success: false,
-      message: "Failed to create pickup",
-      error: error.message,
+      message: error.message,
     });
   }
 };
+
 
 // GET ALL PICKUPS
 const getPickups = async (req, res) => {
   try {
     const pickups = await Pickup.find()
-      .populate("ngo")
+      .populate("ngo", "name shortName address phone")
       .sort({ createdAt: -1 });
 
     res.json({
@@ -89,13 +43,13 @@ const getPickups = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch pickups",
-      error: error.message,
+      message: error.message,
     });
   }
 };
 
-// GET PICKUP BY ID
+
+// GET ONE PICKUP
 const getPickupById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -107,7 +61,8 @@ const getPickupById = async (req, res) => {
       });
     }
 
-    const pickup = await Pickup.findById(id).populate("ngo");
+    const pickup = await Pickup.findById(id)
+      .populate("ngo", "name shortName address phone");
 
     if (!pickup) {
       return res.status(404).json({
@@ -125,11 +80,11 @@ const getPickupById = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch pickup",
-      error: error.message,
+      message: error.message,
     });
   }
 };
+
 
 // UPDATE PICKUP
 const updatePickup = async (req, res) => {
@@ -150,7 +105,7 @@ const updatePickup = async (req, res) => {
         new: true,
         runValidators: true,
       }
-    ).populate("ngo");
+    ).populate("ngo", "name shortName address phone");
 
     if (!pickup) {
       return res.status(404).json({
@@ -167,13 +122,13 @@ const updatePickup = async (req, res) => {
   } catch (error) {
     console.error("Update pickup error:", error);
 
-    res.status(500).json({
+    res.status(400).json({
       success: false,
-      message: "Failed to update pickup",
-      error: error.message,
+      message: error.message,
     });
   }
 };
+
 
 // DELETE PICKUP
 const deletePickup = async (req, res) => {
@@ -205,11 +160,11 @@ const deletePickup = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to delete pickup",
-      error: error.message,
+      message: error.message,
     });
   }
 };
+
 
 module.exports = {
   createPickup,

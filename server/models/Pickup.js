@@ -23,12 +23,19 @@ const pickupSchema = new mongoose.Schema(
     foodItems: {
       type: [String],
       required: true,
+      default: [],
     },
 
     quantity: {
       type: Number,
       required: true,
       min: 1,
+    },
+
+    quantityUnit: {
+      type: String,
+      enum: ["kg", "litres", "packets", "items"],
+      default: "kg",
     },
 
     pickupDate: {
@@ -39,12 +46,19 @@ const pickupSchema = new mongoose.Schema(
     pickupTime: {
       type: String,
       required: true,
+      trim: true,
     },
 
     address: {
       type: String,
       required: true,
       trim: true,
+    },
+
+    notes: {
+      type: String,
+      trim: true,
+      default: "",
     },
 
     status: {
@@ -57,12 +71,6 @@ const pickupSchema = new mongoose.Schema(
         "Cancelled",
       ],
       default: "Pending",
-    },
-
-    notes: {
-      type: String,
-      default: "",
-      trim: true,
     },
   },
   {

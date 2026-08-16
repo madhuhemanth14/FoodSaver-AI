@@ -5,7 +5,7 @@ import Footer from "./components/common/Footer";
 
 import NGOFinder from "./pages/ngo/NGOFinder";
 import NGODetails from "./pages/ngo/NGODetails";
-import NGOMap from "./pages/map/NGOMapPage";
+import NGOMap from "./pages/map/NGOMappage";
 
 import PickupRequest from "./pages/pickup/PickupRequest";
 import PickupTracking from "./pages/pickup/PickupTracking";
@@ -14,11 +14,8 @@ import PickupHistory from "./pages/pickup/PickupHistory";
 function App() {
   return (
     <div className="app">
-
-      {/* GLOBAL NAVBAR */}
       <Navbar />
 
-      {/* PAGE CONTENT */}
       <main className="app-content">
         <Routes>
 
@@ -28,8 +25,9 @@ function App() {
             element={<NGOFinder />}
           />
 
+          {/* IMPORTANT: MongoDB NGO ID */}
           <Route
-            path="/ngos/details"
+            path="/ngos/:id"
             element={<NGODetails />}
           />
 
@@ -46,7 +44,7 @@ function App() {
           />
 
           <Route
-            path="/pickup/tracking"
+            path="/pickup/tracking/:id"
             element={<PickupTracking />}
           />
 
@@ -58,9 +56,7 @@ function App() {
         </Routes>
       </main>
 
-      {/* GLOBAL FOOTER — ONLY ONE */}
       <Footer />
-
     </div>
   );
 }
