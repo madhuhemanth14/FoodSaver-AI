@@ -1,10 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/ngo-map.css";
 import NGOMap from "../../components/ngo/NGOMap";
-import NGO_DATA from "../../data/mockNGOs";
+import { getNGOs } from "../../services/ngoService";
 
 function NGOMapPage() {
+  const [ngos, setNgos] = useState([]);
   const [selectedNGO, setSelectedNGO] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadNGOs = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getNGOs();
+
+        if (!cancelled) {
+          setNgos(Array.isArray(data) ? data : []);
+        }
+      } catch (err) {
+        console.error("Failed to load NGOs:", err);
+
+        if (!cancelled) {
+          setError(
+            err.response?.data?.message ||
+              "Unable to load NGOs from the server."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadNGOs();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <main className="ngo-map-page">
@@ -13,7 +52,6 @@ function NGOMapPage() {
         <div className="ngo-map-page-header">
           <div>
             <h1>Nearby Organisations</h1>
-
             <p>
               Find food donation organisations near your location.
             </p>
@@ -21,9 +59,15 @@ function NGOMapPage() {
 
           <div className="ngo-map-page-badge">
             <span></span>
-            {NGO_DATA.length} Organisations
+            {loading ? "Loading..." : `${ngos.length} Organisations`}
           </div>
         </div>
+
+        {error && (
+          <div className="ngo-map-page-error">
+            {error}
+          </div>
+        )}
 
         <section className="ngo-map-card">
 
@@ -43,11 +87,21 @@ function NGOMapPage() {
             </div>
           </div>
 
-          <NGOMap
-            ngos={NGO_DATA}
-            selectedNGO={selectedNGO}
-            onSelectNGO={setSelectedNGO}
-          />
+          {loading ? (
+            <div className="ngo-map-loading">
+              <p>Loading NGOs from MongoDB...</p>
+            </div>
+          ) : ngos.length === 0 ? (
+            <div className="ngo-map-loading">
+              <p>No NGOs found.</p>
+            </div>
+          ) : (
+            <NGOMap
+              ngos={ngos}
+              selectedNGO={selectedNGO}
+              onSelectNGO={setSelectedNGO}
+            />
+          )}
 
         </section>
 

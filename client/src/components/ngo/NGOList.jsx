@@ -17,9 +17,9 @@ export default function NGOList({ ngos, selectedNGO, onViewDetails, onSchedulePi
     <div className="ngo-finder-page__grid">
       {ngos.map((ngo) => (
         <NGOCard
-          key={ngo.id}
+          key={ngo._id}
           ngo={ngo}
-          selected={selectedNGO?.id === ngo.id}
+          selected={selectedNGO?.id === ngo._id}
           onViewDetails={onViewDetails}
           onSchedulePickup={onSchedulePickup}
           onSelect={onSelect}

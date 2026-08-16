@@ -13,26 +13,28 @@ export default function NGODetails() {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
+    const loadNGO = async () => {
+      try {
+        setLoading(true);
+        setNotFound(false);
 
-    getNGOById(id)
-      .then((data) => {
-        if (cancelled) return;
-        if (!data) setNotFound(true);
+        const data = await getNGOById(id);
+
+        if (!data) {
+          setNotFound(true);
+          return;
+        }
+
         setNgo(data);
-      })
-      .catch(() => {
-        if (!cancelled) setNotFound(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
+      } catch (error) {
+        console.error("Failed to load NGO:", error);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
     };
+
+    loadNGO();
   }, [id]);
 
   if (loading) {
@@ -46,76 +48,145 @@ export default function NGODetails() {
   if (notFound || !ngo) {
     return (
       <div className="ngo-details-page">
-        <button type="button" className="ngo-details-page__back" onClick={() => navigate(-1)}>
+        <button
+          type="button"
+          className="ngo-details-page__back"
+          onClick={() => navigate(-1)}
+        >
           ← Back
         </button>
-        <div className="ngo-finder-page__state">
-          <span className="ngo-finder-page__state-icon" role="img" aria-hidden="true">🏢</span>
-          <p className="ngo-finder-page__state-title">NGO not found</p>
-          <p>This NGO may have been removed or the link is incorrect.</p>
-        </div>
+
+        <p className="ngo-finder-page__state-title">
+          NGO not found
+        </p>
+
+        <p>
+          This NGO may have been removed or the link is incorrect.
+        </p>
       </div>
     );
   }
 
   return (
     <div className="ngo-details-page">
-      <button type="button" className="ngo-details-page__back" onClick={() => navigate(-1)}>
-        ← Back to NGO Finder
+
+      <button
+        type="button"
+        className="ngo-details-page__back"
+        onClick={() => navigate(-1)}
+      >
+        ← Back
       </button>
 
-      <div className="ngo-details-page__card">
-        <div className="ngo-details-page__image">
-          <span role="img" aria-hidden="true">🏢</span>
+      <div className="ngo-details-page__body">
+
+        <div className="ngo-details-page__title-row">
+          <h1 className="ngo-details-page__name">
+            {ngo.name}
+          </h1>
+
+          <span>
+            {ngo.verified ? "🟢 Verified" : "Unverified"}
+          </span>
         </div>
 
-        <div className="ngo-details-page__body">
-          <div className="ngo-details-page__title-row">
-            <h1 className="ngo-details-page__name">{ngo.name}</h1>
-            <span>{ngo.verified ? "🟢 Verified" : "Unverified"}</span>
-          </div>
-          <span className="ngo-details-page__rating">⭐ {ngo.rating.toFixed(1)}</span>
-
-          <div className="ngo-details-page__info-grid">
-            <div className="ngo-details-page__info-item">
-              📍 <span><strong>Address</strong>{ngo.address}</span>
-            </div>
-            <div className="ngo-details-page__info-item">
-              📞 <span><strong>Phone</strong>{ngo.phone}</span>
-            </div>
-            <div className="ngo-details-page__info-item">
-              ✉️ <span><strong>Email</strong>{ngo.email}</span>
-            </div>
-            <div className="ngo-details-page__info-item">
-              📏 <span><strong>Distance</strong>{ngo.distance} km away</span>
-            </div>
-            <div className="ngo-details-page__info-item">
-              🕒 <span><strong>Opening Hours</strong>{ngo.openingHours}</span>
-            </div>
-          </div>
-
-          <div>
-            <p className="ngo-details-page__section-label">Accepted Food</p>
-            <ul className="ngo-details-page__food-list">
-              {ngo.acceptedFoodTypes.map((food) => (
-                <li key={food} className="ngo-details-page__food-item">✓ {food}</li>
-              ))}
-            </ul>
-          </div>
-
-          <button
-            type="button"
-            className="ngo-details-page__cta"
-            onClick={() => navigate("/pickup/request", { state: { ngo } })}
-          >
-            Schedule Pickup
-          </button>
+        <div className="ngo-details-page__rating">
+          ⭐ {ngo.rating || 0}
+          <span>
+            ({ngo.reviews || 0} reviews)
+          </span>
         </div>
+
+        <div className="ngo-details-page__info">
+
+          <div className="ngo-details-page__info-item">
+            📍
+            <span>
+              <strong>Address</strong>
+              {ngo.address}
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            🏙️
+            <span>
+              <strong>City</strong>
+              {ngo.city}, {ngo.state}
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            📞
+            <span>
+              <strong>Phone</strong>
+              {ngo.phone}
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            📏
+            <span>
+              <strong>Distance</strong>
+              {ngo.distance} km away
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            🟢
+            <span>
+              <strong>Status</strong>
+              {ngo.status}
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            📦
+            <span>
+              <strong>Capacity</strong>
+              {ngo.capacity}
+            </span>
+          </div>
+
+        </div>
+
+        <div>
+          <p className="ngo-details-page__section-label">
+            Accepted Food
+          </p>
+
+          <ul className="ngo-details-page__food-list">
+            {ngo.acceptedFood?.map((food) => (
+              <li
+                key={food}
+                className="ngo-details-page__food-item"
+              >
+                ✓ {food}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          className="ngo-details-page__cta"
+          onClick={() =>
+            navigate("/pickup/request", {
+              state: { ngo },
+            })
+          }
+        >
+          Schedule Pickup
+        </button>
+
       </div>
 
       <div className="ngo-details-page__map">
-        <NGOMap ngos={[ngo]} selectedNGO={ngo} />
+        <NGOMap
+          ngos={[ngo]}
+          selectedNGO={ngo}
+        />
       </div>
+
     </div>
   );
 }
