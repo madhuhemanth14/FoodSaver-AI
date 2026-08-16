@@ -49,11 +49,9 @@ function NGOMapPage() {
     <main className="ngo-map-page">
       <div className="ngo-map-page-container">
 
-        {/* Header */}
         <div className="ngo-map-page-header">
           <div>
             <h1>Nearby Organisations</h1>
-
             <p>
               Find food donation organisations near your location.
             </p>
@@ -65,14 +63,12 @@ function NGOMapPage() {
           </div>
         </div>
 
-        {/* Error */}
         {error && (
           <div className="ngo-map-page-error">
             {error}
           </div>
         )}
 
-        {/* Map Card */}
         <section className="ngo-map-card">
 
           <div className="ngo-map-card-header">

@@ -1,0 +1,91 @@
+/* Styles specific to the DonationDetails page */
+
+.fs-details-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fs-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: var(--fs-space-5);
+}
+
+.fs-details-back:hover {
+  color: var(--fs-primary);
+}
+
+.fs-details-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--fs-space-6);
+  margin-bottom: var(--fs-space-6);
+}
+
+@media (max-width: 780px) {
+  .fs-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fs-details-image {
+  width: 100%;
+  height: 280px;
+  border-radius: var(--fs-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--fs-border);
+}
+
+.fs-details-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fs-details-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--fs-space-3);
+  margin-bottom: var(--fs-space-4);
+  flex-wrap: wrap;
+}
+
+.fs-details-title-row h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.fs-details-section {
+  padding: var(--fs-space-5);
+  margin-bottom: var(--fs-space-5);
+}
+
+.fs-details-section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--fs-space-2);
+  font-weight: 700;
+  margin: 0 0 var(--fs-space-4);
+  color: var(--fs-primary-dark);
+}
+
+.fs-placeholder-note {
+  display: inline-block;
+  margin-top: var(--fs-space-3);
+  font-size: 0.75rem;
+  color: var(--fs-text-muted);
+  background: var(--fs-bg);
+  border: 1px dashed var(--fs-border);
+  border-radius: var(--fs-radius-sm);
+  padding: 6px 10px;
+}
+
+.fs-details-skeleton {
+  height: 40px;
+  margin-bottom: var(--fs-space-3);
+}
