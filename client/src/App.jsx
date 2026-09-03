@@ -16,6 +16,7 @@ function App() {
           path="/"
           element={<Navigate to="/ngos" replace />}
         />
+      
 
         <Route
           path="/ngos"
