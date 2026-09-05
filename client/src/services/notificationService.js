@@ -1,99 +1,28 @@
-import mockNotifications from "../data/mockNotifications";
+import { api } from '../context/AuthContext';
 
-const STORAGE_KEY = "foodsaver_notifications";
+const notificationService = {
+  async getNotifications() {
+    const res = await api.get('/notifications');
+    return res.data.data;
+  },
 
-function getStoredNotifications() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+  async getUnreadCount() {
+    const res = await api.get('/notifications/unread-count');
+    return res.data.data.count;
+  },
 
-    if (stored) {
-      const parsed = JSON.parse(stored);
+  async markAsRead(id) {
+    const res = await api.put(`/notifications/${id}/read`);
+    return res.data.data;
+  },
 
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    }
-  } catch (error) {
-    console.error(
-      "Failed to read notification storage:",
-      error
-    );
+  async markAllAsRead() {
+    await api.put('/notifications/read-all');
+  },
+
+  async deleteNotification(id) {
+    await api.delete(`/notifications/${id}`);
   }
+};
 
-  const initialData = mockNotifications.map(
-    (notification) => ({
-      ...notification,
-    })
-  );
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(initialData)
-  );
-
-  return initialData;
-}
-
-function saveNotifications(notifications) {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(notifications)
-  );
-}
-
-export async function getNotifications() {
-  return getStoredNotifications();
-}
-
-export async function getUnreadCount() {
-  const notifications = getStoredNotifications();
-
-  return notifications.filter(
-    (notification) => !notification.read
-  ).length;
-}
-
-export async function markAsRead(id) {
-  const notifications = getStoredNotifications();
-
-  const updatedNotifications = notifications.map(
-    (notification) =>
-      notification.id === id
-        ? {
-            ...notification,
-            read: true,
-          }
-        : notification
-  );
-
-  saveNotifications(updatedNotifications);
-
-  return updatedNotifications;
-}
-
-export async function markAllAsRead() {
-  const notifications = getStoredNotifications();
-
-  const updatedNotifications = notifications.map(
-    (notification) => ({
-      ...notification,
-      read: true,
-    })
-  );
-
-  saveNotifications(updatedNotifications);
-
-  return updatedNotifications;
-}
-
-export async function resetNotifications() {
-  const freshNotifications = mockNotifications.map(
-    (notification) => ({
-      ...notification,
-    })
-  );
-
-  saveNotifications(freshNotifications);
-
-  return freshNotifications;
-}
+export default notificationService;

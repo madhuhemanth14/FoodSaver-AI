@@ -1,89 +1,51 @@
-import React from "react";
-import { Heart, MapPin, ArrowRight } from "lucide-react";
-import heroImage from "../assets/hero-food.png";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
-    <section className="hero" id="home">
-      <div className="hero-content">
-
-        {/* ================= LEFT SIDE ================= */}
-        <div className="hero-left">
-
-          <p className="small-heading">
-            AI-POWERED FOOD SHARING PLATFORM
-          </p>
-
-          <h1>
-            Don't Waste Food –
-            <br />
-            <span>
-              Share Hope.
-              <span className="hero-leaf">🍃</span>
-            </span>
-          </h1>
-
-          <p className="hero-description">
-            FoodSaver AI connects surplus food with people in need using
-            AI technology and smart logistics to build a hunger-free,
-            waste-free world.
-          </p>
-
-          {/* Buttons */}
-          <div className="hero-buttons">
-
-            <button className="primary-btn">
-              Donate Food
-              <Heart size={19} />
-            </button>
-
-            <button className="secondary-btn">
-              Find NGO Near You
-              <MapPin size={19} />
-            </button>
-
-          </div>
-
-          {/* Donor information */}
-          <div className="donor-info">
-
-            <div className="avatars">
-              <div>👨🏻</div>
-              <div>👩🏻</div>
-              <div>👨🏻</div>
-              <div>👩🏻</div>
-              <div>👨🏻</div>
+    <div className="relative bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32 pt-20">
+          <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+            <div className="sm:text-center lg:text-left">
+              <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                <span className="block xl:inline">Don't waste food,</span>{' '}
+                <span className="block text-[#2E7D32]">share it with those in need.</span>
+              </h1>
+              <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                Join our AI-powered platform to connect surplus food with local NGOs and reduce food waste in your community.
+              </p>
+              <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                <div className="rounded-md shadow">
+                  <button
+                    onClick={() => navigate('/donate')}
+                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#2E7D32] hover:bg-[#1B5E20] md:py-4 md:text-lg transition"
+                  >
+                    Donate Food
+                  </button>
+                </div>
+                <div className="mt-3 sm:mt-0 sm:ml-3">
+                  <button
+                    onClick={() => navigate('/ngos')}
+                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#2E7D32] bg-[#E8F5E9] hover:bg-[#C8E6C9] md:py-4 md:text-lg transition"
+                  >
+                    Find NGO Near You
+                  </button>
+                </div>
+              </div>
             </div>
-
-            <p>
-              Join <strong>5,000+</strong> donors who are
-              <br />
-              making a difference daily
-            </p>
-
-          </div>
+          </main>
         </div>
-
-
-        {/* ================= RIGHT SIDE ================= */}
-        <div className="hero-right">
-
-          <div className="hero-background-circle"></div>
-
-          <img
-            src={heroImage}
-            alt="FoodSaver AI food donation"
-            className="hero-food-image"
-          />
-
-        </div>
-
       </div>
-
-      {/* Bottom decorative shape */}
-      <div className="hero-bottom-wave"></div>
-
-    </section>
+      <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 bg-[#F8FAF8] flex items-center justify-center">
+        {/* Placeholder for an image in the hero section */}
+        <div className="w-full h-64 sm:h-72 md:h-96 lg:h-full flex items-center justify-center text-gray-400">
+          <span className="text-xl font-medium">Hero Image Area</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
