@@ -1,67 +1,49 @@
-// Pickup service layer.
-//
-// Backed by mock data for now. Every function is async and returns plain
-// objects/arrays so this can later be pointed at Express + MongoDB without
-// touching the components that call it.
-//
-// Example future implementation:
-//   export const createPickup = (data) =>
-//     api.post("/pickups", data).then((res) => res.data);
+import axios from "axios";
 
-import { mockPickups, PICKUP_STATUS } from "../data/mockPickups";
+const API_URL = "http://localhost:5000/api/pickups";
 
-const SIMULATED_DELAY_MS = 400;
+/**
+ * Create pickup
+ */
+export const createPickup = async (pickupData) => {
+  const response = await axios.post(API_URL, pickupData);
+  return response.data.data;
+};
 
-const delay = (value, ms = SIMULATED_DELAY_MS) =>
-  new Promise((resolve) => setTimeout(() => resolve(value), ms));
+/**
+ * Get all pickups
+ */
+export const getMyPickups = async () => {
+  const response = await axios.get(API_URL);
+  return response.data.data;
+};
 
-// In-memory store so created/updated/cancelled pickups persist for the
-// remainder of the session (mirrors how a real API's DB state behaves).
-let pickups = [...mockPickups];
-let nextIdNumber = 1025;
+/**
+ * Get one pickup
+ */
+export const getPickup = async (id) => {
+  const response = await axios.get(`${API_URL}/${id}`);
+  return response.data.data;
+};
 
-/** Create a new pickup request. Returns the created pickup. */
-export async function createPickup(pickupData) {
-  const newPickup = {
-    id: `FS${nextIdNumber++}`,
-    donationId: pickupData.donationId || `DON-${Math.floor(1000 + Math.random() * 9000)}`,
-    status: PICKUP_STATUS.REQUESTED,
-    createdAt: new Date().toISOString(),
-    ...pickupData,
-  };
-
-  pickups = [newPickup, ...pickups];
-  return delay(newPickup);
-}
-
-/** Get a single pickup by id. Returns null if not found. */
-export async function getPickup(id) {
-  const pickup = pickups.find((p) => p.id === id) || null;
-  return delay(pickup);
-}
-
-/** Get all pickups for the current donor, newest first. */
-export async function getMyPickups() {
-  const sorted = [...pickups].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
-  return delay(sorted);
-}
-
-/** Update the status of a pickup. Returns the updated pickup, or null. */
-export async function updatePickupStatus(id, status) {
-  let updated = null;
-  pickups = pickups.map((p) => {
-    if (p.id === id) {
-      updated = { ...p, status };
-      return updated;
-    }
-    return p;
+/**
+ * Update pickup status
+ */
+export const updatePickupStatus = async (id, status) => {
+  const response = await axios.put(`${API_URL}/${id}`, {
+    status,
   });
-  return delay(updated);
-}
 
-/** Cancel a pickup (marks it REJECTED, matching the status enum). */
-export async function cancelPickup(id) {
-  return updatePickupStatus(id, PICKUP_STATUS.REJECTED);
-}
+  return response.data.data;
+};
+
+/**
+ * Cancel pickup
+ */
+export const cancelPickup = async (id) => {
+  const response = await axios.put(`${API_URL}/${id}`, {
+    status: "Cancelled",
+  });
+
+  return response.data.data;
+};

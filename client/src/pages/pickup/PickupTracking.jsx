@@ -1,113 +1,181 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getPickup } from "../../services/pickupService";
 import "../../styles/pickup-tracking.css";
 
-const timeline = [
-  {
-    icon: "📄",
-    title: "Donation Submitted",
-    description: "Donor submitted the surplus food details.",
-    time: "4:00 PM",
-    completed: true,
-  },
-  {
-    icon: "🤝",
-    title: "NGO Accepted",
-    description: "NGO reviewed and accepted the donation.",
-    time: "4:04 PM",
-    completed: true,
-  },
-  {
-    icon: "📅",
-    title: "Pickup Scheduled",
-    description: "A pickup slot was confirmed with the donor.",
-    time: "4:10 PM",
-    completed: true,
-  },
-  {
-    icon: "🧑‍✈️",
-    title: "Driver Assigned",
-    description: "A pickup driver has been assigned.",
-    time: "4:22 PM",
-    completed: true,
-  },
-  {
-    icon: "🚚",
-    title: "On the Way to NGO",
-    description: "The driver is currently transporting the donation.",
-    time: "Now",
-    completed: true,
-  },
-  {
-    icon: "✅",
-    title: "Delivered",
-    description: "Donation will be marked complete after NGO confirmation.",
-    time: "",
-    completed: false,
-  },
-];
-
 export default function PickupTracking() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [pickup, setPickup] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadPickup = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getPickup(id);
+
+        setPickup(data);
+      } catch (err) {
+        console.error("Failed to load pickup:", err);
+
+        setError(
+          err.response?.data?.message ||
+            "Unable to load pickup details."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      loadPickup();
+    } else {
+      setLoading(false);
+      setError("Pickup ID is missing.");
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <main className="tracking-page">
+        <div className="tracking-container">
+          <h1>Loading Pickup...</h1>
+          <p>Getting your pickup details from the server.</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !pickup) {
+    return (
+      <main className="tracking-page">
+        <div className="tracking-container">
+          <h1>Pickup Not Found</h1>
+          <p>{error || "Pickup does not exist."}</p>
+
+          <button
+            type="button"
+            onClick={() => navigate("/pickup/history")}
+          >
+            Back to Pickup History
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  const status = pickup.status || "Pending";
+
+  const statusProgress = {
+    Pending: 25,
+    Confirmed: 50,
+    "Picked Up": 75,
+    Completed: 100,
+    Cancelled: 100,
+  };
+
+  const progress = statusProgress[status] || 25;
+
+  const timeline = [
+    {
+      title: "Pickup Request Submitted",
+      description: "Your pickup request was submitted successfully.",
+      completed: true,
+    },
+    {
+      title: "Pickup Confirmed",
+      description: "The NGO has confirmed the pickup request.",
+      completed: [
+        "Confirmed",
+        "Picked Up",
+        "Completed",
+      ].includes(status),
+    },
+    {
+      title: "Food Picked Up",
+      description: "The donated food has been collected.",
+      completed: [
+        "Picked Up",
+        "Completed",
+      ].includes(status),
+    },
+    {
+      title: "Delivered to NGO",
+      description: "The food has been delivered to the NGO.",
+      completed: status === "Completed",
+    },
+  ];
+
   return (
     <main className="tracking-page">
       <div className="tracking-container">
 
         {/* Header */}
-
         <div className="tracking-header">
-
           <div>
             <h1>Pickup Status</h1>
 
             <p>
-              Tracking ID: <strong>FSA-PK-208453</strong>
-              {" · "}
-              Donation: <strong>FSA-DN-208453</strong>
+              Pickup ID:{" "}
+              <strong>{pickup._id}</strong>
             </p>
           </div>
 
-          <button className="tracking-top-button">
-            📍 Track Pickup
+          <button
+            type="button"
+            className="tracking-top-button"
+          >
+            Track Pickup
           </button>
-
         </div>
 
-        {/* Progress card */}
-
+        {/* Progress */}
         <section className="tracking-progress-card">
 
           <div className="tracking-progress-top">
-
             <span className="tracking-status-badge">
-              🔵 On the Way to NGO
+              {status}
             </span>
 
-            <strong>89% complete</strong>
-
+            <strong>{progress}% complete</strong>
           </div>
 
           <div className="tracking-progress-bar">
             <div
               className="tracking-progress-fill"
-              style={{ width: "89%" }}
+              style={{ width: `${progress}%` }}
             />
           </div>
 
           <div className="tracking-route-info">
 
             <span>
-              🏠 6-3-1109, Somajiguda, Hyderabad, Telangana 500082
+              📍 Pickup Address: {pickup.address}
             </span>
 
             <span>
-              🏁 12-4-56, Ashok Nagar, Hyderabad, Telangana 500020
+              🏢 NGO:{" "}
+              {pickup.ngo?.name || "NGO"}
+            </span>
+
+            {pickup.ngo?.address && (
+              <span>
+                📍 NGO Address: {pickup.ngo.address}
+              </span>
+            )}
+
+            <span>
+              📅 Pickup Date:{" "}
+              {new Date(pickup.pickupDate).toLocaleDateString()}
             </span>
 
             <span>
-              🚦 Traffic: Moderate
-            </span>
-
-            <span>
-              ⏱ ETA: 3 min
+              ⏰ Pickup Time: {pickup.pickupTime}
             </span>
 
           </div>
@@ -115,11 +183,9 @@ export default function PickupTracking() {
         </section>
 
         {/* Main content */}
-
         <div className="tracking-content">
 
           {/* Timeline */}
-
           <section className="tracking-timeline-card">
 
             <div className="tracking-timeline">
@@ -127,7 +193,9 @@ export default function PickupTracking() {
               {timeline.map((item, index) => (
                 <div
                   className={`timeline-item ${
-                    item.completed ? "timeline-completed" : ""
+                    item.completed
+                      ? "timeline-completed"
+                      : ""
                   }`}
                   key={item.title}
                 >
@@ -139,7 +207,9 @@ export default function PickupTracking() {
                   {index !== timeline.length - 1 && (
                     <div
                       className={`timeline-line ${
-                        item.completed ? "timeline-line-active" : ""
+                        item.completed
+                          ? "timeline-line-active"
+                          : ""
                       }`}
                     />
                   )}
@@ -147,17 +217,13 @@ export default function PickupTracking() {
                   <div className="timeline-content">
 
                     <div className="timeline-title-row">
+                      <h3>{item.title}</h3>
 
-                      <h3>
-                        {item.icon} {item.title}
-                      </h3>
-
-                      {item.time && (
+                      {item.completed && (
                         <span className="timeline-time">
-                          {item.time}
+                          Done
                         </span>
                       )}
-
                     </div>
 
                     <p>{item.description}</p>
@@ -171,88 +237,101 @@ export default function PickupTracking() {
 
           </section>
 
-          {/* Right sidebar */}
-
+          {/* Sidebar */}
           <aside className="tracking-sidebar">
 
-            {/* Driver */}
-
+            {/* NGO Details */}
             <div className="tracking-side-card">
 
-              <h2>Driver Details</h2>
+              <h2>NGO Details</h2>
 
               <div className="driver-info">
 
                 <div className="driver-avatar">
-                  🧑‍✈️
+                  NGO
                 </div>
 
                 <div>
-                  <h3>Ramesh Kumar</h3>
+                  <h3>
+                    {pickup.ngo?.name ||
+                      "NGO"}
+                  </h3>
 
-                  <p>Mini Van · AP39AB1234</p>
-
-                  <span className="driver-rating">
-                    ⭐ 4.9
-                  </span>
+                  <p>
+                    {pickup.ngo?.shortName || ""}
+                  </p>
                 </div>
 
               </div>
 
-              <button className="call-driver-button">
-                📞 Call +91 98765 43210
-              </button>
+              {pickup.ngo?.phone && (
+                <p>
+                  📞 {pickup.ngo.phone}
+                </p>
+              )}
+
+              {pickup.ngo?.address && (
+                <p>
+                  📍 {pickup.ngo.address}
+                </p>
+              )}
 
             </div>
 
-            {/* OTP */}
-
+            {/* Food Details */}
             <div className="tracking-side-card">
 
-              <h2>OTP Verification</h2>
+              <h2>Food Details</h2>
 
-              <p className="otp-description">
-                Share this code with the driver to confirm handover at
-                pickup.
+              <p>
+                <strong>Food:</strong>{" "}
+                {pickup.foodItems?.join(", ")}
               </p>
 
-              <div className="otp-code">
-                4829
-              </div>
-
-              <p className="otp-warning">
-                Do not share this OTP until the driver arrives.
+              <p>
+                <strong>Quantity:</strong>{" "}
+                {pickup.quantity}{" "}
+                {pickup.quantityUnit}
               </p>
+
+              {pickup.notes && (
+                <p>
+                  <strong>Notes:</strong>{" "}
+                  {pickup.notes}
+                </p>
+              )}
 
             </div>
 
-            {/* Donation */}
-
+            {/* Donor Details */}
             <div className="tracking-side-card">
 
-              <h2>Donation Details</h2>
+              <h2>Donor Details</h2>
 
-              <div className="donation-detail-row">
-                <span>Food</span>
-                <strong>Cooked Food</strong>
-              </div>
+              <p>
+                <strong>Name:</strong>{" "}
+                {pickup.donorName}
+              </p>
 
-              <div className="donation-detail-row">
-                <span>Quantity</span>
-                <strong>40 servings</strong>
-              </div>
-
-              <div className="donation-detail-row">
-                <span>NGO</span>
-                <strong>Helping Hands Foundation</strong>
-              </div>
+              <p>
+                <strong>Phone:</strong>{" "}
+                {pickup.donorPhone}
+              </p>
 
             </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                navigate("/pickup/history")
+              }
+            >
+              View Pickup History
+            </button>
 
           </aside>
 
         </div>
-
       </div>
     </main>
   );

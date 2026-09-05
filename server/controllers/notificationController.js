@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Notification = require("../models/Notification");
 const sendEmail = require("../services/emailService");
+
 // Get all notifications
 const getNotifications = async (req, res) => {
     try {
@@ -107,6 +108,7 @@ const markAllAsRead = async (req, res) => {
     }
 };
 
+
 // Create a test notification
 const createTestNotification = async (req, res) => {
     try {
@@ -119,7 +121,7 @@ const createTestNotification = async (req, res) => {
             });
         }
 
-        // 1. Create notification in MongoDB
+        // Create notification in MongoDB
         const notification = await Notification.create({
             userId: new mongoose.Types.ObjectId(),
             type: "system",
@@ -128,20 +130,18 @@ const createTestNotification = async (req, res) => {
             isRead: false
         });
 
-        // 2. Send email
+        // Send email notification
         await sendEmail(
             email,
             "FoodSaver AI - Test Notification",
             "Your notification backend is working!"
         );
 
-        // 3. Send response
         res.status(201).json({
             success: true,
             message: "Notification created and email sent successfully",
             notification
         });
-
     } catch (error) {
         console.error("Create test notification error:", error);
 
@@ -152,6 +152,8 @@ const createTestNotification = async (req, res) => {
         });
     }
 };
+
+
 module.exports = {
     getNotifications,
     getUnreadCount,

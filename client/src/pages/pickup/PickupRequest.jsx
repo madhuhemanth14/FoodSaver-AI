@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createPickup,
+} from "../../services/pickupService";
 import "../../styles/pickup-request.css";
-
-const ngos = [
-  "Helping Hands Foundation",
-  "Annapurna Seva Trust",
-  "Green Plate Initiative",
-  "Nourish Community Kitchen",
-  "Sunrise Orphan Care Home",
-];
 
 const foodTypes = [
   "Cooked Food",
@@ -19,17 +15,34 @@ const foodTypes = [
 ];
 
 export default function PickupRequest() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const selectedNGO = location.state?.ngo || null;
+
   const [form, setForm] = useState({
-    ngo: "",
+    ngo: selectedNGO?._id || "",
     foodType: "",
     date: "",
     time: "",
     quantity: "",
     contact: "",
+    donorName: "",
+    address: "",
     instructions: "",
   });
 
   const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (selectedNGO?._id) {
+      setForm((prev) => ({
+        ...prev,
+        ngo: selectedNGO._id,
+      }));
+    }
+  }, [selectedNGO]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +53,7 @@ export default function PickupRequest() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -49,29 +62,65 @@ export default function PickupRequest() {
       !form.date ||
       !form.time ||
       !form.quantity ||
-      !form.contact
+      !form.contact ||
+      !form.donorName ||
+      !form.address
     ) {
       setMessage("Please fill in all required fields.");
       return;
     }
 
-    setMessage("Pickup request submitted successfully!");
+    try {
+      setSubmitting(true);
+      setMessage("");
 
-    console.log("Pickup Request:", form);
+      const pickupData = {
+        ngo: form.ngo,
+
+        donorName: form.donorName,
+
+        donorPhone: form.contact,
+
+        foodItems: [form.foodType],
+
+        quantity: Number(form.quantity),
+
+        quantityUnit: "kg",
+
+        pickupDate: form.date,
+
+        pickupTime: form.time,
+
+        address: form.address,
+
+        notes: form.instructions,
+      };
+
+      const createdPickup = await createPickup(pickupData);
+
+      console.log("Created pickup:", createdPickup);
+
+      setMessage("Pickup request submitted successfully!");
+
+      // Go directly to tracking page using MongoDB _id
+      setTimeout(() => {
+        navigate(`/pickup/tracking/${createdPickup._id}`);
+      }, 700);
+
+    } catch (error) {
+      console.error("Pickup creation failed:", error);
+
+      setMessage(
+        error.response?.data?.message ||
+          "Failed to create pickup request."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
-    setForm({
-      ngo: "",
-      foodType: "",
-      date: "",
-      time: "",
-      quantity: "",
-      contact: "",
-      instructions: "",
-    });
-
-    setMessage("");
+    navigate(-1);
   };
 
   return (
@@ -81,36 +130,73 @@ export default function PickupRequest() {
         <div className="pickup-request-header">
           <div>
             <h1>Schedule a Pickup</h1>
+
             <p>
-              Tell us what you're donating and we'll match it with the right NGO.
+              Tell us what you're donating and we'll match it
+              with the right NGO.
             </p>
           </div>
         </div>
 
-        <form className="pickup-request-card" onSubmit={handleSubmit}>
+        <form
+          className="pickup-request-card"
+          onSubmit={handleSubmit}
+        >
 
           <div className="pickup-form-grid">
 
             {/* NGO */}
-            <div className="pickup-field">
-              <label htmlFor="ngo">
+            <div className="pickup-field pickup-field-full">
+              <label>
                 NGO Selection
               </label>
 
-              <select
-                id="ngo"
-                name="ngo"
-                value={form.ngo}
-                onChange={handleChange}
-              >
-                <option value="">Choose an NGO...</option>
+              <input
+                type="text"
+                value={
+                  selectedNGO?.name ||
+                  "No NGO selected"
+                }
+                readOnly
+              />
 
-                {ngos.map((ngo) => (
-                  <option key={ngo} value={ngo}>
-                    {ngo}
-                  </option>
-                ))}
-              </select>
+              {!form.ngo && (
+                <small>
+                  Please select an NGO from the NGO Finder first.
+                </small>
+              )}
+            </div>
+
+            {/* Donor Name */}
+            <div className="pickup-field">
+              <label htmlFor="donorName">
+                Donor Name
+              </label>
+
+              <input
+                id="donorName"
+                name="donorName"
+                type="text"
+                placeholder="Your name"
+                value={form.donorName}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Contact */}
+            <div className="pickup-field">
+              <label htmlFor="contact">
+                Contact Number
+              </label>
+
+              <input
+                id="contact"
+                name="contact"
+                type="tel"
+                placeholder="10-digit mobile number"
+                value={form.contact}
+                onChange={handleChange}
+              />
             </div>
 
             {/* Food */}
@@ -125,14 +211,36 @@ export default function PickupRequest() {
                 value={form.foodType}
                 onChange={handleChange}
               >
-                <option value="">Select food type...</option>
+                <option value="">
+                  Select food type...
+                </option>
 
                 {foodTypes.map((food) => (
-                  <option key={food} value={food}>
+                  <option
+                    key={food}
+                    value={food}
+                  >
                     {food}
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Quantity */}
+            <div className="pickup-field">
+              <label htmlFor="quantity">
+                Food Quantity (kg)
+              </label>
+
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min="1"
+                placeholder="e.g. 10"
+                value={form.quantity}
+                onChange={handleChange}
+              />
             </div>
 
             {/* Date */}
@@ -165,35 +273,18 @@ export default function PickupRequest() {
               />
             </div>
 
-            {/* Quantity */}
-            <div className="pickup-field">
-              <label htmlFor="quantity">
-                Food Quantity <span>(approx. servings)</span>
+            {/* Address */}
+            <div className="pickup-field pickup-field-full">
+              <label htmlFor="address">
+                Pickup Address
               </label>
 
-              <input
-                id="quantity"
-                name="quantity"
-                type="number"
-                min="1"
-                placeholder="e.g. 40"
-                value={form.quantity}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Contact */}
-            <div className="pickup-field">
-              <label htmlFor="contact">
-                Contact Number
-              </label>
-
-              <input
-                id="contact"
-                name="contact"
-                type="tel"
-                placeholder="10-digit mobile number"
-                value={form.contact}
+              <textarea
+                id="address"
+                name="address"
+                rows="3"
+                placeholder="Enter the address where the food should be collected"
+                value={form.address}
                 onChange={handleChange}
               />
             </div>
@@ -201,7 +292,8 @@ export default function PickupRequest() {
             {/* Instructions */}
             <div className="pickup-field pickup-field-full">
               <label htmlFor="instructions">
-                Special Instructions <span>(optional)</span>
+                Special Instructions
+                <span> (optional)</span>
               </label>
 
               <textarea
@@ -234,6 +326,7 @@ export default function PickupRequest() {
               type="button"
               className="pickup-cancel-button"
               onClick={handleCancel}
+              disabled={submitting}
             >
               Cancel
             </button>
@@ -241,8 +334,11 @@ export default function PickupRequest() {
             <button
               type="submit"
               className="pickup-submit-button"
+              disabled={submitting}
             >
-              Schedule Pickup
+              {submitting
+                ? "Submitting..."
+                : "Schedule Pickup"}
             </button>
 
           </div>

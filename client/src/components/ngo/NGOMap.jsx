@@ -113,7 +113,7 @@ export default function NGOMap({ ngos = [], userLocation, selectedNGO, onNGOSele
     ngos.forEach((ngo) => {
       if (typeof ngo.latitude !== "number" || typeof ngo.longitude !== "number") return;
 
-      const isSelected = selectedNGO?.id === ngo.id;
+      const isSelected = selectedNGO?._id === ngo._id;
       const marker = new google.maps.Marker({
         position: { lat: ngo.latitude, lng: ngo.longitude },
         map: mapRef.current,
