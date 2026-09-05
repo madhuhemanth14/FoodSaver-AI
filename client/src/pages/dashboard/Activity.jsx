@@ -1,36 +1,53 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import {
   CheckCircle2,
   Package,
   Truck,
 } from "lucide-react";
 
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
 import "./Activity.css";
+
+const activities = [
+  {
+    icon: <Package size={19} />,
+    title: "Listed a new donation",
+    description: "Vegetable Biryani Trays",
+    time: "Today, 10:30 AM",
+    type: "Donation",
+    className: "activity-donation",
+  },
+  {
+    icon: <Truck size={19} />,
+    title: "Pickup Scheduled",
+    description: "Sunrise Bakery · 5:30 PM",
+    time: "Today",
+    type: "Pickup",
+    className: "activity-pickup",
+  },
+  {
+    icon: <CheckCircle2 size={19} />,
+    title: "Donation Completed",
+    description: "Food successfully delivered",
+    time: "Yesterday, 4:20 PM",
+    type: "Completed",
+    className: "activity-complete",
+  },
+  {
+    icon: <Package size={19} />,
+    title: "Donation Accepted",
+    description: "Your food was accepted by an NGO",
+    time: "Yesterday, 1:30 PM",
+    type: "Accepted",
+    className: "activity-accepted",
+  },
+];
 
 function Activity() {
   const navigate = useNavigate();
-  const [activities, setActivities] = useState([]);
-  useEffect(() => {
-  const fetchActivities = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/activity"
-      );
-
-      const data = await response.json();
-
-      setActivities(data.activities || []);
-    } catch (error) {
-      console.error(
-        "Failed to fetch activities:",
-        error
-      );
-    }
-  };
-
-  fetchActivities();
-}, []);
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
 
   return (
     <div className="activity-page">
@@ -48,7 +65,7 @@ function Activity() {
           <button
             type="button"
             className="activity-dashboard-button"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(`${base}/dashboard`)}
           >
             Dashboard
           </button>
@@ -59,13 +76,13 @@ function Activity() {
           {activities.map((activity) => (
             <button
               type="button"
-              key={activity._id}
-              className="activity-page-card"
-              onClick={() => navigate("/dashboard")}
+              key={activity.title}
+              className={`activity-page-card ${activity.className}`}
+              onClick={() => navigate(`${base}/dashboard`)}
             >
 
               <div className="activity-page-icon">
-                📦
+                {activity.icon}
               </div>
 
               <div className="activity-page-content">
@@ -77,8 +94,9 @@ function Activity() {
                 <span>
                   {activity.description}
                 </span>
+
                 <small>
-                  {new Date(activity.createdAt).toLocaleString()}
+                  {activity.time}
                 </small>
 
               </div>

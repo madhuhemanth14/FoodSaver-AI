@@ -7,6 +7,8 @@ import {
   markAsRead,
   markAllAsRead,
 } from "../../services/notificationService";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
 
 import "./Notifications.css";
 
@@ -23,6 +25,8 @@ const filters = [
 
 function Notifications() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
 
   const [notifications, setNotifications] = useState([]);
   const [filter, setFilter] = useState("all");
@@ -65,7 +69,7 @@ function Notifications() {
 
   const unreadCount = useMemo(() => {
     return notifications.filter(
-      (notification) => !notification.isRead
+      (notification) => !notification.read
     ).length;
   }, [notifications]);
 
@@ -76,7 +80,7 @@ function Notifications() {
 
     if (filter === "unread") {
       return notifications.filter(
-        (notification) => !notification.isRead
+        (notification) => !notification.read
       );
     }
 
@@ -157,7 +161,7 @@ function Notifications() {
           <button
             type="button"
             className="dashboard-link-button"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(`${base}/dashboard`)}
           >
             Dashboard
           </button>
@@ -219,9 +223,9 @@ function Notifications() {
             filteredNotifications.map(
               (notification) => (
                 <article
-                  key={notification._id}
+                  key={notification.id}
                   className={
-                    notification.isRead
+                    notification.read
                       ? "full-notification read"
                       : "full-notification unread"
                   }
@@ -240,7 +244,7 @@ function Notifications() {
                         {notification.title}
                       </h3>
 
-                      {!notification.isRead && (
+                      {!notification.read && (
                         <span className="unread-dot" />
                       )}
                     </div>
@@ -255,13 +259,13 @@ function Notifications() {
 
                   </div>
 
-                  {!notification.isRead ? (
+                  {!notification.read ? (
                     <button
                       type="button"
                       className="single-read-button"
                       onClick={() =>
                         handleMarkAsRead(
-                          notification._id
+                          notification.id
                         )
                       }
                     >

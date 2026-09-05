@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const notificationRoutes = require("./routes/notificationRoutes");
 const activityRoutes = require("./routes/activityRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activity", activityRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/email", emailRoutes);
 
 // Test API
 app.get("/api/health", (req, res) => {

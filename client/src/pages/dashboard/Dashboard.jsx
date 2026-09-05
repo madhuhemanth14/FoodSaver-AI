@@ -8,8 +8,10 @@ import {
   User,
 } from "lucide-react";
 
+import QuickActions from "../../components/dashboard/QuickActions";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
 import "./Dashboard.css";
-import { getUnreadCount } from "../../services/notificationService";
 
 const initialNotifications = [
   {
@@ -66,52 +68,25 @@ function getInitialNotifications() {
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
+  const displayName = user?.name || "Guest";
 
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [stats, setStats] = useState({
-  totalDonations: 0,
-  mealsServed: 0,
-  activeDonations: 0,
-  pendingPickups: 0,
-  co2Saved: 0,
-  });
 
-  useEffect(() => {
-  const fetchUnreadCount = async () => {
-    try {
-      const count = await getUnreadCount();
-      setUnreadCount(count);
-    } catch (error) {
-      console.error(
-        "Failed to fetch unread notification count:",
-        error
-      );
-    }
-  };
+  const [notifications] = useState(
+    getInitialNotifications
+  );
 
-  fetchUnreadCount();
-   }, []);
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length;
 
   useEffect(() => {
-  const fetchStats = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/dashboard/stats"
-      );
-
-      const data = await response.json();
-
-      setStats(data);
-    } catch (error) {
-      console.error(
-        "Failed to fetch dashboard stats:",
-        error
-      );
-    }
-  };
-
-  fetchStats();
-   }, []);
+    localStorage.setItem(
+      "foodsaver_notifications",
+      JSON.stringify(notifications)
+    );
+  }, [notifications]);
 
   return (
     <div className="dashboard-layout">
@@ -130,7 +105,7 @@ function Dashboard() {
           type="button"
           className="sidebar-btn active"
           title="Dashboard"
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate(`${base}/dashboard`)}
         >
           <LayoutDashboard size={20} />
           <span>Dashboard</span>
@@ -141,7 +116,7 @@ function Dashboard() {
           type="button"
           className="sidebar-btn"
           title="Notifications"
-          onClick={() => navigate("/notifications")}
+          onClick={() => navigate(`${base}/notifications`)}
         >
           <span className="sidebar-icon-wrapper">
             <Bell size={20} />
@@ -161,29 +136,30 @@ function Dashboard() {
           type="button"
           className="sidebar-btn"
           title="Activity"
-          onClick={() => navigate("/activity")}
+          onClick={() => navigate(`${base}/activity`)}
         >
           <Clock3 size={20} />
           <span>Activity</span>
         </button>
 
-        {/* Profile
-            Waiting for authentication/profile teammate integration.
-            Do not navigate yet. */}
+        {/* Profile */}
         <button
           type="button"
           className="sidebar-btn"
           title="Profile"
+          onClick={() => navigate(`${base}/profile`)}
         >
           <User size={20} />
           <span>Profile</span>
         </button>
 
-        {/* Settings */}
+        {/* Settings — no dedicated settings page exists yet, so this
+            opens Profile, consistent with the Quick Actions fallback. */}
         <button
           type="button"
           className="sidebar-btn"
           title="Settings"
+          onClick={() => navigate(`${base}/profile`)}
         >
           <Settings size={20} />
           <span>Settings</span>
@@ -220,7 +196,7 @@ function Dashboard() {
               className="header-icon-btn"
               title="Notifications"
               onClick={() =>
-                navigate("/notifications")
+                navigate(`${base}/notifications`)
               }
             >
               <Bell size={21} />
@@ -232,13 +208,12 @@ function Dashboard() {
               )}
             </button>
 
-            {/* Profile
-                Waiting for authentication/profile
-                teammate integration. */}
+            {/* Profile */}
             <button
               type="button"
               className="header-profile-btn"
               title="Profile"
+              onClick={() => navigate(`${base}/profile`)}
             >
               <User size={21} />
             </button>
@@ -255,13 +230,14 @@ function Dashboard() {
           {/* Welcome */}
           <section className="welcome-heading">
 
-            <h1>
-              Welcome back, Sowmya 👋
+           <h1>
+              Welcome back, {displayName} 👋
             </h1>
 
             <p>
-              Here's what's happening with your
-              donations today.
+              {user?.role === "ngo"
+                ? "Here's what's happening with incoming donations and pickups today."
+                : "Here's what's happening with your donations today."}
             </p>
 
           </section>
@@ -269,18 +245,20 @@ function Dashboard() {
           {/* Profile summary */}
           <section className="profile-summary">
 
-            <div className="large-avatar">
-              S
+           <div className="large-avatar">
+              {displayName
+              .charAt(0)
+              .toUpperCase()}
             </div>
 
             <div className="profile-summary-text">
 
               <h2>
-                Sowmya Dasari
+                {displayName}
               </h2>
 
               <p>
-                Donor · FoodSaver AI
+                {user?.role === "ngo" ? "NGO" : user?.role === "admin" ? "Admin" : "Donor"} · FoodSaver AI
               </p>
 
               <span>
@@ -300,7 +278,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>{stats.totalDonations}</h2>
+                <h2>25</h2>
                 <p>Total Donations</p>
               </div>
             </div>
@@ -311,7 +289,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>{stats.mealsServed}</h2>
+                <h2>1,240</h2>
                 <p>Meals Served</p>
               </div>
             </div>
@@ -322,7 +300,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>{stats.activeDonations}</h2>
+                <h2>6</h2>
                 <p>Active Donations</p>
               </div>
             </div>
@@ -333,7 +311,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>{stats.pendingPickups}</h2>
+                <h2>3</h2>
                 <p>Pending Pickups</p>
               </div>
             </div>
@@ -344,7 +322,7 @@ function Dashboard() {
               </div>
 
               <div>
-                <h2>{stats.co2Saved}</h2>
+                <h2>256</h2>
                 <p>CO₂ Saved (kg)</p>
               </div>
             </div>
@@ -366,7 +344,7 @@ function Dashboard() {
                 <button
                   type="button"
                   onClick={() =>
-                    navigate("/activity")
+                    navigate(`${base}/activity`)
                   }
                 >
                   View
@@ -503,7 +481,7 @@ function Dashboard() {
               <button
                 type="button"
                 onClick={() =>
-                  navigate("/activity")
+                  navigate(`${base}/activity`)
                 }
               >
                 View all
@@ -516,7 +494,7 @@ function Dashboard() {
               type="button"
               className="activity-row"
               onClick={() =>
-                navigate("/activity")
+                navigate(`${base}/activity`)
               }
             >
 
@@ -549,7 +527,7 @@ function Dashboard() {
               type="button"
               className="activity-row"
               onClick={() =>
-                navigate("/activity")
+                navigate(`${base}/activity`)
               }
             >
 
@@ -582,7 +560,7 @@ function Dashboard() {
               type="button"
               className="activity-row"
               onClick={() =>
-                navigate("/activity")
+                navigate(`${base}/activity`)
               }
             >
 
@@ -611,6 +589,9 @@ function Dashboard() {
             </button>
 
           </section>
+
+          {/* Quick Actions */}
+          <QuickActions />
 
         </div>
 
