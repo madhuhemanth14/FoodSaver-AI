@@ -1,196 +1,110 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Leaf, ArrowLeft } from "lucide-react";
-import heroImage from "../assets/hero-food.png";
+import React, { useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Mail, Lock, Loader2 } from 'lucide-react';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    remember: false,
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    console.log("Login data:", formData);
+    try {
+      const user = await login(email, password);
 
-    // Later you can connect your backend authentication here.
+      const from = location.state?.from?.pathname;
+      if (from) {
+        navigate(from);
+      } else {
+        if (user.role === 'donor') navigate('/dashboard');
+        else if (user.role === 'ngo') navigate('/ngo/dashboard');
+        else if (user.role === 'admin') navigate('/admin');
+        else navigate('/');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to login');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="auth-page">
+    <div className="min-h-screen bg-[#F8FAF8] flex items-center justify-center p-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-[#2E7D32]">Welcome Back</h1>
+          <p className="text-gray-500 mt-2">Login to your account to continue</p>
+        </div>
 
-      {/* ================= LEFT SIDE ================= */}
-      <div className="auth-form-section">
-
-        <div className="auth-form-container">
-
-          {/* Logo */}
-          <Link to="/" className="auth-logo">
-            <div className="auth-logo-icon">
-              <Leaf size={25} />
-            </div>
-
-            <span>
-              FoodSaver <b>AI</b>
-            </span>
-          </Link>
-
-          {/* Back */}
-          <Link to="/" className="back-home">
-            <ArrowLeft size={16} />
-            Back to Home
-          </Link>
-
-          <div className="auth-heading">
-            <h1>Welcome back</h1>
-
-            <p>
-              Log in to manage donations, pickups, and NGO matches.
-            </p>
+        {error && (
+          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm text-center">
+            {error}
           </div>
+        )}
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="auth-form">
-
-            {/* Email */}
-            <div className="form-group">
-              <label htmlFor="email">
-                Email address
-              </label>
-
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                id="email"
-                name="email"
                 type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition"
+                placeholder="Enter your email"
                 required
               />
             </div>
-
-            {/* Password */}
-            <div className="form-group">
-              <label htmlFor="password">
-                Password
-              </label>
-
-              <div className="password-input">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() =>
-                    setShowPassword(!showPassword)
-                  }
-                >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Remember + Forgot */}
-            <div className="form-options">
-
-              <label className="remember-me">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  checked={formData.remember}
-                  onChange={handleChange}
-                />
-
-                <span>Remember me</span>
-              </label>
-
-              <button
-                type="button"
-                className="forgot-password"
-              >
-                Forgot password?
-              </button>
-
-            </div>
-
-            {/* Login */}
-            <button
-              type="submit"
-              className="auth-submit"
-            >
-              Log In
-            </button>
-
-          </form>
-
-          <div className="auth-divider">
-            <span>or</span>
           </div>
 
-          <p className="auth-switch">
-            Don't have an account?{" "}
-            <Link to="/signup">
-              Sign up
-            </Link>
-          </p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+          </div>
 
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#2E7D32] hover:bg-[#1B5E20] text-white py-3 rounded-lg font-medium transition flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin w-5 h-5 mr-2" />
+                Logging in...
+              </>
+            ) : (
+              'Login'
+            )}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Don't have an account?{' '}
+          <Link to="/signup" className="text-[#2E7D32] font-semibold hover:underline">
+            Sign up here
+          </Link>
         </div>
       </div>
-
-
-      {/* ================= RIGHT SIDE ================= */}
-      <div className="auth-visual-section">
-
-        <div className="auth-visual-content">
-
-          <img
-            src={heroImage}
-            alt="FoodSaver AI food donation"
-            className="auth-food-image"
-          />
-
-          <h2>
-            Every login moves food from
-            surplus to someone's plate
-          </h2>
-
-          <p>
-            Track pickups, see AI-verified food quality,
-            and connect with the nearest NGO — all from
-            your FoodSaver AI account.
-          </p>
-
-        </div>
-
-      </div>
-
     </div>
   );
 };

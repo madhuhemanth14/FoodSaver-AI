@@ -8,78 +8,44 @@ import {
   User,
 } from "lucide-react";
 
+import { useAuth } from "../../context/AuthContext";
+import { getDonorDashboard } from "../../services/dashboardService";
+import QuickActions from "../../components/dashboard/QuickActions";
 import "./Dashboard.css";
-
-const initialNotifications = [
-  {
-    id: 1,
-    type: "pickup",
-    title: "Pickup Scheduled",
-    message:
-      "Your food donation is scheduled for pickup today.",
-    time: "10 minutes ago",
-    read: false,
-  },
-  {
-    id: 2,
-    type: "donation",
-    title: "Donation Accepted",
-    message:
-      "Your food donation has been accepted by the NGO.",
-    time: "1 hour ago",
-    read: false,
-  },
-  {
-    id: 3,
-    type: "ai",
-    title: "Food Analysis Completed",
-    message:
-      "Your AI food analysis has been completed successfully.",
-    time: "2 hours ago",
-    read: false,
-  },
-];
-
-function getInitialNotifications() {
-  try {
-    const saved = localStorage.getItem(
-      "foodsaver_notifications"
-    );
-
-    if (saved) {
-      const parsed = JSON.parse(saved);
-
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    }
-  } catch (error) {
-    console.error(
-      "Unable to load notifications:",
-      error
-    );
-  }
-
-  return initialNotifications;
-}
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const [notifications, setNotifications] = useState(
-    getInitialNotifications
-  );
-
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read
-  ).length;
+  const [dashData, setDashData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    localStorage.setItem(
-      "foodsaver_notifications",
-      JSON.stringify(notifications)
-    );
-  }, [notifications]);
+    let cancelled = false;
+    setLoading(true);
+
+    getDonorDashboard()
+      .then((data) => {
+        if (!cancelled) {
+          setDashData(data);
+          setUnreadCount(data.unreadNotifications || 0);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Dashboard fetch error:", err);
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, []);
+
+  const stats = dashData?.stats || {};
+  const recentDonations = dashData?.recentDonations || [];
+  const recentActivity = dashData?.recentActivity || [];
+
+  const userName = user?.name || "Guest";
 
   return (
     <div className="dashboard-layout">
@@ -135,13 +101,12 @@ function Dashboard() {
           <span>Activity</span>
         </button>
 
-        {/* Profile
-            Waiting for authentication/profile teammate integration.
-            Do not navigate yet. */}
+        {/* Profile */}
         <button
           type="button"
           className="sidebar-btn"
           title="Profile"
+          onClick={() => navigate("/profile")}
         >
           <User size={20} />
           <span>Profile</span>
@@ -152,6 +117,7 @@ function Dashboard() {
           type="button"
           className="sidebar-btn"
           title="Settings"
+          onClick={() => navigate("/profile")}
         >
           <Settings size={20} />
           <span>Settings</span>
@@ -200,13 +166,12 @@ function Dashboard() {
               )}
             </button>
 
-            {/* Profile
-                Waiting for authentication/profile
-                teammate integration. */}
+            {/* Profile */}
             <button
               type="button"
               className="header-profile-btn"
               title="Profile"
+              onClick={() => navigate("/profile")}
             >
               <User size={21} />
             </button>
@@ -223,8 +188,8 @@ function Dashboard() {
           {/* Welcome */}
           <section className="welcome-heading">
 
-            <h1>
-              Welcome back, Sowmya 👋
+           <h1>
+              Welcome back, {userName} 👋
             </h1>
 
             <p>
@@ -237,18 +202,18 @@ function Dashboard() {
           {/* Profile summary */}
           <section className="profile-summary">
 
-            <div className="large-avatar">
-              S
+           <div className="large-avatar">
+              {userName.charAt(0).toUpperCase()}
             </div>
 
             <div className="profile-summary-text">
 
               <h2>
-                Sowmya Dasari
+                {userName}
               </h2>
 
               <p>
-                Donor · FoodSaver AI
+                {user?.role === "ngo" ? "NGO" : "Donor"} · FoodSaver AI
               </p>
 
               <span>
@@ -260,325 +225,151 @@ function Dashboard() {
           </section>
 
           {/* Analytics */}
-          <section className="stats-grid">
+          {loading ? (
+            <section className="stats-grid">
+              {[1,2,3,4,5].map(i => (
+                <div className="stat-card" key={i} style={{opacity: 0.5}}>
+                  <div className="stat-icon">⏳</div>
+                  <div><h2>--</h2><p>Loading...</p></div>
+                </div>
+              ))}
+            </section>
+          ) : (
+            <section className="stats-grid">
 
-            <div className="stat-card">
-              <div className="stat-icon">
-                📦
+              <div className="stat-card">
+                <div className="stat-icon">
+                  📦
+                </div>
+                <div>
+                  <h2>{stats.totalDonations || 0}</h2>
+                  <p>Total Donations</p>
+                </div>
               </div>
 
-              <div>
-                <h2>25</h2>
-                <p>Total Donations</p>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">
-                🍽️
-              </div>
-
-              <div>
-                <h2>1,240</h2>
-                <p>Meals Served</p>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">
-                🟢
+              <div className="stat-card">
+                <div className="stat-icon">
+                  🍽️
+                </div>
+                <div>
+                  <h2>{(stats.mealsProvided || 0).toLocaleString()}</h2>
+                  <p>Meals Served</p>
+                </div>
               </div>
 
-              <div>
-                <h2>6</h2>
-                <p>Active Donations</p>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">
-                🚚
-              </div>
-
-              <div>
-                <h2>3</h2>
-                <p>Pending Pickups</p>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">
-                🌍
+              <div className="stat-card">
+                <div className="stat-icon">
+                  🟢
+                </div>
+                <div>
+                  <h2>{stats.activeDonations || 0}</h2>
+                  <p>Active Donations</p>
+                </div>
               </div>
 
-              <div>
-                <h2>256</h2>
-                <p>CO₂ Saved (kg)</p>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  ✅
+                </div>
+                <div>
+                  <h2>{stats.completedDonations || 0}</h2>
+                  <p>Completed</p>
+                </div>
               </div>
-            </div>
 
-          </section>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  🌍
+                </div>
+                <div>
+                  <h2>{stats.co2Saved || 0}</h2>
+                  <p>CO₂ Saved (kg)</p>
+                </div>
+              </div>
+
+            </section>
+          )}
 
           {/* Two-column content */}
           <section className="two-column">
 
-            {/* Active Donations */}
+            {/* Recent Donations */}
             <div className="content-card">
 
               <div className="card-header">
-
-                <h2>
-                  Active Donations
-                </h2>
-
+                <h2>Recent Donations</h2>
                 <button
                   type="button"
-                  onClick={() =>
-                    navigate("/activity")
-                  }
+                  onClick={() => navigate("/donations")}
                 >
-                  View
+                  View All
                 </button>
-
               </div>
 
-              <div className="list-row">
-
-                <div>
-                  <strong>
-                    Vegetable Biryani Trays
-                  </strong>
-
-                  <small>
-                    12 trays
-                  </small>
+              {recentDonations.length === 0 && !loading && (
+                <div style={{ padding: "20px", color: "#999", textAlign: "center" }}>
+                  <p>No donations yet. Start by donating food!</p>
+                  <button
+                    type="button"
+                    className="status active-status"
+                    style={{ marginTop: 10, cursor: "pointer" }}
+                    onClick={() => navigate("/donate")}
+                  >
+                    Donate Now
+                  </button>
                 </div>
+              )}
 
-                <span className="status active-status">
-                  Active · 3h
-                </span>
-
-              </div>
-
-              <div className="list-row">
-
-                <div>
-                  <strong>
-                    Bakery Assortment
-                  </strong>
-
-                  <small>
-                    Multiple items
-                  </small>
+              {recentDonations.map((d) => (
+                <div className="list-row" key={d._id}>
+                  <div>
+                    <strong>{d.foodName}</strong>
+                    <small>{d.quantity} {d.quantityUnit || "kg"}</small>
+                  </div>
+                  <span className={`status ${
+                    d.status === "Delivered" ? "active-status" :
+                    d.status === "Cancelled" ? "expiring-status" :
+                    "active-status"
+                  }`}>
+                    {d.status}
+                  </span>
                 </div>
-
-                <span className="status active-status">
-                  Active · 6h
-                </span>
-
-              </div>
-
-              <div className="list-row">
-
-                <div>
-                  <strong>
-                    Packaged Fruit Bowls
-                  </strong>
-
-                  <small>
-                    40 bowls
-                  </small>
-                </div>
-
-                <span className="status expiring-status">
-                  Expiring · 1h
-                </span>
-
-              </div>
+              ))}
 
             </div>
 
-            {/* Upcoming Pickups */}
+            {/* Recent Activity */}
             <div className="content-card">
 
               <div className="card-header">
-
-                <h2>
-                  Upcoming Pickups
-                </h2>
-
+                <h2>Recent Activity</h2>
                 <Clock3 size={18} />
-
               </div>
 
-              <div className="pickup-row">
-
-                <div>
-                  <strong>
-                    Sunrise Bakery
-                  </strong>
-
-                  <small>
-                    Ramesh Kumar
-                  </small>
+              {recentActivity.length === 0 && !loading && (
+                <div style={{ padding: "20px", color: "#999", textAlign: "center" }}>
+                  No recent activity yet.
                 </div>
+              )}
 
-                <span>
-                  Today, 5:30 PM
-                </span>
-
-              </div>
-
-              <div className="pickup-row">
-
-                <div>
-                  <strong>
-                    Green Table Kitchen
-                  </strong>
-
-                  <small>
-                    Meena Iyer
-                  </small>
+              {recentActivity.map((a) => (
+                <div className="pickup-row" key={a._id}>
+                  <div>
+                    <strong>{a.title}</strong>
+                    <small>{a.message}</small>
+                  </div>
+                  <span style={{ fontSize: 12, color: "#999" }}>
+                    {new Date(a.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
-
-                <span>
-                  Today, 7:00 PM
-                </span>
-
-              </div>
+              ))}
 
             </div>
 
           </section>
 
-          {/* Recent Activities */}
-          <section className="recent-card">
-
-            <div className="recent-header">
-
-              <div>
-
-                <h2>
-                  Recent Activities
-                </h2>
-
-                <p>
-                  Your latest FoodSaver AI activity
-                </p>
-
-              </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  navigate("/activity")
-                }
-              >
-                View all
-              </button>
-
-            </div>
-
-            {/* Activity 1 */}
-            <button
-              type="button"
-              className="activity-row"
-              onClick={() =>
-                navigate("/activity")
-              }
-            >
-
-              <div className="activity-left">
-
-                <span className="activity-icon donation-icon">
-                  📦
-                </span>
-
-                <div>
-                  <strong>
-                    Listed a new donation
-                  </strong>
-
-                  <p>
-                    Vegetable Biryani Trays
-                  </p>
-                </div>
-
-              </div>
-
-              <span className="activity-type">
-                Donation
-              </span>
-
-            </button>
-
-            {/* Activity 2 */}
-            <button
-              type="button"
-              className="activity-row"
-              onClick={() =>
-                navigate("/activity")
-              }
-            >
-
-              <div className="activity-left">
-
-                <span className="activity-icon pickup-icon">
-                  🚚
-                </span>
-
-                <div>
-                  <strong>
-                    Pickup Scheduled
-                  </strong>
-
-                  <p>
-                    Sunrise Bakery · Today, 5:30 PM
-                  </p>
-                </div>
-
-              </div>
-
-              <span className="activity-type">
-                Pickup
-              </span>
-
-            </button>
-
-            {/* Activity 3 */}
-            <button
-              type="button"
-              className="activity-row"
-              onClick={() =>
-                navigate("/activity")
-              }
-            >
-
-              <div className="activity-left">
-
-                <span className="activity-icon complete-icon">
-                  ✅
-                </span>
-
-                <div>
-                  <strong>
-                    Donation Completed
-                  </strong>
-
-                  <p>
-                    Food successfully delivered
-                  </p>
-                </div>
-
-              </div>
-
-              <span className="activity-type">
-                Completed
-              </span>
-
-            </button>
-
-          </section>
+          {/* Quick Actions */}
+          <QuickActions />
 
         </div>
 

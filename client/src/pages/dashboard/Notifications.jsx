@@ -1,288 +1,141 @@
-import { useEffect, useMemo, useState } from "react";
-import { CheckCheck } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import {
-  getNotifications,
-  markAsRead,
-  markAllAsRead,
-} from "../../services/notificationService";
-
+import { useAuth } from "../../context/AuthContext";
+import { ArrowLeft } from "lucide-react";
+import notificationService from "../../services/notificationService";
 import "./Notifications.css";
 
-const filters = [
-  { key: "all", label: "All" },
-  { key: "unread", label: "Unread" },
-  { key: "donation", label: "Donation" },
-  { key: "pickup", label: "Pickup" },
-  { key: "ai", label: "AI" },
-  { key: "ngo", label: "NGO" },
-  { key: "expiry", label: "Expiry" },
-  { key: "system", label: "System" },
-];
-
-function Notifications() {
+export default function Notifications() {
   const navigate = useNavigate();
-
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
-  const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let active = true;
+    let cancelled = false;
+    setLoading(true);
 
-    const loadNotifications = async () => {
-      try {
-        const data = await getNotifications();
-
-        if (active) {
-          setNotifications(
-            Array.isArray(data) ? data : []
-          );
-        }
-      } catch (error) {
-        console.error(
-          "Failed to load notifications:",
-          error
-        );
-
-        if (active) {
-          setNotifications([]);
-        }
-      } finally {
-        if (active) {
+    notificationService
+      .getNotifications()
+      .then((data) => {
+        if (!cancelled) {
+          setNotifications(data.notifications || []);
           setLoading(false);
         }
-      }
-    };
+      })
+      .catch((err) => {
+        console.error("Failed to load notifications:", err);
+        if (!cancelled) setLoading(false);
+      });
 
-    loadNotifications();
-
-    return () => {
-      active = false;
-    };
+    return () => { cancelled = true; };
   }, []);
 
-  const unreadCount = useMemo(() => {
-    return notifications.filter(
-      (notification) => !notification.read
-    ).length;
-  }, [notifications]);
-
-  const filteredNotifications = useMemo(() => {
-    if (filter === "all") {
-      return notifications;
-    }
-
-    if (filter === "unread") {
-      return notifications.filter(
-        (notification) => !notification.read
-      );
-    }
-
-    return notifications.filter(
-      (notification) => notification.type === filter
-    );
-  }, [notifications, filter]);
-
-  const handleMarkAsRead = async (id) => {
+  const handleMarkRead = async (id) => {
     try {
-      const updated = await markAsRead(id);
-
-      setNotifications(
-        Array.isArray(updated) ? updated : []
+      await notificationService.markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, read: true } : n))
       );
-    } catch (error) {
-      console.error(
-        "Failed to mark notification as read:",
-        error
-      );
+    } catch (err) {
+      console.error("Failed to mark as read:", err);
     }
   };
 
-  const handleMarkAllAsRead = async () => {
+  const handleMarkAllRead = async () => {
     try {
-      const updated = await markAllAsRead();
-
-      setNotifications(
-        Array.isArray(updated) ? updated : []
+      await notificationService.markAllAsRead();
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, read: true }))
       );
-    } catch (error) {
-      console.error(
-        "Failed to mark all notifications as read:",
-        error
-      );
+    } catch (err) {
+      console.error("Failed to mark all as read:", err);
     }
   };
 
-  const getNotificationIcon = (type) => {
+  const handleDelete = async (id) => {
+    try {
+      await notificationService.deleteNotification(id);
+      setNotifications((prev) => prev.filter((n) => n._id !== id));
+    } catch (err) {
+      console.error("Failed to delete notification:", err);
+    }
+  };
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const getIcon = (type) => {
     switch (type) {
-      case "donation":
-        return "📦";
-
-      case "pickup":
-        return "🚚";
-
-      case "ai":
-        return "🤖";
-
-      case "ngo":
-        return "🏢";
-
-      case "expiry":
-        return "⚠️";
-
-      case "system":
-        return "🌿";
-
-      default:
-        return "🔔";
+      case "donation_created": return "📦";
+      case "analysis_completed": return "🔬";
+      case "pickup_scheduled": return "🚚";
+      case "donation_completed": return "✅";
+      case "registration": return "🎉";
+      case "expiry_warning": return "⚠️";
+      default: return "🔔";
     }
   };
 
   return (
     <div className="notifications-page">
-      <div className="notifications-page-inner">
+      <div className="notifications-container">
+        <button className="notif-back" onClick={() => navigate(-1)}>
+          <ArrowLeft size={18} /> Back
+        </button>
 
-        {/* PAGE HEADER */}
-        <div className="notifications-topbar">
+        <div className="notif-header">
           <div>
             <h1>Notifications</h1>
-
-            <p>
-              Stay updated with your FoodSaver AI activity.
-            </p>
+            <p>{unreadCount} unread notification{unreadCount !== 1 ? "s" : ""}</p>
           </div>
-
-          <button
-            type="button"
-            className="dashboard-link-button"
-            onClick={() => navigate("/dashboard")}
-          >
-            Dashboard
-          </button>
-        </div>
-
-        {/* ACTIONS */}
-        <div className="notification-actions">
           {unreadCount > 0 && (
-            <button
-              type="button"
-              className="mark-all-button"
-              onClick={handleMarkAllAsRead}
-            >
-              <CheckCheck size={17} />
+            <button className="notif-mark-all" onClick={handleMarkAllRead}>
               Mark all as read
             </button>
           )}
         </div>
 
-        {/* FILTERS */}
-        <div className="notification-filters">
-          {filters.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              className={
-                filter === item.key
-                  ? "filter-btn active"
-                  : "filter-btn"
-              }
-              onClick={() => setFilter(item.key)}
+        {loading && (
+          <div className="notif-loading">
+            <div className="notif-spinner" />
+            <p>Loading notifications...</p>
+          </div>
+        )}
+
+        {!loading && notifications.length === 0 && (
+          <div className="notif-empty">
+            <p style={{ fontSize: 40 }}>🔔</p>
+            <h3>No notifications yet</h3>
+            <p>You'll see notifications about your donations and pickups here.</p>
+          </div>
+        )}
+
+        <div className="notif-list">
+          {notifications.map((n) => (
+            <div
+              key={n._id}
+              className={`notif-item ${n.read ? "read" : "unread"}`}
             >
-              {item.label}
-            </button>
+              <span className="notif-icon">{getIcon(n.type)}</span>
+              <div className="notif-content">
+                <strong>{n.title}</strong>
+                <p>{n.message}</p>
+                <small>{new Date(n.createdAt).toLocaleString()}</small>
+              </div>
+              <div className="notif-actions">
+                {!n.read && (
+                  <button onClick={() => handleMarkRead(n._id)} title="Mark read">
+                    ✓
+                  </button>
+                )}
+                <button onClick={() => handleDelete(n._id)} title="Delete">
+                  ✕
+                </button>
+              </div>
+            </div>
           ))}
         </div>
-
-        {/* NOTIFICATION LIST */}
-        <section className="notification-page-list">
-
-          {loading ? (
-            <div className="notification-empty">
-              <h3>Loading notifications...</h3>
-              <p>Please wait.</p>
-            </div>
-          ) : filteredNotifications.length === 0 ? (
-            <div className="notification-empty">
-              <div className="notification-empty-icon">
-                🎉
-              </div>
-
-              <h3>You're all caught up</h3>
-
-              <p>
-                No notifications in this category.
-              </p>
-            </div>
-          ) : (
-            filteredNotifications.map(
-              (notification) => (
-                <article
-                  key={notification.id}
-                  className={
-                    notification.read
-                      ? "full-notification read"
-                      : "full-notification unread"
-                  }
-                >
-
-                  <div className="full-notification-icon">
-                    {getNotificationIcon(
-                      notification.type
-                    )}
-                  </div>
-
-                  <div className="full-notification-content">
-
-                    <div className="notification-title-row">
-                      <h3>
-                        {notification.title}
-                      </h3>
-
-                      {!notification.read && (
-                        <span className="unread-dot" />
-                      )}
-                    </div>
-
-                    <p>
-                      {notification.message}
-                    </p>
-
-                    <span className="notification-time">
-                      {notification.time}
-                    </span>
-
-                  </div>
-
-                  {!notification.read ? (
-                    <button
-                      type="button"
-                      className="single-read-button"
-                      onClick={() =>
-                        handleMarkAsRead(
-                          notification.id
-                        )
-                      }
-                    >
-                      Mark as read
-                    </button>
-                  ) : (
-                    <span className="read-label">
-                      Read
-                    </span>
-                  )}
-
-                </article>
-              )
-            )
-          )}
-
-        </section>
-
       </div>
     </div>
   );
 }
-
-export default Notifications;

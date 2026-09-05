@@ -1,111 +1,109 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CheckCircle2,
   Package,
   Truck,
+  ArrowLeft,
+  Bell,
 } from "lucide-react";
-
+import { useAuth } from "../../context/AuthContext";
+import notificationService from "../../services/notificationService";
 import "./Activity.css";
 
-const activities = [
-  {
-    icon: <Package size={19} />,
-    title: "Listed a new donation",
-    description: "Vegetable Biryani Trays",
-    time: "Today, 10:30 AM",
-    type: "Donation",
-    className: "activity-donation",
-  },
-  {
-    icon: <Truck size={19} />,
-    title: "Pickup Scheduled",
-    description: "Sunrise Bakery · 5:30 PM",
-    time: "Today",
-    type: "Pickup",
-    className: "activity-pickup",
-  },
-  {
-    icon: <CheckCircle2 size={19} />,
-    title: "Donation Completed",
-    description: "Food successfully delivered",
-    time: "Yesterday, 4:20 PM",
-    type: "Completed",
-    className: "activity-complete",
-  },
-  {
-    icon: <Package size={19} />,
-    title: "Donation Accepted",
-    description: "Your food was accepted by an NGO",
-    time: "Yesterday, 1:30 PM",
-    type: "Accepted",
-    className: "activity-accepted",
-  },
-];
+const getActivityIcon = (type) => {
+  switch (type) {
+    case "donation_created": return <Package size={19} />;
+    case "pickup_scheduled": return <Truck size={19} />;
+    case "donation_completed": return <CheckCircle2 size={19} />;
+    default: return <Bell size={19} />;
+  }
+};
+
+const getActivityClass = (type) => {
+  switch (type) {
+    case "donation_created": return "activity-donation";
+    case "pickup_scheduled": return "activity-pickup";
+    case "donation_completed": return "activity-complete";
+    default: return "activity-donation";
+  }
+};
 
 function Activity() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    notificationService
+      .getNotifications()
+      .then((data) => {
+        if (!cancelled) {
+          setActivities(data.notifications || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load activity:", err);
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const formatTime = (dateStr) => {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now - d;
+    const diffH = Math.floor(diffMs / 3600000);
+    if (diffH < 1) return "Just now";
+    if (diffH < 24) return `${diffH}h ago`;
+    if (diffH < 48) return "Yesterday";
+    return d.toLocaleDateString();
+  };
 
   return (
     <div className="activity-page">
-      <div className="activity-page-inner">
+      <div className="activity-container">
+        <button className="activity-back" onClick={() => navigate(-1)}>
+          <ArrowLeft size={18} /> Back
+        </button>
 
-        <div className="activity-topbar">
-          <div>
-            <h1>Recent Activity</h1>
+        <h1 className="activity-title">Recent Activity</h1>
+        <p className="activity-subtitle">Your latest FoodSaver AI activity</p>
 
-            <p>
-              Track your recent FoodSaver AI activity.
-            </p>
+        {loading && (
+          <div style={{ textAlign: "center", padding: 40, color: "#999" }}>
+            Loading activity...
           </div>
+        )}
 
-          <button
-            type="button"
-            className="activity-dashboard-button"
-            onClick={() => navigate("/dashboard")}
-          >
-            Dashboard
-          </button>
-        </div>
+        {!loading && activities.length === 0 && (
+          <div style={{ textAlign: "center", padding: 60, color: "#999" }}>
+            <p style={{ fontSize: 36 }}>📋</p>
+            <h3>No activity yet</h3>
+            <p>Start donating food to see your activity here.</p>
+          </div>
+        )}
 
-        <div className="activity-list-page">
-
-          {activities.map((activity) => (
-            <button
-              type="button"
-              key={activity.title}
-              className={`activity-page-card ${activity.className}`}
-              onClick={() => navigate("/dashboard")}
-            >
-
-              <div className="activity-page-icon">
-                {activity.icon}
+        <div className="activity-list">
+          {activities.map((a) => (
+            <div key={a._id} className={`activity-card ${getActivityClass(a.type)}`}>
+              <div className="activity-icon">
+                {getActivityIcon(a.type)}
               </div>
-
-              <div className="activity-page-content">
-
-                <strong>
-                  {activity.title}
-                </strong>
-
-                <span>
-                  {activity.description}
-                </span>
-
-                <small>
-                  {activity.time}
-                </small>
-
+              <div className="activity-info">
+                <strong>{a.title}</strong>
+                <p>{a.message}</p>
               </div>
-
-              <div className="activity-page-type">
-                {activity.type}
+              <div className="activity-meta">
+                <span className="activity-time">{formatTime(a.createdAt)}</span>
+                <span className="activity-type-badge">{a.type?.replace(/_/g, " ") || "System"}</span>
               </div>
-
-            </button>
+            </div>
           ))}
-
         </div>
-
       </div>
     </div>
   );

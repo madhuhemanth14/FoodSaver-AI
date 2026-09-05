@@ -1,12 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/pickups";
+import { api } from '../context/AuthContext';
 
 /**
  * Create pickup
  */
 export const createPickup = async (pickupData) => {
-  const response = await axios.post(API_URL, pickupData);
+  const response = await api.post('/pickups', pickupData);
   return response.data.data;
 };
 
@@ -14,7 +12,7 @@ export const createPickup = async (pickupData) => {
  * Get all pickups
  */
 export const getMyPickups = async () => {
-  const response = await axios.get(API_URL);
+  const response = await api.get('/pickups');
   return response.data.data;
 };
 
@@ -22,7 +20,7 @@ export const getMyPickups = async () => {
  * Get one pickup
  */
 export const getPickup = async (id) => {
-  const response = await axios.get(`${API_URL}/${id}`);
+  const response = await api.get(`/pickups/${id}`);
   return response.data.data;
 };
 
@@ -30,7 +28,7 @@ export const getPickup = async (id) => {
  * Update pickup status
  */
 export const updatePickupStatus = async (id, status) => {
-  const response = await axios.put(`${API_URL}/${id}`, {
+  const response = await api.put(`/pickups/${id}`, {
     status,
   });
 
@@ -41,7 +39,7 @@ export const updatePickupStatus = async (id, status) => {
  * Cancel pickup
  */
 export const cancelPickup = async (id) => {
-  const response = await axios.put(`${API_URL}/${id}`, {
+  const response = await api.put(`/pickups/${id}`, {
     status: "Cancelled",
   });
 
