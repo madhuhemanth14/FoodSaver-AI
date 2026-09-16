@@ -63,6 +63,13 @@ location: {
       trim: true,
     },
 
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      default: "",
+    },
+
     status: {
       type: String,
       enum: ["Open", "Closed"],

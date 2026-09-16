@@ -1,48 +1,66 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const notificationSchema = new mongoose.Schema(
-    {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
+const notificationSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
 
-        type: {
-            type: String,
-            enum: [
-                "donation",
-                "pickup",
-                "ai",
-                "ngo",
-                "expiry",
-                "system"
-            ],
-            required: true
-        },
+  type: {
+    type: String,
+    enum: [
+      'registration',
+      'login',
+      'donation_created',
+      'donation_accepted',
+      'donation_rejected',
+      'analysis_completed',
+      'pickup_scheduled',
+      'pickup_confirmed',
+      'pickup_pickedup',
+      'pickup_delivered',
+      'donation_completed',
+      'expiry_warning',
+      'food_expired',
+      'system',
+      'admin'
+    ],
+    default: 'system'
+  },
 
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
 
-        message: {
-            type: String,
-            required: true,
-            trim: true
-        },
+  message: {
+    type: String,
+    required: true,
+    trim: true
+  },
 
-        isRead: {
-            type: Boolean,
-            default: false
-        }
-    },
-    {
-        timestamps: true
-    }
-);
+  data: {
+    type: mongoose.Schema.Types.Mixed
+  },
 
-module.exports = mongoose.model(
-    "Notification",
-    notificationSchema
-);
+  read: {
+    type: Boolean,
+    default: false
+  },
+
+  readAt: {
+    type: Date
+  }
+}, {
+  timestamps: true
+});
+
+notificationSchema.index({
+  user: 1,
+  read: 1,
+  createdAt: -1
+});
+
+module.exports = mongoose.model('Notification', notificationSchema);

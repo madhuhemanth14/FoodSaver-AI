@@ -1,26 +1,24 @@
-const express = require("express");
-
-const {
-    getNotifications,
-    getUnreadCount,
-    markAsRead,
-    markAllAsRead,
-    createTestNotification
-} = require("../controllers/notificationController");
+const express = require('express');
 const router = express.Router();
 
-// GET all notifications
-router.get("/", getNotifications);
+const { requireAuth } = require('../middleware/auth');
 
-// GET unread notification count
-router.get("/unread-count", getUnreadCount);
+const {
+  getMyNotifications,
+  getUnreadCount,
+  markAsRead,
+  markAllAsRead,
+  deleteNotification
+} = require('../controllers/notificationController');
 
-// PATCH one notification as read
-router.patch("/:id/read", markAsRead);
+router.get('/', requireAuth, getMyNotifications);
 
-// PATCH all notifications as read
-router.patch("/read-all", markAllAsRead);
+router.get('/unread-count', requireAuth, getUnreadCount);
 
-router.post("/test", createTestNotification);
+router.patch('/:id/read', requireAuth, markAsRead);
+
+router.patch('/read-all', requireAuth, markAllAsRead);
+
+router.delete('/:id', requireAuth, deleteNotification);
 
 module.exports = router;

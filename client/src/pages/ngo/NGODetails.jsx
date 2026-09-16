@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
 import NGOMap from "../../components/ngo/NGOMap";
 import { getNGOById } from "../../services/ngoService";
 import "../../styles/ngo-details.css";
@@ -7,6 +9,8 @@ import "../../styles/ngo-details.css";
 export default function NGODetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
 
   const [ngo, setNgo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -170,7 +174,7 @@ export default function NGODetails() {
           type="button"
           className="ngo-details-page__cta"
           onClick={() =>
-            navigate("/pickup/request", {
+            navigate(`${base}/pickups/request`, {
               state: { ngo },
             })
           }

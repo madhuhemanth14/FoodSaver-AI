@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
 
 const API_URL = "http://localhost:5000/api/ngos";
 
 export default function NGOFinder() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
   const [ngos, setNgos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -277,7 +283,7 @@ export default function NGOFinder() {
                 <button
                   style={styles.pickupButton}
                   onClick={() => {
-                    console.log("Schedule pickup for:", ngo);
+                    navigate(`${base}/pickups/request`, { state: { ngo } });
                   }}
                 >
                   Schedule Pickup

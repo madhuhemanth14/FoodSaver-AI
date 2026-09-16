@@ -1,396 +1,159 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  Eye,
-  EyeOff,
-  Leaf,
-  ArrowLeft,
-} from "lucide-react";
-
-import heroImage from "../assets/hero-food.png";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { User, Mail, Lock, Phone, Shield, Loader2 } from 'lucide-react';
 
 const Register = () => {
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
-
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    role: "Food Donor",
-    password: "",
-    confirmPassword: "",
-    terms: false,
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    role: 'donor'
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    if (
-      formData.password !==
-      formData.confirmPassword
-    ) {
-      alert("Passwords do not match.");
-      return;
+    try {
+      await register(formData);
+      navigate('/login', { state: { message: 'Registration successful! Please login.' } });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to register');
+    } finally {
+      setLoading(false);
     }
-
-    if (!formData.terms) {
-      alert(
-        "Please agree to the Terms & Privacy Policy."
-      );
-      return;
-    }
-
-    console.log(
-      "Registration data:",
-      formData
-    );
-
-    // Later connect this to your backend.
   };
 
   return (
-    <div className="auth-page register-page">
+    <div className="min-h-screen bg-[#F8FAF8] flex items-center justify-center p-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-[#2E7D32]">Create Account</h1>
+          <p className="text-gray-500 mt-2">Join FoodSaver AI to make a difference</p>
+        </div>
 
-      {/* ================= LEFT SIDE ================= */}
-
-      <div className="auth-form-section">
-
-        <div className="auth-form-container register-container">
-
-          {/* Logo */}
-          <Link to="/" className="auth-logo">
-
-            <div className="auth-logo-icon">
-              <Leaf size={25} />
-            </div>
-
-            <span>
-              FoodSaver <b>AI</b>
-            </span>
-
-          </Link>
-
-          {/* Back */}
-          <Link
-            to="/"
-            className="back-home"
-          >
-            <ArrowLeft size={16} />
-            Back to Home
-          </Link>
-
-          <div className="auth-heading register-heading">
-
-            <h1>
-              Create your account
-            </h1>
-
-            <p>
-              Join FoodSaver AI and help turn
-              surplus food into someone's next meal.
-            </p>
-
+        {error && (
+          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm text-center">
+            {error}
           </div>
+        )}
 
-
-          {/* ================= REGISTER FORM ================= */}
-
-          <form
-            onSubmit={handleSubmit}
-            className="auth-form"
-          >
-
-            {/* Full Name */}
-
-            <div className="form-group">
-
-              <label htmlFor="fullName">
-                Full name
-              </label>
-
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                id="fullName"
-                name="fullName"
                 type="text"
-                placeholder="Your full name"
-                value={formData.fullName}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition"
+                placeholder="John Doe"
                 required
               />
-
             </div>
+          </div>
 
-
-            {/* Email + Phone */}
-
-            <div className="form-row">
-
-              <div className="form-group">
-
-                <label htmlFor="email">
-                  Email address
-                </label>
-
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label htmlFor="phone">
-                  Phone number
-                </label>
-
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="+91 98765 43210"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-
-              </div>
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition"
+                placeholder="john@example.com"
+                required
+              />
             </div>
+          </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition"
+                placeholder="+1 234 567 8900"
+                required
+              />
+            </div>
+          </div>
 
-            {/* Role */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition"
+                placeholder="Create a password"
+                required
+              />
+            </div>
+          </div>
 
-            <div className="form-group">
-
-              <label htmlFor="role">
-                I am signing up as
-              </label>
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">I want to register as:</label>
+            <div className="relative">
+              <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select
-                id="role"
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E7D32] focus:border-[#2E7D32] outline-none transition appearance-none bg-white"
               >
-                <option value="Food Donor">
-                  Food Donor
-                </option>
-
-                <option value="NGO">
-                  NGO
-                </option>
-
-                <option value="Volunteer">
-                  Volunteer
-                </option>
+                <option value="donor">Food Donor (Restaurant/Individual)</option>
+                <option value="ngo">NGO / Organization</option>
               </select>
-
             </div>
-
-
-            {/* Password + Confirm Password */}
-
-            <div className="form-row">
-
-              <div className="form-group">
-
-                <label htmlFor="password">
-                  Password
-                </label>
-
-                <div className="password-input">
-
-                  <input
-                    id="password"
-                    name="password"
-                    type={
-                      showPassword
-                        ? "text"
-                        : "password"
-                    }
-                    placeholder="Create a password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() =>
-                      setShowPassword(
-                        !showPassword
-                      )
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
-                  </button>
-
-                </div>
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label htmlFor="confirmPassword">
-                  Confirm password
-                </label>
-
-                <div className="password-input">
-
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={
-                      showConfirmPassword
-                        ? "text"
-                        : "password"
-                    }
-                    placeholder="Re-enter password"
-                    value={
-                      formData.confirmPassword
-                    }
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() =>
-                      setShowConfirmPassword(
-                        !showConfirmPassword
-                      )
-                    }
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
-                  </button>
-
-                </div>
-
-              </div>
-
-            </div>
-
-
-            {/* Terms */}
-
-            <label className="terms-checkbox">
-
-              <input
-                type="checkbox"
-                name="terms"
-                checked={formData.terms}
-                onChange={handleChange}
-              />
-
-              <span>
-                I agree to the{" "}
-                <a href="#">
-                  Terms & Privacy Policy
-                </a>
-              </span>
-
-            </label>
-
-
-            {/* Create Account */}
-
-            <button
-              type="submit"
-              className="auth-submit"
-            >
-              Create Account
-            </button>
-
-          </form>
-
-
-          <div className="auth-divider">
-            <span>or</span>
           </div>
 
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#2E7D32] hover:bg-[#1B5E20] text-white py-3 rounded-lg font-medium transition mt-4 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin w-5 h-5 mr-2" />
+                Creating Account...
+              </>
+            ) : (
+              'Sign Up'
+            )}
+          </button>
+        </form>
 
-          <p className="auth-switch">
-
-            Already have an account?{" "}
-
-            <Link to="/login">
-              Log in
-            </Link>
-
-          </p>
-
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Already have an account?{' '}
+          <Link to="/login" className="text-[#2E7D32] font-semibold hover:underline">
+            Login here
+          </Link>
         </div>
-
       </div>
-
-
-      {/* ================= RIGHT SIDE ================= */}
-
-      <div className="auth-visual-section">
-
-        <div className="auth-visual-content">
-
-          <img
-            src={heroImage}
-            alt="FoodSaver AI food donation"
-            className="auth-food-image"
-          />
-
-          <h2>
-            Turn surplus food into
-            someone's next meal
-          </h2>
-
-          <p>
-            Sign up to list surplus food, get
-            AI-verified freshness checks, and get
-            matched with the nearest NGO for pickup.
-          </p>
-
-        </div>
-
-      </div>
-
     </div>
   );
 };
