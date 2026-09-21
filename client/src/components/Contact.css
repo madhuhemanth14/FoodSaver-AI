@@ -1,0 +1,233 @@
+.contact-section {
+  padding: 38px 48px 64px;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+}
+
+.contact-section .section-eyebrow {
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+}
+
+.contact-section .section-title h2 {
+  font-size: 2rem;
+  color: #16281a;
+  margin: 0 0 26px;
+  font-weight: 700;
+}
+
+.contact-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 24px;
+  text-align: left;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-info-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8faf8;
+  border: 1px solid rgba(46, 125, 50, 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.contact-info-card--link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.contact-info-card--link:hover {
+  background: #eaf6ea;
+}
+
+.contact-info-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eaf6ea;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-info-card span {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #8a978a;
+  margin-bottom: 2px;
+}
+
+.contact-info-card strong {
+  font-size: 0.88rem;
+  color: #1b3a1d;
+  font-weight: 600;
+}
+
+.contact-map-preview {
+  background: #eaf6ea;
+  border: 1px dashed #a9d3a9;
+  border-radius: 14px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.contact-map-preview--live {
+  border: 1px solid rgba(46, 125, 50, 0.15);
+  padding: 0;
+}
+
+.contact-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.contact-socials a,
+.contact-socials button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+  background: #ffffff;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+
+.contact-socials a:hover,
+.contact-socials button:hover {
+  background: #eaf6ea;
+}
+
+.contact-share-status {
+  margin: 10px 0 0;
+  color: #2e7d32;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.contact-form {
+  background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.1);
+  border-radius: 18px;
+  padding: 30px;
+}
+
+.contact-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.contact-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.contact-form-field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1b3a1d;
+}
+
+.contact-form-field input,
+.contact-form-field textarea {
+  border: 1px solid rgba(46, 125, 50, 0.2);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: #f8faf8;
+  resize: vertical;
+}
+
+.contact-form-field input:focus,
+.contact-form-field textarea:focus {
+  outline: none;
+  border-color: #2e7d32;
+  background: #ffffff;
+}
+
+.contact-submit {
+  width: 100%;
+  background: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.contact-submit:hover {
+  background: #256b28;
+}
+
+.contact-success {
+  margin: 14px 0 0;
+  color: #2e7d32;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.contact-error {
+  margin: 14px 0 0;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.field-error {
+  color: #b91c1c;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .contact-section {
+    padding: 56px 20px 70px;
+  }
+
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form-row {
+    grid-template-columns: 1fr;
+  }
+}

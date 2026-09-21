@@ -1,0 +1,389 @@
+/* =========================================
+   PICKUP TRACKING
+   ========================================= */
+
+.tracking-page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  background: #f7faf8;
+  padding: 35px 24px 70px;
+  box-sizing: border-box;
+}
+
+.tracking-container {
+  width: 100%;
+  max-width: 1230px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.tracking-header h1 {
+  margin: 0 0 8px;
+  color: #216b2b;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.tracking-header p {
+  margin: 0;
+  color: #687578;
+  font-size: 15px;
+}
+
+.tracking-header strong {
+  color: #536164;
+}
+
+.tracking-top-button {
+  border: none;
+  border-radius: 9px;
+  background: #2e7d32;
+  color: #ffffff;
+  padding: 14px 23px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Progress */
+
+.tracking-progress-card {
+  background: #ffffff;
+  border: 1px solid #e0e8e2;
+  border-radius: 17px;
+  padding: 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 18px rgba(36, 83, 48, 0.06);
+}
+
+.tracking-progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 13px;
+}
+
+.tracking-progress-top strong {
+  color: #216b2b;
+  font-size: 14px;
+}
+
+.tracking-status-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #e1f4ff;
+  color: #1382bd;
+  border-radius: 20px;
+  padding: 7px 13px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tracking-progress-bar {
+  height: 10px;
+  width: 100%;
+  background: #f0f4f1;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.tracking-progress-fill {
+  height: 100%;
+  background: #36933e;
+  border-radius: inherit;
+}
+
+.tracking-route-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 14px;
+  color: #687578;
+  font-size: 12px;
+}
+
+/* Main grid */
+
+.tracking-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* Timeline */
+
+.tracking-timeline-card {
+  background: #ffffff;
+  border: 1px solid #e0e8e2;
+  border-radius: 17px;
+  padding: 28px 25px;
+  box-shadow: 0 5px 18px rgba(36, 83, 48, 0.06);
+}
+
+.tracking-timeline {
+  width: 100%;
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  column-gap: 16px;
+  min-height: 93px;
+}
+
+.timeline-marker {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #edf1ee;
+  color: #87918d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 800;
+  z-index: 2;
+}
+
+.timeline-completed .timeline-marker {
+  background: #2e7d32;
+  color: #ffffff;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 34px;
+  left: 16px;
+  width: 2px;
+  height: 65px;
+  background: #e0e7e2;
+}
+
+.timeline-line-active {
+  background: #4eae57;
+}
+
+.timeline-content {
+  padding-bottom: 22px;
+}
+
+.timeline-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.timeline-content h3 {
+  margin: 0 0 7px;
+  color: #354149;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.timeline-content p {
+  margin: 0;
+  color: #738083;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.timeline-time {
+  flex-shrink: 0;
+  color: #8a9690;
+  font-size: 12px;
+  padding-top: 2px;
+}
+
+/* Sidebar */
+
+.tracking-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.tracking-side-card {
+  background: #ffffff;
+  border: 1px solid #e0e8e2;
+  border-radius: 17px;
+  padding: 23px;
+  box-shadow: 0 5px 18px rgba(36, 83, 48, 0.06);
+}
+
+.tracking-side-card h2 {
+  margin: 0 0 20px;
+  color: #354149;
+  font-size: 18px;
+}
+
+/* Driver */
+
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.driver-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #e6f3e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.driver-info h3 {
+  margin: 0 0 4px;
+  color: #354149;
+  font-size: 15px;
+}
+
+.driver-info p {
+  margin: 0 0 5px;
+  color: #758083;
+  font-size: 12px;
+}
+
+.driver-rating {
+  color: #b26b00;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.call-driver-button {
+  width: 100%;
+  height: 42px;
+  margin-top: 18px;
+  border: none;
+  border-radius: 8px;
+  background: #e6f4e8;
+  color: #216b2b;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* OTP */
+
+.otp-description {
+  margin: -8px 0 16px;
+  color: #748083;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.otp-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  border: 1px dashed #91b795;
+  border-radius: 10px;
+  background: #f3faf4;
+  color: #216b2b;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 7px;
+}
+
+.otp-warning {
+  margin: 11px 0 0;
+  color: #8a9690;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* Donation */
+
+.donation-detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 11px 0;
+  border-bottom: 1px solid #edf1ee;
+  font-size: 13px;
+}
+
+.donation-detail-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.donation-detail-row span {
+  color: #87918d;
+}
+
+.donation-detail-row strong {
+  color: #354149;
+  text-align: right;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .tracking-content {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .tracking-page {
+    padding: 25px 15px 50px;
+  }
+
+  .tracking-header {
+    flex-direction: column;
+  }
+
+  .tracking-header h1 {
+    font-size: 32px;
+  }
+
+  .tracking-top-button {
+    width: 100%;
+  }
+
+  .tracking-progress-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tracking-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-route-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .timeline-title-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

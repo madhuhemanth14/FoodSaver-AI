@@ -1,0 +1,150 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 48px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(46, 125, 50, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  font-family: "Poppins", sans-serif;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1b3a1d;
+  flex-shrink: 0;
+}
+
+.navbar .logo b {
+  color: #2e7d32;
+}
+
+.navbar .logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eaf6ea;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar .nav-links a {
+  text-decoration: none;
+  color: #40503f;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.navbar .nav-links a:hover {
+  color: #2e7d32;
+}
+
+.navbar .nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.navbar .login-btn,
+.navbar .dashboard-btn {
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1.5px solid #2e7d32;
+  color: #2e7d32;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navbar .login-btn:hover,
+.navbar .dashboard-btn:hover {
+  background: #eaf6ea;
+}
+
+.navbar .signup-btn {
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1.5px solid #2e7d32;
+  background: #2e7d32;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.navbar .signup-btn:hover {
+  background: #256b28;
+}
+
+.navbar .logout-btn {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1.5px solid #2e7d32;
+  background: transparent;
+  color: #2e7d32;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.navbar .logout-btn:hover {
+  background: #eaf6ea;
+}
+
+.navbar .nav-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+@media (max-width: 960px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 14px 20px;
+  }
+
+  .navbar .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 18px;
+    overflow-x: auto;
+    padding-top: 10px;
+  }
+}

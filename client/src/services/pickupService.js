@@ -1,50 +1,46 @@
-export const createPickupRequest = async (pickupData) => {
+import api from "./api";
 
-  const pickup = {
-    id: Date.now(),
-    ...pickupData,
-    status: "REQUESTED",
-    createdAt: new Date().toISOString()
-  };
+const RESOURCE = "/pickups";
 
-  localStorage.setItem(
-    "activePickup",
-    JSON.stringify(pickup)
-  );
-
-  return pickup;
+/**
+ * Create pickup. Donor identity is derived server-side from the
+ * authenticated user (see server/controllers/pickupController.js) — this
+ * payload only carries what the server can't infer: which donation (if
+ * any), which NGO, and pickup logistics.
+ */
+export const createPickup = async (pickupData) => {
+  const response = await api.post(RESOURCE, pickupData);
+  return response.data.data;
 };
 
-export const getActivePickup = async () => {
-
-  const pickup =
-    localStorage.getItem("activePickup");
-
-  return pickup
-    ? JSON.parse(pickup)
-    : null;
+/**
+ * Get pickups visible to the authenticated user (their own, if a donor).
+ */
+export const getMyPickups = async () => {
+  const response = await api.get(RESOURCE);
+  return response.data.data;
 };
 
-export const updatePickupStatus = async (
-  status
-) => {
+/**
+ * Get one pickup
+ */
+export const getPickup = async (id) => {
+  const response = await api.get(`${RESOURCE}/${id}`);
+  return response.data.data;
+};
 
-  const pickup =
-    await getActivePickup();
+/**
+ * Update pickup status (NGO/admin only — enforced server-side)
+ */
+export const updatePickupStatus = async (id, status) => {
+  const response = await api.put(`${RESOURCE}/${id}`, { status });
+  return response.data.data;
+};
 
-  if (!pickup) {
-    return null;
-  }
-
-  const updatedPickup = {
-    ...pickup,
-    status
-  };
-
-  localStorage.setItem(
-    "activePickup",
-    JSON.stringify(updatedPickup)
-  );
-
-  return updatedPickup;
+/**
+ * Cancel pickup (NGO/admin only — enforced server-side)
+ */
+export const cancelPickup = async (id) => {
+  const response = await api.put(`${RESOURCE}/${id}`, { status: "Cancelled" });
+  return response.data.data;
 };

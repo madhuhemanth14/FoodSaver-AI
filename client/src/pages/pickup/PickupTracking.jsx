@@ -1,213 +1,342 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getPickup } from "../../services/pickupService";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
+import "../../styles/pickup-tracking.css";
 
-function PickupTracking() {
-
-  const location = useLocation();
+export default function PickupTracking() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
 
-  const storedPickup =
-    JSON.parse(localStorage.getItem("activePickup"));
+  const [pickup, setPickup] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const pickup =
-    location.state?.pickup || storedPickup;
+  useEffect(() => {
+    const loadPickup = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-  const statuses = [
-    {
-      key: "REQUESTED",
-      title: "Request Sent",
-      description: "Your pickup request has been submitted."
-    },
-    {
-      key: "NGO_ACCEPTED",
-      title: "NGO Accepted",
-      description: "The NGO has accepted your donation."
-    },
-    {
-      key: "SCHEDULED",
-      title: "Pickup Scheduled",
-      description: "Pickup date and time have been confirmed."
-    },
-    {
-      key: "PICKUP_ASSIGNED",
-      title: "Pickup Assigned",
-      description: "A pickup partner has been assigned."
-    },
-    {
-      key: "PICKED_UP",
-      title: "Food Picked Up",
-      description: "Your food has been collected."
-    },
-    {
-      key: "COMPLETED",
-      title: "Completed",
-      description: "Your donation reached the NGO."
+        const data = await getPickup(id);
+
+        setPickup(data);
+      } catch (err) {
+        console.error("Failed to load pickup:", err);
+
+        setError(
+          err.response?.data?.message ||
+            "Unable to load pickup details."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      loadPickup();
+    } else {
+      setLoading(false);
+      setError("Pickup ID is missing.");
     }
-  ];
+  }, [id]);
 
-  // If there is no pickup
-  if (!pickup) {
+  if (loading) {
     return (
-      <main className="pickup-page">
-
-        <h2>No active pickup found.</h2>
-
-        <button
-          className="schedule-btn"
-          onClick={() => navigate("/ngos")}
-        >
-          Find an NGO
-        </button>
-
+      <main className="tracking-page">
+        <div className="tracking-container">
+          <h1>Loading Pickup...</h1>
+          <p>Getting your pickup details from the server.</p>
+        </div>
       </main>
     );
   }
 
-  // Find current status
-  const currentIndex =
-    statuses.findIndex(
-      (item) => item.key === pickup.status
+  if (error || !pickup) {
+    return (
+      <main className="tracking-page">
+        <div className="tracking-container">
+          <h1>Pickup Not Found</h1>
+          <p>{error || "Pickup does not exist."}</p>
+
+          <button
+            type="button"
+            onClick={() => navigate(`${base}/pickups`)}
+          >
+            Back to Pickup History
+          </button>
+        </div>
+      </main>
     );
+  }
 
+  const status = pickup.status || "Pending";
 
-  // ⭐ ADD handleNextStatus HERE
-  const handleNextStatus = () => {
-
-    const nextIndex = currentIndex + 1;
-
-    if (nextIndex >= statuses.length) {
-      return;
-    }
-
-    const updatedPickup = {
-      ...pickup,
-      status: statuses[nextIndex].key
-    };
-
-    localStorage.setItem(
-      "activePickup",
-      JSON.stringify(updatedPickup)
-    );
-
-    window.location.reload();
+  const statusProgress = {
+    Pending: 25,
+    Confirmed: 50,
+    "Picked Up": 75,
+    Completed: 100,
+    Cancelled: 100,
   };
 
+  const progress = statusProgress[status] || 25;
+
+  const timeline = [
+    {
+      title: "Pickup Request Submitted",
+      description: "Your pickup request was submitted successfully.",
+      completed: true,
+    },
+    {
+      title: "Pickup Confirmed",
+      description: "The NGO has confirmed the pickup request.",
+      completed: [
+        "Confirmed",
+        "Picked Up",
+        "Completed",
+      ].includes(status),
+    },
+    {
+      title: "Food Picked Up",
+      description: "The donated food has been collected.",
+      completed: [
+        "Picked Up",
+        "Completed",
+      ].includes(status),
+    },
+    {
+      title: "Delivered to NGO",
+      description: "The food has been delivered to the NGO.",
+      completed: status === "Completed",
+    },
+  ];
 
   return (
-    <main className="pickup-page">
-
+    <main className="tracking-page">
       <div className="tracking-container">
 
-        <button
-          className="back-btn"
-          onClick={() => navigate("/ngos")}
-        >
-          ← Find More NGOs
-        </button>
-
+        {/* Header */}
         <div className="tracking-header">
+          <div>
+            <h1>Pickup Status</h1>
 
-          <h1>Pickup Tracking</h1>
+            <p>
+              Pickup ID:{" "}
+              <strong>{pickup._id}</strong>
+            </p>
+          </div>
 
-          <p>
-            Pickup ID: #{pickup.id}
-          </p>
-
+          <button
+            type="button"
+            className="tracking-top-button"
+          >
+            Track Pickup
+          </button>
         </div>
 
-        <div className="tracking-card">
+        {/* Progress */}
+        <section className="tracking-progress-card">
 
-          <div className="tracking-summary">
+          <div className="tracking-progress-top">
+            <span className="tracking-status-badge">
+              {status}
+            </span>
 
-            <div>
-              <span>NGO</span>
-              <strong>
-                {pickup.ngo?.name}
-              </strong>
-            </div>
+            <strong>{progress}% complete</strong>
+          </div>
 
-            <div>
-              <span>Food</span>
-              <strong>
-                {pickup.foodType}
-              </strong>
-            </div>
+          <div className="tracking-progress-bar">
+            <div
+              className="tracking-progress-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
 
-            <div>
-              <span>Quantity</span>
-              <strong>
-                {pickup.quantity}
-              </strong>
-            </div>
+          <div className="tracking-route-info">
+
+            <span>
+              📍 Pickup Address: {pickup.address}
+            </span>
+
+            <span>
+              🏢 NGO:{" "}
+              {pickup.ngo?.name || "NGO"}
+            </span>
+
+            {pickup.ngo?.address && (
+              <span>
+                📍 NGO Address: {pickup.ngo.address}
+              </span>
+            )}
+
+            <span>
+              📅 Pickup Date:{" "}
+              {new Date(pickup.pickupDate).toLocaleDateString()}
+            </span>
+
+            <span>
+              ⏰ Pickup Time: {pickup.pickupTime}
+            </span>
 
           </div>
 
-          <div className="timeline">
+        </section>
 
-            {statuses.map((status, index) => {
+        {/* Main content */}
+        <div className="tracking-content">
 
-              const completed =
-                index <= currentIndex;
+          {/* Timeline */}
+          <section className="tracking-timeline-card">
 
-              return (
+            <div className="tracking-timeline">
+
+              {timeline.map((item, index) => (
                 <div
                   className={`timeline-item ${
-                    completed ? "completed" : ""
+                    item.completed
+                      ? "timeline-completed"
+                      : ""
                   }`}
-                  key={status.key}
+                  key={item.title}
                 >
 
-                  <div className="timeline-dot">
-                    {completed ? "✓" : index + 1}
+                  <div className="timeline-marker">
+                    {item.completed ? "✓" : "○"}
                   </div>
+
+                  {index !== timeline.length - 1 && (
+                    <div
+                      className={`timeline-line ${
+                        item.completed
+                          ? "timeline-line-active"
+                          : ""
+                      }`}
+                    />
+                  )}
 
                   <div className="timeline-content">
 
-                    <h3>
-                      {status.title}
-                    </h3>
+                    <div className="timeline-title-row">
+                      <h3>{item.title}</h3>
 
-                    <p>
-                      {status.description}
-                    </p>
+                      {item.completed && (
+                        <span className="timeline-time">
+                          Done
+                        </span>
+                      )}
+                    </div>
+
+                    <p>{item.description}</p>
 
                   </div>
 
                 </div>
-              );
+              ))}
 
-            })}
+            </div>
 
-          </div>
+          </section>
 
+          {/* Sidebar */}
+          <aside className="tracking-sidebar">
 
-          {/* ⭐ ADD BUTTON HERE */}
+            {/* NGO Details */}
+            <div className="tracking-side-card">
 
-          <button
-            className="demo-status-btn"
-            onClick={handleNextStatus}
-            disabled={
-              currentIndex >= statuses.length - 1
-            }
-          >
-            Demo: Move to Next Status
-          </button>
+              <h2>NGO Details</h2>
 
+              <div className="driver-info">
 
-          <button
-            className="schedule-btn"
-            onClick={() =>
-              navigate("/pickup/history")
-            }
-          >
-            View Pickup History
-          </button>
+                <div className="driver-avatar">
+                  NGO
+                </div>
+
+                <div>
+                  <h3>
+                    {pickup.ngo?.name ||
+                      "NGO"}
+                  </h3>
+
+                  <p>
+                    {pickup.ngo?.shortName || ""}
+                  </p>
+                </div>
+
+              </div>
+
+              {pickup.ngo?.phone && (
+                <p>
+                  📞 {pickup.ngo.phone}
+                </p>
+              )}
+
+              {pickup.ngo?.address && (
+                <p>
+                  📍 {pickup.ngo.address}
+                </p>
+              )}
+
+            </div>
+
+            {/* Food Details */}
+            <div className="tracking-side-card">
+
+              <h2>Food Details</h2>
+
+              <p>
+                <strong>Food:</strong>{" "}
+                {pickup.foodItems?.join(", ")}
+              </p>
+
+              <p>
+                <strong>Quantity:</strong>{" "}
+                {pickup.quantity}{" "}
+                {pickup.quantityUnit}
+              </p>
+
+              {pickup.notes && (
+                <p>
+                  <strong>Notes:</strong>{" "}
+                  {pickup.notes}
+                </p>
+              )}
+
+            </div>
+
+            {/* Donor Details */}
+            <div className="tracking-side-card">
+
+              <h2>Donor Details</h2>
+
+              <p>
+                <strong>Name:</strong>{" "}
+                {pickup.donorName}
+              </p>
+
+              <p>
+                <strong>Phone:</strong>{" "}
+                {pickup.donorPhone}
+              </p>
+
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`${base}/pickups`)
+              }
+            >
+              View Pickup History
+            </button>
+
+          </aside>
 
         </div>
-
       </div>
-
     </main>
   );
 }
-
-export default PickupTracking;

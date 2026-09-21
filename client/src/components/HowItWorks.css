@@ -1,0 +1,125 @@
+.how-section {
+  padding: 80px 48px;
+  background: #f8faf8;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+}
+
+.section-title {
+  max-width: 640px;
+  margin: 0 auto 48px;
+}
+
+.section-eyebrow {
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+}
+
+.section-title h2 {
+  font-size: 2rem;
+  color: #16281a;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.section-leaf {
+  font-size: 1.1rem;
+}
+
+.steps-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.step-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.1);
+  border-radius: 16px;
+  padding: 26px 18px;
+  text-align: left;
+}
+
+.step-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eaf6ea;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.step-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.step-number {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-title h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  color: #1b3a1d;
+  font-weight: 700;
+}
+
+.step-card p {
+  margin: 0;
+  color: #667066;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.step-connector {
+  display: none;
+}
+
+@media (min-width: 961px) {
+  .step-card:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 46px;
+    right: -20px;
+    width: 20px;
+    border-top: 2px dashed rgba(46, 125, 50, 0.35);
+  }
+}
+
+@media (max-width: 960px) {
+  .how-section {
+    padding: 56px 20px;
+  }
+
+  .steps-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+  .steps-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

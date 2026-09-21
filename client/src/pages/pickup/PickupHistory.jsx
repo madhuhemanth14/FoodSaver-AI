@@ -1,97 +1,195 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
+import { getMyPickups } from "../../services/pickupService";
+import "../../styles/pickup-history.css";
 
 function PickupHistory() {
-
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
 
-  const pickupHistory = [
-    {
-      id: 1001,
-      ngo: "Helping Hands",
-      food: "Rice",
-      quantity: "5 kg",
-      date: "12 Aug 2026",
-      status: "COMPLETED"
-    },
-    {
-      id: 1002,
-      ngo: "Food For All",
-      food: "Vegetables",
-      quantity: "3 kg",
-      date: "08 Aug 2026",
-      status: "COMPLETED"
-    }
-  ];
+  const [pickups, setPickups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadPickups = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getMyPickups();
+
+        setPickups(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Failed to load pickup history:", err);
+
+        setError(
+          err.response?.data?.message ||
+            "Unable to load pickup history."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPickups();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="pickup-history-page">
+        <div className="pickup-history-container">
+          <div className="pickup-history-header">
+            <div>
+              <h1>Pickup History</h1>
+              <p>Loading your pickup history...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="pickup-history-page">
+        <div className="pickup-history-container">
+          <div className="pickup-history-header">
+            <div>
+              <h1>Pickup History</h1>
+              <p>{error}</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="pickup-page">
+    <main className="pickup-history-page">
+      <div className="pickup-history-container">
 
-      <div className="history-container">
-
-        <button
-          className="back-btn"
-          onClick={() => navigate("/ngos")}
-        >
-          ← Find NGOs
-        </button>
-
-        <div className="history-header">
-
-          <h1>Pickup History</h1>
-
-          <p>
-            Track all your previous food donations.
-          </p>
-
+        <div className="pickup-history-header">
+          <div>
+            <h1>Pickup History</h1>
+            <p>
+              Your pickup requests and their current status.
+            </p>
+          </div>
         </div>
 
-        <div className="history-list">
+        {pickups.length === 0 ? (
+          <section className="pickup-history-list">
+            <article className="pickup-history-card">
+              <h2>No pickups found</h2>
+              <p>
+                You haven't created any pickup requests yet.
+              </p>
+            </article>
+          </section>
+        ) : (
+          <section className="pickup-history-list">
 
-          {pickupHistory.map((pickup) => (
+            {pickups.map((pickup) => (
+              <article
+                className="pickup-history-card"
+                key={pickup._id}
+              >
 
-            <div
-              className="history-card"
-              key={pickup.id}
-            >
+                <div className="pickup-history-card-header">
 
-              <div>
-                <span className="history-label">
-                  NGO
-                </span>
+                  <div>
+                    <h2>
+                      {pickup.ngo?.name || "NGO"}
+                    </h2>
 
-                <h3>{pickup.ngo}</h3>
-              </div>
+                    <span className="pickup-donation-id">
+                      Pickup ID: {pickup._id}
+                    </span>
+                  </div>
 
-              <div>
-                <span className="history-label">
-                  Food
-                </span>
+                  <span className="pickup-success-badge">
+                    {pickup.status}
+                  </span>
 
-                <p>
-                  {pickup.food} · {pickup.quantity}
-                </p>
-              </div>
+                </div>
 
-              <div>
-                <span className="history-label">
-                  Date
-                </span>
+                <div className="pickup-history-info">
 
-                <p>{pickup.date}</p>
-              </div>
+                  <div className="pickup-info-item">
+                    <span className="pickup-info-label">
+                      Food
+                    </span>
 
-              <span className="history-status">
-                ✓ Completed
-              </span>
+                    <strong>
+                      {pickup.foodItems?.length
+                        ? pickup.foodItems.join(", ")
+                        : "N/A"}
+                    </strong>
+                  </div>
 
-            </div>
+                  <div className="pickup-info-item">
+                    <span className="pickup-info-label">
+                      Quantity
+                    </span>
 
-          ))}
+                    <strong>
+                      {pickup.quantity}{" "}
+                      {pickup.quantityUnit || ""}
+                    </strong>
+                  </div>
 
-        </div>
+                  <div className="pickup-info-item">
+                    <span className="pickup-info-label">
+                      Pickup Date
+                    </span>
+
+                    <strong>
+                      {pickup.pickupDate
+                        ? new Date(
+                            pickup.pickupDate
+                          ).toLocaleDateString()
+                        : "N/A"}
+                    </strong>
+                  </div>
+
+                  <div className="pickup-info-item">
+                    <span className="pickup-info-label">
+                      Pickup Time
+                    </span>
+
+                    <strong>
+                      {pickup.pickupTime || "N/A"}
+                    </strong>
+                  </div>
+
+                </div>
+
+                <div style={{ marginTop: "20px" }}>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(
+                        `${base}/pickups/${pickup._id}`
+                      )
+                    }
+                  >
+                    View Pickup
+                  </button>
+
+                </div>
+
+              </article>
+            ))}
+
+          </section>
+        )}
 
       </div>
-
     </main>
   );
 }

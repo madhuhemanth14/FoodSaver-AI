@@ -1,0 +1,198 @@
+/* =========================================
+   PICKUP HISTORY PAGE
+   ========================================= */
+
+.pickup-history-page {
+  min-height: calc(100vh - 80px);
+  background: #f7faf8;
+  padding: 42px 0 70px;
+}
+
+.pickup-history-container {
+  width: min(1230px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.pickup-history-header {
+  margin-bottom: 30px;
+}
+
+.pickup-history-header h1 {
+  margin: 0;
+  color: #216b2a;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.pickup-history-header p {
+  margin: 12px 0 0;
+  color: #6d7775;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   HISTORY LIST
+   ========================================= */
+
+.pickup-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =========================================
+   HISTORY CARD
+   ========================================= */
+
+.pickup-history-card {
+  background: #ffffff;
+  border: 1px solid #e1e8e4;
+  border-radius: 14px;
+  padding: 16px 24px;
+  box-shadow: 0 2px 8px rgba(30, 70, 40, 0.05);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.pickup-history-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(30, 70, 40, 0.08);
+}
+
+/* =========================================
+   CARD HEADER
+   ========================================= */
+
+.pickup-history-card-header {
+  min-height: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.pickup-history-card-header h2 {
+  margin: 0 0 5px;
+  color: #303b3d;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pickup-donation-id {
+  color: #9aa5a1;
+  font-size: 13px;
+}
+
+/* =========================================
+   SUCCESS BADGE
+   ========================================= */
+
+.pickup-success-badge {
+  flex-shrink: 0;
+  background: #e8f5e9;
+  color: #28752f;
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =========================================
+   INFORMATION ROW
+   ========================================= */
+
+.pickup-history-info {
+  margin-top: 14px;
+  background: #f7faf8;
+  border-radius: 10px;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.pickup-info-item {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.pickup-info-label {
+  color: #91a09a;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pickup-info-item strong {
+  color: #344044;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+  .pickup-history-container {
+    width: min(100% - 32px, 760px);
+  }
+
+  .pickup-history-header h1 {
+    font-size: 36px;
+  }
+
+  .pickup-history-info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 18px;
+  }
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+  .pickup-history-page {
+    padding: 30px 0 50px;
+  }
+
+  .pickup-history-container {
+    width: calc(100% - 24px);
+  }
+
+  .pickup-history-header h1 {
+    font-size: 30px;
+  }
+
+  .pickup-history-header p {
+    font-size: 15px;
+  }
+
+  .pickup-history-card {
+    padding: 18px;
+  }
+
+  .pickup-history-card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pickup-success-badge {
+    align-self: flex-start;
+  }
+
+  .pickup-history-info {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

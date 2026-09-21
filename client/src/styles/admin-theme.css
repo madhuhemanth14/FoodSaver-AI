@@ -1,0 +1,326 @@
+/* src/styles/admin-theme.css
+ *
+ * Shared design system for the Admin module — layout shell, tables,
+ * filters, badges, pagination and modal used across every admin page.
+ * Imported once by AdminLayout so individual admin pages don't each
+ * need to import it.
+ *
+ * Uses the same FoodSaver AI palette as the rest of the app:
+ *   primary green   #2E7D32
+ *   secondary green #66BB6A
+ *   background      #F8FAF8
+ */
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8faf8;
+  font-family: "Poppins", sans-serif;
+}
+
+.admin-layout__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-layout__content {
+  flex: 1;
+  padding: 24px 28px 48px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.admin-page-header {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-page-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  color: #1b3a1d;
+}
+
+.admin-page-header p {
+  margin: 0;
+  color: #5b6b5c;
+  font-size: 0.92rem;
+}
+
+/* ---------- Filter panel ---------- */
+
+.admin-filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.admin-filter-panel__search {
+  flex: 1 1 220px;
+  min-width: 180px;
+  padding: 9px 12px;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  background: #f8faf8;
+}
+
+.admin-filter-panel__search:focus {
+  border-color: #2e7d32;
+  background: #ffffff;
+}
+
+.admin-filter-panel__select,
+.admin-filter-panel__date {
+  padding: 9px 10px;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  background: #f8faf8;
+  color: #1b3a1d;
+}
+
+/* ---------- Data table ---------- */
+
+.admin-table-wrap {
+  background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 12px 14px;
+  background: #eef6ee;
+  color: #1b3a1d;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(46, 125, 50, 0.12);
+}
+
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(46, 125, 50, 0.08);
+  color: #33402f;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table__empty,
+.admin-table__loading {
+  padding: 40px;
+  text-align: center;
+  color: #5b6b5c;
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.row-actions__btn {
+  border: 1px solid rgba(46, 125, 50, 0.3);
+  background: #ffffff;
+  color: #2e7d32;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.row-actions__btn:hover {
+  background: #eef6ee;
+}
+
+.row-actions__btn--positive {
+  border-color: rgba(46, 125, 50, 0.5);
+  color: #2e7d32;
+  background: #eaf6ea;
+}
+
+.row-actions__btn--danger {
+  border-color: rgba(198, 40, 40, 0.35);
+  color: #c62828;
+  background: #fdecea;
+}
+
+/* ---------- Badges ---------- */
+
+.role-badge,
+.status-badge,
+.verification-badge,
+.donation-status,
+.ngo-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: #eef6ee;
+  color: #2e7d32;
+}
+
+.status-badge--active,
+.verification-badge--verified,
+.ngo-status--active,
+.donation-status--completed {
+  background: #e6f5e8;
+  color: #2e7d32;
+}
+
+.status-badge--blocked,
+.verification-badge--rejected,
+.ngo-status--inactive,
+.donation-status--cancelled {
+  background: #fdecea;
+  color: #c62828;
+}
+
+.status-badge--pending,
+.verification-badge--pending,
+.donation-status--available,
+.donation-status--accepted,
+.donation-status--pickup_scheduled,
+.donation-status--picked_up {
+  background: #fff6e0;
+  color: #a86400;
+}
+
+.role-badge--admin {
+  background: #e8eefc;
+  color: #2350c9;
+}
+
+.role-badge--ngo {
+  background: #eef6ee;
+  color: #2e7d32;
+}
+
+.role-badge--donor {
+  background: #f3eefc;
+  color: #6a2ec9;
+}
+
+/* ---------- Pagination ---------- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #33402f;
+}
+
+.pagination button {
+  border: 1px solid rgba(46, 125, 50, 0.3);
+  background: #ffffff;
+  color: #2e7d32;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Modal ---------- */
+
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 10, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.admin-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.admin-modal h2 {
+  margin: 0 0 16px;
+  color: #1b3a1d;
+  font-size: 1.15rem;
+}
+
+.admin-modal__list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  margin: 0 0 20px;
+}
+
+.admin-modal__list dt {
+  color: #5b6b5c;
+  font-size: 0.82rem;
+}
+
+.admin-modal__list dd {
+  margin: 0;
+  color: #1b3a1d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-layout__content {
+    padding: 18px 14px 36px;
+  }
+
+  .admin-page-header {
+    flex-direction: column;
+  }
+}

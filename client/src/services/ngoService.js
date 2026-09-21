@@ -1,53 +1,51 @@
-const dummyNGOs = [
-  {
-    id: 1,
-    name: "Helping Hands",
-    location: "Ongole",
-    distance: 2.3,
-    rating: 4.6,
-    verified: true,
-    acceptedFoodTypes: [
-      "Rice",
-      "Vegetables",
-      "Fruits"
-    ]
-  },
+import api from "./api";
 
-  {
-    id: 2,
-    name: "Food For All",
-    location: "Ongole",
-    distance: 4.1,
-    rating: 4.4,
-    verified: true,
-    acceptedFoodTypes: [
-      "Cooked Food",
-      "Bread",
-      "Fruits"
-    ]
-  },
+const RESOURCE = "/ngos";
 
-  {
-    id: 3,
-    name: "Care Foundation",
-    location: "Ongole",
-    distance: 5.7,
-    rating: 4.2,
-    verified: true,
-    acceptedFoodTypes: [
-      "Rice",
-      "Dal",
-      "Vegetables"
-    ]
-  }
-];
-
-export const getNearbyNGOs = async () => {
-  return dummyNGOs;
+export const getNGOs = async () => {
+  const response = await api.get(RESOURCE);
+  return response.data.data;
 };
 
 export const getNGOById = async (id) => {
-  return dummyNGOs.find(
-    (ngo) => ngo.id === Number(id)
+  const response = await api.get(`${RESOURCE}/${id}`);
+  return response.data.data;
+};
+
+export const searchNGOs = async (searchTerm = "") => {
+  const response = await api.get(RESOURCE);
+
+  const ngos = response.data.data;
+
+  const term = searchTerm.toLowerCase().trim();
+
+  if (!term) {
+    return ngos;
+  }
+
+  return ngos.filter((ngo) =>
+    ngo.name.toLowerCase().includes(term) ||
+    ngo.address.toLowerCase().includes(term) ||
+    ngo.acceptedFood.some((food) =>
+      food.toLowerCase().includes(term)
+    )
   );
+};
+
+/** GET /api/ngos/me — the authenticated NGO user's own organization record. */
+export const getMyNGO = async () => {
+  const response = await api.get(`${RESOURCE}/me`);
+  return response.data.data;
+};
+
+/** PATCH /api/ngos/me — real NGO profile editing. */
+export const updateMyNGO = async (payload) => {
+  const response = await api.patch(`${RESOURCE}/me`, payload);
+  return response.data.data;
+};
+
+/** GET /api/ngos/dashboard — real per-NGO operational overview. */
+export const getNgoDashboard = async () => {
+  const response = await api.get(`${RESOURCE}/dashboard`);
+  return response.data;
 };

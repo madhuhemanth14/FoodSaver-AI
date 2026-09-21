@@ -1,0 +1,233 @@
+/* =========================================
+   SCHEDULE PICKUP PAGE
+   ========================================= */
+
+.pickup-request-page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  background: #f7faf8;
+  padding: 42px 24px 70px;
+  box-sizing: border-box;
+}
+
+.pickup-request-container {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.pickup-request-header {
+  margin-bottom: 30px;
+}
+
+.pickup-request-header h1 {
+  margin: 0 0 10px;
+  color: #216b2b;
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.pickup-request-header p {
+  margin: 0;
+  color: #687578;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* Main card */
+
+.pickup-request-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e0e8e2;
+  border-radius: 18px;
+  padding: 34px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 25px rgba(36, 83, 48, 0.08);
+}
+
+/* Form grid */
+
+.pickup-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px 18px;
+}
+
+.pickup-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pickup-field-full {
+  grid-column: 1 / -1;
+}
+
+.pickup-field label {
+  margin-bottom: 9px;
+  color: #344047;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pickup-field label span {
+  font-weight: 500;
+  color: #7a8587;
+}
+
+/* Inputs */
+
+.pickup-field input,
+.pickup-field select,
+.pickup-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dce4df;
+  border-radius: 9px;
+  background: #f9fbfa;
+  color: #344047;
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.pickup-field input,
+.pickup-field select {
+  height: 47px;
+  padding: 0 14px;
+}
+
+.pickup-field textarea {
+  padding: 13px 14px;
+  resize: vertical;
+  min-height: 95px;
+  line-height: 1.5;
+}
+
+.pickup-field input::placeholder,
+.pickup-field textarea::placeholder {
+  color: #8b9495;
+}
+
+.pickup-field input:focus,
+.pickup-field select:focus,
+.pickup-field textarea:focus {
+  border-color: #2e7d32;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+/* Message */
+
+.pickup-message {
+  margin-top: 22px;
+  padding: 13px 16px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pickup-message-success {
+  color: #216b2b;
+  background: #e8f5e9;
+  border: 1px solid #c8e6c9;
+}
+
+.pickup-message-error {
+  color: #a33a32;
+  background: #fff1ef;
+  border: 1px solid #ffd4cf;
+}
+
+/* Buttons */
+
+.pickup-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.pickup-cancel-button,
+.pickup-submit-button {
+  height: 46px;
+  border-radius: 9px;
+  padding: 0 24px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pickup-cancel-button {
+  border: none;
+  background: transparent;
+  color: #687578;
+}
+
+.pickup-cancel-button:hover {
+  color: #216b2b;
+}
+
+.pickup-submit-button {
+  min-width: 160px;
+  border: 1px solid #2e7d32;
+  background: #2e7d32;
+  color: #ffffff;
+}
+
+.pickup-submit-button:hover {
+  background: #256b2a;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+  .pickup-request-page {
+    padding: 30px 16px 50px;
+  }
+
+  .pickup-request-header h1 {
+    font-size: 32px;
+  }
+
+  .pickup-request-header p {
+    font-size: 15px;
+  }
+
+  .pickup-request-card {
+    padding: 22px;
+    border-radius: 14px;
+  }
+
+  .pickup-form-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .pickup-field-full {
+    grid-column: auto;
+  }
+
+  .pickup-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .pickup-cancel-button,
+  .pickup-submit-button {
+    width: 100%;
+  }
+}

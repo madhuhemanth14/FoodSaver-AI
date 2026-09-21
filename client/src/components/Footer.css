@@ -1,0 +1,95 @@
+.footer {
+  background: #ffffff;
+  border-top: 1px solid rgba(46, 125, 50, 0.08);
+  padding: 56px 48px 24px;
+  font-family: "Poppins", sans-serif;
+}
+
+.footer-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1b3a1d;
+  margin-bottom: 12px;
+}
+
+.footer-logo b {
+  color: #2e7d32;
+}
+
+.footer-brand p {
+  color: #667066;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  max-width: 260px;
+}
+
+.footer-column h4 {
+  font-size: 0.9rem;
+  color: #1b3a1d;
+  margin: 0 0 14px;
+  font-weight: 700;
+}
+
+.footer-column a {
+  display: block;
+  color: #667066;
+  text-decoration: none;
+  font-size: 0.84rem;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.footer-column a:hover {
+  color: #2e7d32;
+}
+
+.social-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.social-icons a {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.social-icons a:hover {
+  background: #eaf6ea;
+}
+
+.footer-copy {
+  text-align: center;
+  color: #8a978a;
+  font-size: 0.8rem;
+  margin: 40px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(46, 125, 50, 0.08);
+}
+
+@media (max-width: 960px) {
+  .footer {
+    padding: 40px 20px 20px;
+  }
+
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

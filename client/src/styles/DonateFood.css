@@ -1,0 +1,50 @@
+/* Styles specific to the DonateFood page (multi-step donation flow) */
+
+.fs-donate-page .fs-container {
+  max-width: 760px;
+}
+
+.fs-donate-step-panel {
+  min-height: 200px;
+}
+
+.fs-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--fs-space-4);
+}
+
+.fs-form-grid .fs-field-full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .fs-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fs-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--fs-space-5);
+}
+
+.fs-form-actions .fs-btn {
+  min-width: 200px;
+}
+
+@media (max-width: 520px) {
+  .fs-form-actions {
+    flex-direction: column;
+  }
+  .fs-form-actions .fs-btn {
+    width: 100%;
+  }
+}
+
+.fs-ai-step-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--fs-space-6);
+}

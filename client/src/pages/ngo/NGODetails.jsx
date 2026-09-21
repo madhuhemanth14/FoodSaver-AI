@@ -1,131 +1,196 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { rolePrefix } from "../../utils/roles";
+import NGOMap from "../../components/ngo/NGOMap";
+import { getNGOById } from "../../services/ngoService";
+import "../../styles/ngo-details.css";
 
-function NGODetails() {
-  const location = useLocation();
+export default function NGODetails() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
 
-  const ngo = location.state?.ngo;
+  const [ngo, setNgo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!ngo) {
+  useEffect(() => {
+    const loadNGO = async () => {
+      try {
+        setLoading(true);
+        setNotFound(false);
+
+        const data = await getNGOById(id);
+
+        if (!data) {
+          setNotFound(true);
+          return;
+        }
+
+        setNgo(data);
+      } catch (error) {
+        console.error("Failed to load NGO:", error);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNGO();
+  }, [id]);
+
+  if (loading) {
     return (
       <div className="ngo-details-page">
-        <h2>NGO not found</h2>
+        <p>Loading NGO details...</p>
+      </div>
+    );
+  }
 
+  if (notFound || !ngo) {
+    return (
+      <div className="ngo-details-page">
         <button
-          className="view-details-btn"
-          onClick={() => navigate("/ngos")}
+          type="button"
+          className="ngo-details-page__back"
+          onClick={() => navigate(-1)}
         >
-          Back to NGOs
+          ← Back
         </button>
+
+        <p className="ngo-finder-page__state-title">
+          NGO not found
+        </p>
+
+        <p>
+          This NGO may have been removed or the link is incorrect.
+        </p>
       </div>
     );
   }
 
   return (
-    <main className="ngo-details-page">
+    <div className="ngo-details-page">
 
       <button
-        className="back-btn"
-        onClick={() => navigate("/ngos")}
+        type="button"
+        className="ngo-details-page__back"
+        onClick={() => navigate(-1)}
       >
-        ← Back to NGOs
+        ← Back
       </button>
 
-      <section className="ngo-details-card">
+      <div className="ngo-details-page__body">
 
-        <div className="ngo-details-header">
+        <div className="ngo-details-page__title-row">
+          <h1 className="ngo-details-page__name">
+            {ngo.name}
+          </h1>
 
-          <div>
-            <h1>{ngo.name}</h1>
-
-            {ngo.verified && (
-              <span className="verified-badge">
-                ✓ Verified NGO
-              </span>
-            )}
-          </div>
-
-          <div className="ngo-rating">
-            ⭐ {ngo.rating}
-          </div>
-
+          <span>
+            {ngo.verified ? "🟢 Verified" : "Unverified"}
+          </span>
         </div>
 
-        <div className="ngo-details-info">
+        <div className="ngo-details-page__rating">
+          ⭐ {ngo.rating || 0}
+          <span>
+            ({ngo.reviews || 0} reviews)
+          </span>
+        </div>
 
-          <div className="detail-box">
-            <span>📍</span>
-            <div>
-              <strong>Location</strong>
-              <p>{ngo.location}</p>
-            </div>
+        <div className="ngo-details-page__info">
+
+          <div className="ngo-details-page__info-item">
+            📍
+            <span>
+              <strong>Address</strong>
+              {ngo.address}
+            </span>
           </div>
 
-          <div className="detail-box">
-            <span>📏</span>
-            <div>
+          <div className="ngo-details-page__info-item">
+            🏙️
+            <span>
+              <strong>City</strong>
+              {ngo.city}, {ngo.state}
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            📞
+            <span>
+              <strong>Phone</strong>
+              {ngo.phone}
+            </span>
+          </div>
+
+          <div className="ngo-details-page__info-item">
+            📏
+            <span>
               <strong>Distance</strong>
-              <p>{ngo.distance} km away</p>
-            </div>
+              {ngo.distance} km away
+            </span>
           </div>
 
-          <div className="detail-box">
-            <span>🕒</span>
-            <div>
-              <strong>Working Hours</strong>
-              <p>9:00 AM - 6:00 PM</p>
-            </div>
+          <div className="ngo-details-page__info-item">
+            🟢
+            <span>
+              <strong>Status</strong>
+              {ngo.status}
+            </span>
           </div>
 
-        </div>
-
-        <div className="accepted-food-section">
-
-          <h2>Accepted Food Types</h2>
-
-          <div className="food-tags">
-
-            {ngo.acceptedFoodTypes.map((food) => (
-              <span
-                className="food-tag"
-                key={food}
-              >
-                ✓ {food}
-              </span>
-            ))}
-
+          <div className="ngo-details-page__info-item">
+            📦
+            <span>
+              <strong>Capacity</strong>
+              {ngo.capacity}
+            </span>
           </div>
 
         </div>
 
-        <div className="ngo-description">
-
-          <h2>About this NGO</h2>
-
-          <p>
-            This verified organization helps distribute
-            surplus food to people and communities in need.
-            Your donation can help reduce food waste and
-            support those who need it most.
+        <div>
+          <p className="ngo-details-page__section-label">
+            Accepted Food
           </p>
 
+          <ul className="ngo-details-page__food-list">
+            {ngo.acceptedFood?.map((food) => (
+              <li
+                key={food}
+                className="ngo-details-page__food-item"
+              >
+                ✓ {food}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <button
-          className="schedule-btn"
+          type="button"
+          className="ngo-details-page__cta"
           onClick={() =>
-            navigate("/pickup/request", {
-              state: { ngo }
+            navigate(`${base}/pickups/request`, {
+              state: { ngo },
             })
           }
         >
-          Schedule Pickup →
+          Schedule Pickup
         </button>
 
-      </section>
+      </div>
 
-    </main>
+      <div className="ngo-details-page__map">
+        <NGOMap
+          ngos={[ngo]}
+          selectedNGO={ngo}
+        />
+      </div>
+
+    </div>
   );
 }
-
-export default NGODetails;

@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Analysis History page — scoped styles ("ah-" prefix).
+   ========================================================================== */
+
+.ah-page {
+  --ah-primary: #2e7d32;
+  --ah-bg: #f8faf8;
+  --ah-white: #ffffff;
+  --ah-text: #1c2b1e;
+  --ah-text-muted: #5f6f61;
+  --ah-border: #e2ece3;
+
+  font-family: "Poppins", system-ui, sans-serif;
+  background-color: var(--ah-bg);
+  color: var(--ah-text);
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.ah-page__header {
+  margin-bottom: 20px;
+}
+
+.ah-page__title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--ah-primary);
+  margin: 0 0 6px;
+}
+
+.ah-page__subtitle {
+  color: var(--ah-text-muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.ah-page__status {
+  color: var(--ah-text-muted);
+  text-align: center;
+  padding: 40px 0;
+}
+
+/* Controls ------------------------------------------------------------------ */
+
+.ah-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 640px) {
+  .ah-controls {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+.ah-controls__search,
+.ah-controls__select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  border: 1px solid var(--ah-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--ah-white);
+  color: var(--ah-text);
+}
+
+.ah-controls__search:focus,
+.ah-controls__select:focus {
+  outline: 2px solid #a5d6a7;
+  outline-offset: 1px;
+}
+
+/* List / Cards ---------------------------------------------------------------- */
+
+.ah-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ah-card {
+  background: var(--ah-white);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 10px rgba(46, 125, 50, 0.05);
+}
+
+.ah-card__image {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ah-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ah-card__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ah-card__name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.ah-card__badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+
+.ah-card__meta {
+  font-size: 0.78rem;
+  color: var(--ah-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ah-card__action {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Empty state ------------------------------------------------------------------ */
+
+.ah-empty {
+  text-align: center;
+  padding: 48px 20px;
+  background: var(--ah-white);
+  border-radius: 14px;
+}
+
+.ah-empty__title {
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.ah-empty__hint {
+  color: var(--ah-text-muted);
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+  .ah-card {
+    flex-wrap: wrap;
+  }
+  .ah-card__action {
+    width: 100%;
+  }
+}
