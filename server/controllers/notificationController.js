@@ -1,166 +1,163 @@
-const mongoose = require('mongoose');
-const Notification = require('../models/Notification');
+const mongoose = require("mongoose");
+const Notification = require("../models/Notification");
+const sendEmail = require("../services/emailService");
 
-/**
- * Get current user's notifications
- */
-exports.getMyNotifications = async (req, res) => {
-  try {
-    const notifications = await Notification.find({
-      user: req.user._id
-    })
-      .sort({ createdAt: -1 })
-      .limit(50);
+// Get all notifications
+const getNotifications = async (req, res) => {
+    try {
+        const notifications = await Notification.find()
+            .sort({ createdAt: -1 });
 
-    res.json({
-      success: true,
-      data: {
-        count: notifications.length,
-        notifications
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching notifications:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-};
+        res.status(200).json({
+            success: true,
+            count: notifications.length,
+            notifications
+        });
+    } catch (error) {
+        console.error("Get notifications error:", error);
 
-/**
- * Get current user's unread notification count
- */
-exports.getUnreadCount = async (req, res) => {
-  try {
-    const count = await Notification.countDocuments({
-      user: req.user._id,
-      read: false
-    });
-
-    res.json({
-      success: true,
-      data: { count }
-    });
-  } catch (error) {
-    console.error('Error fetching unread count:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-};
-
-/**
- * Mark a single notification as read
- */
-exports.markAsRead = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid notification ID'
-      });
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch notifications"
+        });
     }
-
-    const notification = await Notification.findOne({
-      _id: id,
-      user: req.user._id
-    });
-
-    if (!notification) {
-      return res.status(404).json({
-        success: false,
-        message: 'Notification not found'
-      });
-    }
-
-    notification.read = true;
-    notification.readAt = new Date();
-
-    await notification.save();
-
-    res.json({
-      success: true,
-      data: notification
-    });
-  } catch (error) {
-    console.error('Error marking notification as read:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
 };
 
-/**
- * Mark all user's notifications as read
- */
-exports.markAllAsRead = async (req, res) => {
-  try {
-    await Notification.updateMany(
-      {
-        user: req.user._id,
-        read: false
-      },
-      {
-        $set: {
-          read: true,
-          readAt: new Date()
+
+// Get unread notification count
+const getUnreadCount = async (req, res) => {
+    try {
+        const count = await Notification.countDocuments({
+            isRead: false
+        });
+
+        res.status(200).json({
+            success: true,
+            count
+        });
+    } catch (error) {
+        console.error("Get unread count error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch unread notification count"
+        });
+    }
+};
+
+
+// Mark one notification as read
+const markAsRead = async (req, res) => {
+    try {
+        const notification = await Notification.findByIdAndUpdate(
+            req.params.id,
+            {
+                isRead: true
+            },
+            {
+                new: true
+            }
+        );
+
+        if (!notification) {
+            return res.status(404).json({
+                success: false,
+                message: "Notification not found"
+            });
         }
-      }
-    );
 
-    res.json({
-      success: true,
-      message: 'All notifications marked as read'
-    });
-  } catch (error) {
-    console.error('Error marking all notifications as read:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
+        res.status(200).json({
+            success: true,
+            message: "Notification marked as read",
+            notification
+        });
+    } catch (error) {
+        console.error("Mark notification as read error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to mark notification as read"
+        });
+    }
 };
 
-/**
- * Delete a notification
- */
-exports.deleteNotification = async (req, res) => {
-  try {
-    const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid notification ID'
-      });
+// Mark all notifications as read
+const markAllAsRead = async (req, res) => {
+    try {
+        await Notification.updateMany(
+            {
+                isRead: false
+            },
+            {
+                isRead: true
+            }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "All notifications marked as read"
+        });
+    } catch (error) {
+        console.error("Mark all notifications as read error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to mark all notifications as read"
+        });
     }
+};
 
-    const notification = await Notification.findOneAndDelete({
-      _id: id,
-      user: req.user._id
-    });
 
-    if (!notification) {
-      return res.status(404).json({
-        success: false,
-        message: 'Notification not found'
-      });
+// Create a test notification
+const createTestNotification = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            });
+        }
+
+        // Create notification in MongoDB
+        const notification = await Notification.create({
+            userId: new mongoose.Types.ObjectId(),
+            type: "system",
+            title: "Test Notification",
+            message: "Your notification backend is working!",
+            isRead: false
+        });
+
+        // Send email notification
+        await sendEmail(
+            email,
+            "FoodSaver AI - Test Notification",
+            "Your notification backend is working!"
+        );
+
+        res.status(201).json({
+            success: true,
+            message: "Notification created and email sent successfully",
+            notification
+        });
+    } catch (error) {
+        console.error("Create test notification error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to create notification or send email",
+            error: error.message
+        });
     }
+};
 
-    res.json({
-      success: true,
-      message: 'Notification deleted successfully'
-    });
-  } catch (error) {
-    console.error('Error deleting notification:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
+
+module.exports = {
+    getNotifications,
+    getUnreadCount,
+    markAsRead,
+    markAllAsRead,
+    createTestNotification
 };
