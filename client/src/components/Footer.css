@@ -185,7 +185,7 @@
 /* Mobile (320px - 600px) */
 @media (max-width: 600px) {
   .footer {
-    padding: 36px 18px 24px;
+    padding: 36px 18px 96px;
   }
 
   .footer-container {
@@ -198,4 +198,5 @@
     padding-top: 16px;
   }
 }
+
 

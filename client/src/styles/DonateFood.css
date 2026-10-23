@@ -323,6 +323,27 @@
   }
 }
 
+@media (max-width: 420px) {
+  .fs-donate-page .fs-container {
+    padding: 0 10px;
+  }
+  .fs-donate-form {
+    padding: 16px 10px;
+    border-radius: 14px;
+    gap: 20px;
+  }
+  .fs-step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  .fs-step-label {
+    font-size: 0.68rem;
+    letter-spacing: -0.02em;
+  }
+}
+
+
 /* Fields & Labels */
 .fs-field {
   display: flex;

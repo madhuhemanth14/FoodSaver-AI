@@ -115,9 +115,29 @@
 
   .about-container {
     grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .about-stat-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .about-stat-card {
+    flex: 1;
+    min-width: 130px;
+    padding: 16px 18px;
   }
 
   .about-visual {
-    margin-top: 24px;
+    margin-top: 16px;
+  }
+
+  .about-badge {
+    position: static;
+    margin-top: 16px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
+

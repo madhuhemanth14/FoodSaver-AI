@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Leaf, Pencil, Trash2, LogOut } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Leaf, Pencil, Trash2, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { roleHomePath, rolePrefix } from "../utils/roles";
@@ -7,10 +7,13 @@ import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const profileRef = useRef(null);
 
+  // Close profile dropdown when clicking outside
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -21,34 +24,42 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
+  // Close mobile navigation on route change
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [location.pathname]);
+
   const handleLogout = () => {
     setProfileOpen(false);
+    setMobileNavOpen(false);
     logout();
     navigate("/login", { replace: true });
   };
 
   const openSettings = (section) => {
     setProfileOpen(false);
+    setMobileNavOpen(false);
     navigate(`${rolePrefix(user.role)}/settings${section ? `?section=${section}` : ""}`);
   };
 
   return (
     <nav className="navbar">
-      <Link to="/" className="logo">
+      <Link to="/" className="logo" onClick={() => setMobileNavOpen(false)}>
         <div className="logo-icon">
-          <Leaf size={24} />
+          <Leaf size={22} />
         </div>
         <span>
           FoodSaver <b>AI</b>
         </span>
       </Link>
 
-      <div className="nav-links">
-        <a href="/#home">Home</a>
-        <a href="/#about">About</a>
-        <a href="/#how-it-works">How It Works</a>
-        <a href="/#features">Features</a>
-        <a href="/#contact">Contact</a>
+      {/* Navigation links (collapsible on mobile, inline on desktop) */}
+      <div className={`nav-links ${mobileNavOpen ? "nav-links--open" : ""}`}>
+        <a href="/#home" onClick={() => setMobileNavOpen(false)}>Home</a>
+        <a href="/#about" onClick={() => setMobileNavOpen(false)}>About</a>
+        <a href="/#how-it-works" onClick={() => setMobileNavOpen(false)}>How It Works</a>
+        <a href="/#features" onClick={() => setMobileNavOpen(false)}>Features</a>
+        <a href="/#contact" onClick={() => setMobileNavOpen(false)}>Contact</a>
       </div>
 
       <div className="nav-buttons">
@@ -58,7 +69,7 @@ const Navbar = () => {
               Dashboard
             </Link>
 
-            {/* The user's initial is the account menu trigger. */}
+            {/* The user's initial is the account menu trigger */}
             <div
               className="nav-profile-wrap"
               ref={profileRef}
@@ -112,9 +123,21 @@ const Navbar = () => {
             </Link>
           </>
         )}
+
+        {/* Mobile menu toggle hamburger */}
+        <button
+          type="button"
+          className="mobile-nav-toggle"
+          aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileNavOpen}
+          onClick={() => setMobileNavOpen(!mobileNavOpen)}
+        >
+          {mobileNavOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
+
