@@ -41,12 +41,42 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>FoodSaver AI API</title>
+      <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f6f8f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .card { background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); padding: 40px; max-width: 500px; text-align: center; border: 1px solid #e2ebe2; }
+        h1 { color: #2e7d32; font-size: 24px; margin: 0 0 10px; }
+        p { color: #5f6f61; font-size: 15px; line-height: 1.6; margin: 0 0 25px; }
+        .badge { display: inline-block; background: #eaf6ea; color: #2e7d32; font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+        a.btn { display: inline-block; background: #2e7d32; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 12px; transition: background 0.2s ease; }
+        a.btn:hover { background: #1b5e20; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <span class="badge">● API Active & Connected</span>
+        <h1>FoodSaver AI Backend</h1>
+        <p>This is the backend API service for FoodSaver AI. To explore the live application, visit the frontend on Vercel.</p>
+        <a class="btn" href="https://foodsaver-ai-theta.vercel.app">Go to FoodSaver AI Website &rarr;</a>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
     message: "FoodSaver AI API is running",
   });
 });
+
 
 app.use("/api/ngos", ngoRoutes);
 app.use("/api/pickups", pickupRoutes);
