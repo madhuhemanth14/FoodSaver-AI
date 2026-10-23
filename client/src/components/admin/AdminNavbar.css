@@ -1,0 +1,113 @@
+.admin-navbar {
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(46, 125, 50, 0.12);
+}
+
+.admin-navbar__title {
+  font-weight: 700;
+  color: #2e7d32;
+  font-size: 1rem;
+}
+
+.admin-navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-navbar__bell {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(46, 125, 50, 0.16);
+  border-radius: 50%;
+  background: #eaf6ea;
+  color: #2e7d32;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-navbar__bell:hover {
+  background: #dcefdc;
+}
+
+.admin-navbar__badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c62828;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0 4px;
+}
+
+.admin-navbar__profile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  padding: 4px 7px;
+}
+
+.admin-navbar__profile:hover {
+  background: #f1f8f1;
+}
+
+.admin-navbar__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.admin-navbar__profile-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.admin-navbar__name {
+  font-size: 0.88rem;
+  color: #33402f;
+  font-weight: 600;
+}
+
+.admin-navbar__edit-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 3px;
+  font-size: 0.68rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .admin-navbar { padding: 0 14px; }
+  .admin-navbar__profile-text { display: none; }
+}

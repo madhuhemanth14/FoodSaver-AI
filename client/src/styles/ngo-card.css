@@ -1,0 +1,167 @@
+.ngo-card {
+  --fs-primary: #2e7d32;
+  --fs-secondary: #66bb6a;
+  --fs-white: #ffffff;
+  --fs-text: #1c2b1e;
+  --fs-text-muted: #5c6b5e;
+  --fs-border: #e1ebe1;
+
+  font-family: "Poppins", sans-serif;
+  background: var(--fs-white);
+  border: 1px solid var(--fs-border);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(46, 125, 50, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.ngo-card:hover,
+.ngo-card--selected {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(46, 125, 50, 0.16);
+  border-color: var(--fs-secondary);
+}
+
+.ngo-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ngo-card__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ngo-card__name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--fs-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ngo-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.ngo-card__badge--verified {
+  background: rgba(46, 125, 50, 0.12);
+  color: var(--fs-primary);
+}
+
+.ngo-card__badge--unverified {
+  background: #f2f2f2;
+  color: var(--fs-text-muted);
+}
+
+.ngo-card__meta-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.88rem;
+  color: var(--fs-text-muted);
+}
+
+.ngo-card__rating {
+  color: #c98a12;
+  font-weight: 600;
+}
+
+.ngo-card__address {
+  font-size: 0.88rem;
+  color: var(--fs-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.ngo-card__section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fs-text-muted);
+  margin: 0 0 6px;
+}
+
+.ngo-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ngo-card__tag {
+  font-size: 0.76rem;
+  font-weight: 500;
+  background: #eef6ee;
+  color: var(--fs-primary);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.ngo-card__hours {
+  font-size: 0.85rem;
+  color: var(--fs-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ngo-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.ngo-card__btn {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--fs-primary);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ngo-card__btn--outline {
+  background: transparent;
+  color: var(--fs-primary);
+}
+
+.ngo-card__btn--outline:hover {
+  background: rgba(46, 125, 50, 0.08);
+}
+
+.ngo-card__btn--filled {
+  background: var(--fs-primary);
+  color: var(--fs-white);
+}
+
+.ngo-card__btn--filled:hover {
+  background: #1f5c24;
+}
+
+.ngo-card__btn:focus-visible,
+.ngo-card:focus-visible {
+  outline: 2px solid var(--fs-secondary);
+  outline-offset: 2px;
+}

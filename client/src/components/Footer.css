@@ -1,0 +1,201 @@
+/* =========================================================
+   FOODSAVER AI - FOOTER
+   Clean 4-column balanced layout, high-contrast green theme
+========================================================= */
+
+.footer {
+  width: 100%;
+  background: #1b5e20;
+  background: linear-gradient(180deg, #1b5e20 0%, #154e1b 100%);
+  color: #ffffff;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 48px 32px 24px;
+  margin-top: auto;
+  box-sizing: border-box;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   COLUMN 1: BRAND & SOCIAL
+========================================================= */
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 340px;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.footer-logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #a5d6a7;
+  flex-shrink: 0;
+}
+
+.footer-logo b {
+  color: #a5d6a7;
+  font-weight: 800;
+}
+
+.footer-brand p {
+  color: #e8f5e9;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+/* Social media icons directly below the description */
+.footer-brand .social-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.footer-brand .social-icons a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.footer-brand .social-icons a:hover {
+  background: #ffffff;
+  color: #1b5e20;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   COLUMNS 2, 3, 4: HEADINGS & LINKS
+========================================================= */
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.footer-column h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: 0.02em;
+  position: relative;
+  text-transform: none;
+}
+
+.footer-column a {
+  display: inline-block;
+  color: #d7edd8;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  transition: color 0.15s ease, transform 0.15s ease;
+  text-align: left;
+}
+
+.footer-column a:hover {
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+/* =========================================================
+   BOTTOM COPYRIGHT
+========================================================= */
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 36px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.footer-copy {
+  margin: 0;
+  color: #c8e6c9;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.8125rem;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 960px) {
+  .footer {
+    padding: 40px 24px 24px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 24px;
+  }
+
+  .footer-brand {
+    max-width: 100%;
+  }
+}
+
+/* Mobile (320px - 600px) */
+@media (max-width: 600px) {
+  .footer {
+    padding: 36px 18px 24px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-bottom {
+    margin-top: 28px;
+    padding-top: 16px;
+  }
+}
+

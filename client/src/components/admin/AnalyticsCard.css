@@ -1,0 +1,84 @@
+.analytics-card {
+  background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.analytics-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.analytics-card__header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1b3a1d;
+}
+
+.analytics-card__trend {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #2e7d32;
+  background: #e6f5e8;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.analytics-card__description {
+  margin: 4px 0 12px;
+  font-size: 0.8rem;
+  color: #5b6b5c;
+}
+
+.analytics-card__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1b3a1d;
+  margin-bottom: 8px;
+}
+
+.analytics-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.analytics-chart--donut {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.analytics-donut {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.analytics-donut__legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.78rem;
+  color: #33402f;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.analytics-donut__legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.analytics-donut__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}

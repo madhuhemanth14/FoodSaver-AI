@@ -1,0 +1,312 @@
+/* ===== PickupForm ===== */
+.pickup-form {
+  --fs-primary: #2e7d32;
+  --fs-primary-dark: #1f5c24;
+  --fs-secondary: #66bb6a;
+  --fs-white: #ffffff;
+  --fs-text: #1c2b1e;
+  --fs-text-muted: #5c6b5e;
+  --fs-border: #e1ebe1;
+  --fs-danger: #d64545;
+
+  font-family: "Poppins", sans-serif;
+  background: var(--fs-white);
+  border: 1px solid var(--fs-border);
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 4px 18px rgba(46, 125, 50, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pickup-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 520px) {
+  .pickup-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pickup-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pickup-form__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fs-text);
+}
+
+.pickup-form__input,
+.pickup-form__select,
+.pickup-form__textarea {
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--fs-text);
+  background: var(--fs-bg, #f8faf8);
+  border: 1px solid var(--fs-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pickup-form__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.pickup-form__input:focus,
+.pickup-form__select:focus,
+.pickup-form__textarea:focus {
+  border-color: var(--fs-primary);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.pickup-form__input--error,
+.pickup-form__select--error,
+.pickup-form__textarea--error {
+  border-color: var(--fs-danger);
+}
+
+.pickup-form__error {
+  font-size: 0.78rem;
+  color: var(--fs-danger);
+  margin: 0;
+}
+
+.pickup-form__submit {
+  margin-top: 6px;
+  background: var(--fs-primary);
+  color: var(--fs-white);
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 14px 22px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.pickup-form__submit:hover:not(:disabled) {
+  background: var(--fs-primary-dark);
+  transform: translateY(-1px);
+}
+
+.pickup-form__submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pickup-form__banner {
+  font-size: 0.85rem;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.pickup-form__banner--success {
+  background: #eef6ee;
+  color: var(--fs-primary-dark);
+}
+
+.pickup-form__banner--error {
+  background: #fdecec;
+  color: var(--fs-danger);
+}
+
+/* ===== PickupStatus ===== */
+.pickup-status {
+  font-family: "Poppins", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.pickup-status--requested { background: #fff6db; color: #9a7b00; }
+.pickup-status--ngo_accepted { background: #e6f6e8; color: #2e7d32; }
+.pickup-status--scheduled { background: #e5f0fb; color: #1c5fa8; }
+.pickup-status--pickup_assigned { background: #f2e8fb; color: #6c3ea8; }
+.pickup-status--picked_up { background: #fdeee0; color: #b8600e; }
+.pickup-status--completed { background: #e0f6e8; color: #1f7a3c; }
+.pickup-status--rejected { background: #fdecec; color: #c53838; }
+
+/* ===== PickupTimeline ===== */
+.pickup-timeline {
+  --fs-primary: #2e7d32;
+  --fs-secondary: #66bb6a;
+  --fs-text: #1c2b1e;
+  --fs-text-muted: #5c6b5e;
+  --fs-border: #e1ebe1;
+
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.pickup-timeline__step {
+  display: flex;
+  gap: 14px;
+  position: relative;
+  padding-bottom: 22px;
+}
+
+.pickup-timeline__step:last-child {
+  padding-bottom: 0;
+}
+
+.pickup-timeline__marker-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pickup-timeline__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fs-border);
+  border: 3px solid var(--fs-border);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.pickup-timeline__step--done .pickup-timeline__dot {
+  background: var(--fs-primary);
+  border-color: rgba(46, 125, 50, 0.25);
+}
+
+.pickup-timeline__step--current .pickup-timeline__dot {
+  background: var(--fs-white, #fff);
+  border-color: var(--fs-primary);
+  box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.25);
+}
+
+.pickup-timeline__step--rejected .pickup-timeline__dot {
+  background: #d64545;
+  border-color: rgba(214, 69, 69, 0.25);
+}
+
+.pickup-timeline__line {
+  flex: 1;
+  width: 2px;
+  background: var(--fs-border);
+  margin-top: 2px;
+}
+
+.pickup-timeline__step--done .pickup-timeline__line {
+  background: var(--fs-primary);
+}
+
+.pickup-timeline__content {
+  padding-top: -1px;
+}
+
+.pickup-timeline__label {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--fs-text-muted);
+  margin: 0;
+}
+
+.pickup-timeline__step--done .pickup-timeline__label,
+.pickup-timeline__step--current .pickup-timeline__label {
+  color: var(--fs-text);
+  font-weight: 600;
+}
+
+/* ===== RouteCard ===== */
+.route-card {
+  --fs-primary: #2e7d32;
+  --fs-white: #ffffff;
+  --fs-text: #1c2b1e;
+  --fs-text-muted: #5c6b5e;
+  --fs-border: #e1ebe1;
+
+  font-family: "Poppins", sans-serif;
+  background: var(--fs-white);
+  border: 1px solid var(--fs-border);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.route-card__point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.route-card__point-icon {
+  font-size: 1.3rem;
+}
+
+.route-card__point-label {
+  font-size: 0.75rem;
+  color: var(--fs-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.route-card__point-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.route-card__arrow {
+  color: var(--fs-text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.route-card__distance {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fs-primary);
+  background: #eef6ee;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.route-card__cta {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid var(--fs-primary);
+  color: var(--fs-primary);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 9px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.route-card__cta:hover {
+  background: rgba(46, 125, 50, 0.08);
+}

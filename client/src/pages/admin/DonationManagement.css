@@ -1,0 +1,155 @@
+/* Shared patterns (page header, row actions, pagination, modal) mirror
+   UserManagement.css — repeated here to keep each page's styles scoped
+   and self-contained rather than adding a new shared file. */
+
+.admin-page-header {
+  margin-bottom: 18px;
+}
+
+.admin-page-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+  color: #1b3a1d;
+}
+
+.admin-page-header p {
+  margin: 0;
+  color: #5b6b5c;
+  font-size: 0.9rem;
+}
+
+.row-actions__btn {
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  background: #ffffff;
+  color: #2e7d32;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.row-actions__btn:hover {
+  background: rgba(102, 187, 106, 0.12);
+}
+
+.row-actions__btn:focus-visible {
+  outline: 2px solid #2e7d32;
+  outline-offset: 1px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #3d4d3e;
+}
+
+.pagination button {
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  background: #ffffff;
+  color: #2e7d32;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination button:not(:disabled):hover {
+  background: rgba(102, 187, 106, 0.12);
+}
+
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 30, 16, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.admin-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.admin-modal h2 {
+  margin: 0 0 14px;
+  color: #1b3a1d;
+  font-size: 1.15rem;
+}
+
+.admin-modal__list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin: 0 0 18px;
+  font-size: 0.88rem;
+}
+
+.admin-modal__list dt {
+  font-weight: 600;
+  color: #5b6b5c;
+}
+
+.admin-modal__list dd {
+  margin: 0;
+  color: #29332a;
+}
+
+/* Donation status badges */
+.donation-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.donation-status--available {
+  color: #1b5e20;
+  background: rgba(165, 214, 167, 0.35);
+}
+
+.donation-status--accepted {
+  color: #2e7d32;
+  background: rgba(102, 187, 106, 0.18);
+}
+
+.donation-status--pickup_scheduled {
+  color: #00695c;
+  background: rgba(0, 150, 136, 0.12);
+}
+
+.donation-status--picked_up {
+  color: #1565c0;
+  background: rgba(21, 101, 192, 0.1);
+}
+
+.donation-status--completed {
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.16);
+  font-weight: 700;
+}
+
+.donation-status--cancelled {
+  color: #b3261e;
+  background: rgba(179, 38, 30, 0.1);
+}
