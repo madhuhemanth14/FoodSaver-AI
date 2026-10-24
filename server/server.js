@@ -71,9 +71,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/health", (req, res) => {
+  const Pickup = require("./models/Pickup");
   res.json({
     success: true,
     message: "FoodSaver AI API is running",
+    pickupModel: Pickup.modelName,
+    build: "pickup-restored-v2",
   });
 });
 
