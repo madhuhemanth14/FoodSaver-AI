@@ -18,9 +18,9 @@ const Stats = () => {
           return (
             <div className="stat" key={stat.label}>
               <div className="stat-icon">
-                <Icon size={20} />
+                <Icon size={22} />
               </div>
-              <div>
+              <div className="stat-info">
                 <strong>{stat.number}</strong>
                 <span>{stat.label}</span>
               </div>

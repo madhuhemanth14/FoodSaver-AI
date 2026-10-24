@@ -272,14 +272,11 @@ textarea {
 
 .hero-food-image {
   width: 100%;
-
-  max-width: 520px;
-
+  max-width: 100%;
   position: relative;
-
   z-index: 2;
-
   display: block;
+  margin: 0 auto;
 }
 
 
@@ -570,51 +567,7 @@ textarea {
 
 
 /* =========================================
-   STATS
-========================================= */
-
-.stats-section {
-  padding: 65px 6%;
-
-  /* Keep the page background clean; only the rounded stats card is green. */
-  background: transparent;
-
-  color: #17201b;
-}
-
-.stats-container {
-  max-width: 1100px;
-
-  margin: 0 auto;
-
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.stat {
-  text-align: center;
-
-  padding: 15px;
-
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.stat:last-child {
-  border-right: none;
-}
-
-.stat h3 {
-  font-size: 35px;
-
-  margin-bottom: 7px;
-}
-
-.stat p {
-  font-size: 12px;
-
-  color: rgba(255, 255, 255, 0.8);
-}
+/* Stats styles managed in components/Stats.css */
 
 
 /* =========================================
@@ -1389,25 +1342,9 @@ textarea {
   }
 
   .hero-food-image {
-    width: 110%;
-
-    max-width: 500px;
-  }
-
-  .stats-container {
-    grid-template-columns: 1fr;
-  }
-
-  .stat {
-    border-right: none;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
-    padding-bottom: 18px;
-  }
-
-  .stat:last-child {
-    border-bottom: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
   .cta-content {

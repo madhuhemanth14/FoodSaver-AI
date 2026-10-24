@@ -1,98 +1,191 @@
-/* Impact statistics: clean layout without a full-width green banner */
+/* Impact statistics: clean, polished layout */
 .stats-section {
-  padding: 30px 48px 34px;
+  padding: 36px 32px 44px;
   background: transparent;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .stats-container {
   max-width: 1240px;
   margin: 0 auto;
-  background: transparent;
-  border-radius: 0;
-  padding: 0 32px;
+  background: #ffffff;
+  border: 1px solid #e8f0ea;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(27, 58, 29, 0.05);
+  padding: 20px 24px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
   gap: 0;
+  box-sizing: border-box;
 }
 
 .stat {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 16px;
-  color: #176b35;
-  min-height: 110px;
-  padding: 18px 34px;
-  border-right: 1px solid #dfe9e1;
+  padding: 12px 20px;
+  border-right: 1px solid #e8f0ea;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 80px;
 }
 
-.stat:nth-child(3),
-.stat:nth-child(5) {
+.stat:last-child {
   border-right: none;
 }
 
-.stat:nth-child(4),
-.stat:nth-child(5) {
-  margin-top: 10px;
-}
-
 .stat-icon {
-  width: 68px;
-  height: 68px;
-  border-radius: 16px;
-  background: #e3f3e8;
-  color: #16833d;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 14px;
+  background: #e8f5e9;
+  color: #1b5e20;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  flex: 1;
 }
 
 .stat strong {
   display: block;
-  color: #16833d;
-  font-size: 1.75rem;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: 1.55rem;
   font-weight: 800;
-  line-height: 1.2;
+  color: #1b4332;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .stat span {
   display: block;
-  color: #5d7180;
-  font-size: 1rem;
-  margin-top: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #52796f;
+  margin-top: 4px;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
-@media (max-width: 960px) {
+/* Tablet: balanced grid with card treatment */
+@media (max-width: 1024px) and (min-width: 641px) {
   .stats-section {
-    padding: 36px 20px 48px;
+    padding: 30px 24px 38px;
   }
 
   .stats-container {
-    grid-template-columns: repeat(2, 1fr);
-    padding: 0;
-  }
-
-  .stat,
-  .stat:nth-child(3),
-  .stat:nth-child(5) {
-    border-right: none;
-    padding: 16px;
-    margin-top: 0;
-  }
-}
-
-@media (max-width: 560px) {
-  .stats-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    padding: 20px;
   }
 
   .stat {
-    border-bottom: 1px solid #dfe9e1;
+    border-right: none;
+    background: #f8faf8;
+    border-radius: 14px;
+    border: 1px solid #e8f0ea;
+    padding: 14px 18px;
+    min-height: 76px;
+  }
+}
+
+/* Mobile: clean vertical list with icons in column 1 and text in column 2 */
+@media (max-width: 640px) {
+  .stats-section {
+    padding: 20px 16px 32px;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 8px 16px;
+    border-radius: 16px;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 13px 4px;
+    border-right: none;
+    border-bottom: 1px solid #edf3ee;
+    min-height: 68px;
+    width: 100%;
   }
 
   .stat:last-child {
     border-bottom: none;
+  }
+
+  .stat-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 12px;
+  }
+
+  .stat-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .stat strong {
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .stat span {
+    font-size: 0.82rem;
+    margin-top: 2px;
+  }
+}
+
+@media (max-width: 360px) {
+  .stats-section {
+    padding: 16px 12px 28px;
+  }
+
+  .stats-container {
+    padding: 6px 12px;
+  }
+
+  .stat {
+    gap: 12px;
+    padding: 11px 2px;
+  }
+
+  .stat-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .stat strong {
+    font-size: 1.25rem;
+  }
+
+  .stat span {
+    font-size: 0.78rem;
   }
 }

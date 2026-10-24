@@ -323,38 +323,31 @@
 
 .hero-image-frame {
   position: relative;
-
   width: 100%;
-
-  max-width: 600px;
-
-  padding: 18px;
-
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 16px;
   background: #ffffff;
-
-  border-radius: 28px;
-
+  border-radius: 26px;
   box-sizing: border-box;
-
-  box-shadow:
-    0 25px 60px rgba(27, 58, 29, 0.16);
-
+  box-shadow: 0 25px 60px rgba(27, 58, 29, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   z-index: 1;
 }
 
 
 .hero-food-image {
   display: block;
-
   width: 100%;
-
+  max-width: 100% !important;
   height: auto;
-
-  aspect-ratio: 1.38 / 1;
-
+  aspect-ratio: 16 / 10;
   object-fit: cover;
-
   border-radius: 18px;
+  margin: 0 auto;
 }
 
 
@@ -707,25 +700,26 @@
 
   .hero-right {
     min-height: auto;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
   .hero-image-frame {
     max-width: 100%;
-
+    margin: 0 auto;
     padding: 12px;
-
-    border-radius: 20px;
+    border-radius: 18px;
   }
 
   .hero-food-image {
-    border-radius: 13px;
+    border-radius: 12px;
+    margin: 0 auto;
   }
 
   .hero-card,
   .hero-food-saved {
     display: none;
   }
-
 }
 
 

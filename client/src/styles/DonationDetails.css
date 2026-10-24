@@ -37,12 +37,17 @@
   border-radius: var(--fs-radius-md);
   overflow: hidden;
   border: 1px solid var(--fs-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
 }
 
 .fs-details-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .fs-details-no-image {

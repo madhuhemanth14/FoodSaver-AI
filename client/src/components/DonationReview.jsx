@@ -30,6 +30,7 @@ function formatDateTime(dateValue, timeValue) {
  */
 export default function DonationReview({ donation, onEdit, onConfirm, submitting }) {
   const { aiAnalysis } = donation;
+  const hasPhoto = Boolean(donation.imagePreviewUrl);
 
   return (
     <div className="fs-card fs-review-card fs-fade-in">
@@ -41,13 +42,15 @@ export default function DonationReview({ donation, onEdit, onConfirm, submitting
         </div>
       </div>
 
-      <div className="fs-review-body">
+      <div className={`fs-review-body ${hasPhoto ? "fs-review-body--has-photo" : "fs-review-body--no-photo"}`}>
         {/* Left column: food photo if present */}
-        {donation.imagePreviewUrl && (
+        {hasPhoto && (
           <div className="fs-review-image-pane">
-            <img src={donation.imagePreviewUrl} alt={donation.foodName} className="fs-review-photo" />
+            <div className="fs-review-photo-wrapper">
+              <img src={donation.imagePreviewUrl} alt={donation.foodName} className="fs-review-photo" />
+            </div>
             <div className="fs-review-photo-caption">
-              <ShieldCheck size={13} /> Attached Food Photo
+              <ShieldCheck size={14} /> Attached Food Photo
             </div>
           </div>
         )}
