@@ -1,32 +1,134 @@
 const mongoose = require("mongoose");
 
-// Permanent record of every password an email address has ever used, kept as
-// bcrypt HASHES ONLY (never plaintext). It is used for exactly one thing:
-// refusing a password that was used before for the same email.
-//
-//  - It must SURVIVE account deletion (never delete these records when a
-//    User is removed), so a deleted-then-re-registered email cannot reuse an
-//    old password.
-//  - It is NEVER a login credential: login only checks User.password.
-const passwordHistorySchema = new mongoose.Schema(
+const pickupSchema = new mongoose.Schema(
   {
-    email: {
+    donation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Donation",
+      required: true,
+    },
+    ngo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NGO",
+      required: true,
+    },
+    donor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    partner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    donorName: {
       type: String,
       required: true,
-      lowercase: true,
       trim: true,
-      index: true,
     },
-    passwordHash: {
+    donorPhone: {
       type: String,
       required: true,
+      trim: true,
     },
-    createdAt: {
+    donorEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
+    foodItems: {
+      type: [String],
+      required: true,
+      default: [],
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 0.1,
+    },
+    quantityUnit: {
+      type: String,
+      default: "kg",
+    },
+    pickupAt: {
       type: Date,
+    },
+    pickupDate: {
+      type: Date,
+      required: true,
       default: Date.now,
     },
+    pickupTime: {
+      type: String,
+      required: true,
+      default: "ASAP",
+    },
+    address: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    donorAddress: {
+      type: String,
+      default: "",
+    },
+    deliveryAddress: {
+      type: String,
+      default: "",
+    },
+    notes: {
+      type: String,
+      default: "",
+    },
+    status: {
+      type: String,
+      enum: [
+        "Pending Confirmation",
+        "Confirmed",
+        "Picked Up",
+        "Completed",
+        "Cancelled",
+        "Pending",
+        "Requested",
+        "Accepted",
+        "On the Way",
+        "Arrived",
+        "Delivered",
+      ],
+      default: "Pending Confirmation",
+    },
+    confirmedAt: {
+      type: Date,
+    },
+    pickedUpAt: {
+      type: Date,
+    },
+    completedAt: {
+      type: Date,
+    },
+    cancelledAt: {
+      type: Date,
+    },
+    timeline: [
+      {
+        status: { type: String, required: true },
+        note: { type: String, default: "" },
+        updatedAt: { type: Date, default: Date.now },
+        updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
   },
-  { timestamps: false }
+  {
+    timestamps: true,
+  }
 );
 
-module.exports = mongoose.model("PasswordHistory", passwordHistorySchema);
+pickupSchema.index({ partner: 1, status: 1 });
+pickupSchema.index({ ngo: 1, status: 1 });
+pickupSchema.index({ donation: 1 });
+pickupSchema.index({ donor: 1 });
+
+module.exports =
+  mongoose.models.Pickup || mongoose.model("Pickup", pickupSchema);
