@@ -97,9 +97,13 @@ const Home = () => {
 /* Global site chrome: one Navbar + one Footer around every non-admin page. */
 const SiteLayout = () => {
   const location = useLocation();
-  const isAuthPage = ["/login", "/signup", "/register"].includes(
-    location.pathname
-  );
+  const isAuthPage = [
+    "/login",
+    "/signup",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+  ].some((path) => location.pathname === path || location.pathname.startsWith(path + "/"));
 
   return (
     <>

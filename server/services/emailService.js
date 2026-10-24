@@ -6,15 +6,18 @@ const nodemailer = require("nodemailer");
 const EMAIL_USER = String(process.env.EMAIL_USER || "").trim();
 const EMAIL_PASS = String(process.env.EMAIL_PASS || "").replace(/\s+/g, "");
 
-// Explicit SMTP settings (defaults = Gmail over implicit TLS). Override in
-// server/.env with SMTP_HOST / SMTP_PORT / SMTP_SECURE if needed, e.g.
-//   SMTP_HOST=smtp.gmail.com  SMTP_PORT=587  SMTP_SECURE=false   (STARTTLS)
+// Explicit SMTP settings (defaults = Gmail STARTTLS on port 587 or SSL on 465).
+// Override in server/.env with SMTP_HOST / SMTP_PORT / SMTP_SECURE if needed.
 const SMTP_HOST = String(process.env.SMTP_HOST || "smtp.gmail.com").trim();
-const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 587;
 const SMTP_SECURE =
   process.env.SMTP_SECURE !== undefined && process.env.SMTP_SECURE !== ""
     ? String(process.env.SMTP_SECURE).trim().toLowerCase() === "true"
     : SMTP_PORT === 465;
+
+// Optional HTTP API credentials (bypasses raw SMTP port restrictions on hosts like Render Free Tier).
+const RESEND_API_KEY = String(process.env.RESEND_API_KEY || "").trim();
+const BREVO_API_KEY = String(process.env.BREVO_API_KEY || "").trim();
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
@@ -24,18 +27,26 @@ const transporter = nodemailer.createTransport({
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
-  // Fail fast with a clear ETIMEDOUT instead of hanging the Verify click.
-  connectionTimeout: 15000,
-  greetingTimeout: 15000,
-  socketTimeout: 30000,
+  // Fail fast with a clear ETIMEDOUT instead of hanging for 30s.
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
   tls: {
     rejectUnauthorized: false,
   },
 });
 
-console.log(`SMTP: host=${SMTP_HOST} port=${SMTP_PORT} secure=${SMTP_SECURE}`);
+const activeProvider = RESEND_API_KEY
+  ? "Resend (HTTPS API)"
+  : BREVO_API_KEY
+  ? "Brevo (HTTPS API)"
+  : `SMTP (${SMTP_HOST}:${SMTP_PORT}, secure=${SMTP_SECURE})`;
+
+console.log(`[email] Active provider: ${activeProvider}`);
 console.log("EMAIL_USER:", EMAIL_USER || "MISSING");
 console.log("EMAIL_PASS:", EMAIL_PASS ? "FOUND" : "MISSING");
+if (RESEND_API_KEY) console.log("RESEND_API_KEY: CONFIGURED");
+if (BREVO_API_KEY) console.log("BREVO_API_KEY: CONFIGURED");
 
 /**
  * Works out WHY a send failed, so callers can tell "this recipient address
@@ -103,7 +114,7 @@ function logMailError(context, error) {
 // One-off startup check: logs whether we can log in to the SMTP server at
 // all, so a broken EMAIL_USER / EMAIL_PASS is visible immediately instead of
 // showing up later as a failed verification email.
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "test" && typeof transporter?.verify === "function") {
   if (!EMAIL_USER || !EMAIL_PASS) {
     console.error("[email] SMTP NOT configured: set EMAIL_USER and EMAIL_PASS (Gmail App Password) in server/.env");
   } else {
@@ -115,6 +126,97 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 /**
+ * Sends email via Resend REST API (HTTPS port 443) if RESEND_API_KEY is configured.
+ */
+async function sendViaResend({ to, subject, text, html, replyTo = null }) {
+  if (!RESEND_API_KEY) return null;
+
+  const from = process.env.RESEND_FROM || `FoodSaver AI <${EMAIL_USER || "onboarding@resend.dev"}>`;
+  const payload = {
+    from,
+    to: [to],
+    subject,
+    text,
+    html: html || undefined,
+  };
+  if (replyTo) payload.reply_to = replyTo;
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    const msg = data?.message || data?.error || `Resend HTTP ${response.status}`;
+    const err = new Error(msg);
+    err.code = "RESEND_API_ERROR";
+    throw err;
+  }
+
+  console.log(`[email] Sent via Resend API to: ${to} (id: ${data.id})`);
+  return {
+    success: true,
+    sentAt: new Date(),
+    error: null,
+    accepted: [to],
+    smtpResponse: `250 OK (Resend: ${data.id})`,
+    messageId: data.id,
+    provider: "resend",
+  };
+}
+
+/**
+ * Sends email via Brevo REST API (HTTPS port 443) if BREVO_API_KEY is configured.
+ */
+async function sendViaBrevo({ to, subject, text, html, replyTo = null }) {
+  if (!BREVO_API_KEY) return null;
+
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || EMAIL_USER || "hello.foodsaverai@gmail.com";
+  const payload = {
+    sender: { name: "FoodSaver AI", email: senderEmail },
+    to: [{ email: to }],
+    subject,
+    textContent: text,
+    htmlContent: html || undefined,
+  };
+  if (replyTo) payload.replyTo = { email: replyTo };
+
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": BREVO_API_KEY,
+      "Content-Type": "application/json",
+      accept: "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    const msg = data?.message || `Brevo HTTP ${response.status}`;
+    const err = new Error(msg);
+    err.code = "BREVO_API_ERROR";
+    throw err;
+  }
+
+  console.log(`[email] Sent via Brevo API to: ${to} (id: ${data.messageId})`);
+  return {
+    success: true,
+    sentAt: new Date(),
+    error: null,
+    accepted: [to],
+    smtpResponse: `250 OK (Brevo: ${data.messageId})`,
+    messageId: data.messageId,
+    provider: "brevo",
+  };
+}
+
+/**
  * Original signature — kept exactly as-is so every existing caller
  * (emailRoutes.js, pickupController.js) keeps working unchanged.
  *
@@ -122,6 +224,12 @@ if (process.env.NODE_ENV !== "test") {
  */
 const sendEmail = async (to, subject, text, replyTo = null) => {
   try {
+    // If an HTTP API is configured, use it for reliability across cloud firewalls
+    if (RESEND_API_KEY || BREVO_API_KEY) {
+      const result = await sendTemplated({ to, subject, text, replyTo });
+      return result.success;
+    }
+
     const mailOptions = {
       from: `"FoodSaver AI" <${EMAIL_USER}>`,
       to,
@@ -133,8 +241,7 @@ const sendEmail = async (to, subject, text, replyTo = null) => {
       mailOptions.replyTo = replyTo;
     }
 
-    await transporter.sendMail(mailOptions);
-
+    const info = await transporter.sendMail(mailOptions);
     console.log("Email sent successfully to:", to);
     return true;
   } catch (error) {
@@ -144,11 +251,9 @@ const sendEmail = async (to, subject, text, replyTo = null) => {
 };
 
 /**
- * New, richer helper used by every new email flow added for this feature
- * (registration, donation, expiry, pickup lifecycle). Supports HTML +
- * plain-text fallback and returns a structured result so callers can
- * persist emailStatus/emailType/emailSentAt/emailError without ever
- * throwing — a failed email must never fail the calling operation.
+ * Rich helper used by every email flow (registration, password reset,
+ * donation, expiry, pickup lifecycle). Supports HTML + plain-text fallback
+ * and returns a structured result so callers can handle delivery status gracefully.
  *
  *   sendEmail.sendTemplated({ to, subject, text, html, replyTo })
  *     -> Promise<{ success: boolean, sentAt: Date|null, error: string|null }>
@@ -160,6 +265,20 @@ const sendTemplated = async ({ to, subject, text, html, replyTo = null }) => {
       err.code = "EENVELOPE";
       throw err;
     }
+
+    // 1. Try Resend if configured
+    if (RESEND_API_KEY) {
+      const resendResult = await sendViaResend({ to, subject, text, html, replyTo });
+      if (resendResult) return resendResult;
+    }
+
+    // 2. Try Brevo if configured
+    if (BREVO_API_KEY) {
+      const brevoResult = await sendViaBrevo({ to, subject, text, html, replyTo });
+      if (brevoResult) return brevoResult;
+    }
+
+    // 3. Fall back to SMTP (Gmail / custom SMTP host)
     if (!EMAIL_USER || !EMAIL_PASS) {
       const err = new Error("EMAIL_USER / EMAIL_PASS are not set in server/.env");
       err.code = "MISSING_CONFIG";
@@ -207,6 +326,7 @@ const sendTemplated = async ({ to, subject, text, html, replyTo = null }) => {
       accepted,
       smtpResponse: info.response || null,
       messageId: info.messageId || null,
+      provider: "smtp",
     };
   } catch (error) {
     const info = logMailError(`send to ${to} [${subject}]`, error);

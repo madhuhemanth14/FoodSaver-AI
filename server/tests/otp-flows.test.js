@@ -379,13 +379,13 @@ test("registration: NGO role gets its NGO record only when the account is create
 
 // ------------------------------------------------------------------ FORGOT PASSWORD
 
-test("forgot password: unregistered email -> 404 with the required message, no OTP sent", async () => {
+test("forgot password: unregistered email -> generic success without account enumeration, no OTP sent", async () => {
   const sentBefore = outbox.length;
   const r = await post("/forgot-password", { email: "ghost@example.com" });
-  assert.equal(r.status, 404);
+  assert.equal(r.status, 200);
   assert.equal(
     r.body.message,
-    "This email is not registered with FoodSaver AI. Please enter the email used to create your account."
+    "If an account exists with this email, an OTP has been sent. Check your email and enter the OTP to reset your password."
   );
   assert.equal(outbox.length, sentBefore);
 });

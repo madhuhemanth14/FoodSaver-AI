@@ -197,7 +197,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page reset-password-page">
       <div className="auth-form-section">
         <div className="auth-form-container">
           <Link to="/" className="auth-logo">

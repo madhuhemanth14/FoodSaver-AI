@@ -57,7 +57,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page forgot-password-page">
       <div className="auth-form-section">
         <div className="auth-form-container">
           <Link to="/" className="auth-logo">
@@ -106,7 +106,7 @@ const ForgotPassword = () => {
               </button>
 
               <p className="forgot-password-help">
-                If the email is not registered, the page will tell you to enter a correct email address.
+                We will send a 6-digit verification code to this address if an account exists.
               </p>
             </form>
           )}
