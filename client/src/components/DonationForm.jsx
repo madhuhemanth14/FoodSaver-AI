@@ -283,22 +283,22 @@ export default function DonationForm({
         </div>
       </section>
 
-      {/* SECTION 2: QUANTITY & PREPARATION */}
+      {/* SECTION 2: QUANTITY & TIMING */}
       <section className="fs-form-section">
         <div className="fs-section-header">
           <div className="fs-section-icon-box">
             <Scale size={18} />
           </div>
           <div>
-            <h2 className="fs-section-title">Quantity &amp; Preparation Timing</h2>
+            <h2 className="fs-section-title">Quantity &amp; Shelf-Life Timing</h2>
             <p className="fs-section-desc">
-              Accurate preparation timing lets FoodSaver AI calculate exact food freshness.
+              Accurate timing enables FoodSaver AI to calculate precise freshness and consumption windows.
             </p>
           </div>
         </div>
 
-        <div className="fs-form-grid-3">
-          {/* Quantity & Unit Combo */}
+        {/* Quantity Field */}
+        <div className="fs-quantity-row">
           <div className="fs-field">
             <label htmlFor="quantity" className="fs-label">
               <span>Quantity</span>
@@ -337,59 +337,116 @@ export default function DonationForm({
               </span>
             )}
           </div>
+        </div>
 
-          {/* Preparation Date */}
-          <div className="fs-field">
-            <label htmlFor="preparationDate" className="fs-label">
-              <span>Preparation Date</span>
-              <span className="fs-required-mark" aria-hidden="true">*</span>
-            </label>
-            <div className="fs-input-affix-wrapper">
-              <span className="fs-input-prefix-icon" aria-hidden="true">
-                <Calendar size={16} />
-              </span>
-              <input
-                id="preparationDate"
-                type="date"
-                className={`fs-input fs-has-prefix ${showError("preparationDate") ? "fs-input-error" : ""}`}
-                value={form.preparationDate}
-                onChange={handleChange("preparationDate")}
-                onBlur={handleBlur("preparationDate")}
-                aria-invalid={!!showError("preparationDate")}
-              />
+        {/* Preparation Date/Time (Left) & Expiry Date/Time (Right) as two equal-sized boxes side by side */}
+        <div className="fs-timing-grid">
+          {/* Preparation Field (Left Box) */}
+          <div className="fs-timing-box">
+            <div className="fs-timing-box__header">
+              <label htmlFor="preparationDate" className="fs-label">
+                <Calendar size={15} />
+                <span>Preparation Date &amp; Time</span>
+                <span className="fs-required-mark" aria-hidden="true">*</span>
+              </label>
             </div>
-            {showError("preparationDate") && (
+
+            <div className="fs-timing-subgrid">
+              <div className="fs-field">
+                <div className="fs-input-affix-wrapper">
+                  <span className="fs-input-prefix-icon" aria-hidden="true">
+                    <Calendar size={16} />
+                  </span>
+                  <input
+                    id="preparationDate"
+                    type="date"
+                    className={`fs-input fs-has-prefix ${showError("preparationDate") ? "fs-input-error" : ""}`}
+                    value={form.preparationDate}
+                    onChange={handleChange("preparationDate")}
+                    onBlur={handleBlur("preparationDate")}
+                    aria-invalid={!!showError("preparationDate")}
+                    title="Preparation Date"
+                  />
+                </div>
+              </div>
+
+              <div className="fs-field">
+                <div className="fs-input-affix-wrapper">
+                  <span className="fs-input-prefix-icon" aria-hidden="true">
+                    <Clock size={16} />
+                  </span>
+                  <input
+                    id="preparationTime"
+                    type="time"
+                    className={`fs-input fs-has-prefix ${showError("preparationTime") ? "fs-input-error" : ""}`}
+                    value={form.preparationTime}
+                    onChange={handleChange("preparationTime")}
+                    onBlur={handleBlur("preparationTime")}
+                    aria-invalid={!!showError("preparationTime")}
+                    title="Preparation Time"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {(showError("preparationDate") || showError("preparationTime")) && (
               <span className="fs-error-text" role="alert">
-                <AlertCircle size={14} /> {errors.preparationDate}
+                <AlertCircle size={14} /> {errors.preparationDate || errors.preparationTime}
               </span>
             )}
           </div>
 
-          {/* Preparation Time */}
-          <div className="fs-field">
-            <label htmlFor="preparationTime" className="fs-label">
-              <span>Preparation Time</span>
-              <span className="fs-required-mark" aria-hidden="true">*</span>
-            </label>
-            <div className="fs-input-affix-wrapper">
-              <span className="fs-input-prefix-icon" aria-hidden="true">
-                <Clock size={16} />
-              </span>
-              <input
-                id="preparationTime"
-                type="time"
-                className={`fs-input fs-has-prefix ${showError("preparationTime") ? "fs-input-error" : ""}`}
-                value={form.preparationTime}
-                onChange={handleChange("preparationTime")}
-                onBlur={handleBlur("preparationTime")}
-                aria-invalid={!!showError("preparationTime")}
-              />
+          {/* Expiry Field (Right Box) */}
+          <div className="fs-timing-box">
+            <div className="fs-timing-box__header">
+              <label htmlFor="expirationDate" className="fs-label fs-label--readonly">
+                <Sparkles size={15} className="fs-sparkle-gold" />
+                <span>Expiry Date &amp; Time</span>
+                <span className="fs-readonly-badge">AI Calculated</span>
+              </label>
             </div>
-            {showError("preparationTime") && (
-              <span className="fs-error-text" role="alert">
-                <AlertCircle size={14} /> {errors.preparationTime}
-              </span>
-            )}
+
+            <div className="fs-timing-subgrid">
+              <div className="fs-field">
+                <div className="fs-input-affix-wrapper">
+                  <span className="fs-input-prefix-icon fs-prefix-green" aria-hidden="true">
+                    <Calendar size={16} />
+                  </span>
+                  <input
+                    id="expirationDate"
+                    type="text"
+                    className="fs-input fs-has-prefix fs-ai-generated-field"
+                    value={displayDate(expiry.date)}
+                    readOnly
+                    placeholder={aiLoading ? "Calculating..." : "Calculated by AI"}
+                    aria-label="AI estimated expiry date (read only)"
+                    title="Estimated Expiry Date"
+                  />
+                </div>
+              </div>
+
+              <div className="fs-field">
+                <div className="fs-input-affix-wrapper">
+                  <span className="fs-input-prefix-icon fs-prefix-green" aria-hidden="true">
+                    <Clock size={16} />
+                  </span>
+                  <input
+                    id="expirationTime"
+                    type="text"
+                    className="fs-input fs-has-prefix fs-ai-generated-field"
+                    value={displayTime(expiry.time)}
+                    readOnly
+                    placeholder={aiLoading ? "Calculating..." : "Calculated by AI"}
+                    aria-label="AI estimated expiry time (read only)"
+                    title="Estimated Expiry Time"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <span className="fs-hint-text fs-hint-green">
+              {aiLoading ? "Calculating freshness..." : "Automatically estimated by FoodSaver AI."}
+            </span>
           </div>
         </div>
       </section>
@@ -477,51 +534,6 @@ export default function DonationForm({
               </div>
             </div>
           )}
-        </div>
-
-        {/* Estimated Expiry Preview Grid */}
-        <div className="fs-form-grid-2 fs-expiry-preview-grid">
-          <div className="fs-field">
-            <label htmlFor="expirationDate" className="fs-label fs-label--readonly">
-              <span>AI Estimated Expiry Date</span>
-              <span className="fs-readonly-badge">Read-only</span>
-            </label>
-            <div className="fs-input-affix-wrapper">
-              <span className="fs-input-prefix-icon fs-prefix-green" aria-hidden="true">
-                <Calendar size={16} />
-              </span>
-              <input
-                id="expirationDate"
-                type="text"
-                className="fs-input fs-has-prefix fs-ai-generated-field"
-                value={displayDate(expiry.date)}
-                readOnly
-                placeholder={aiLoading ? "Calculating..." : "Calculated by AI"}
-                aria-label="AI estimated expiry date (read only)"
-              />
-            </div>
-          </div>
-
-          <div className="fs-field">
-            <label htmlFor="expirationTime" className="fs-label fs-label--readonly">
-              <span>AI Estimated Expiry Time</span>
-              <span className="fs-readonly-badge">Read-only</span>
-            </label>
-            <div className="fs-input-affix-wrapper">
-              <span className="fs-input-prefix-icon fs-prefix-green" aria-hidden="true">
-                <Clock size={16} />
-              </span>
-              <input
-                id="expirationTime"
-                type="text"
-                className="fs-input fs-has-prefix fs-ai-generated-field"
-                value={displayTime(expiry.time)}
-                readOnly
-                placeholder={aiLoading ? "Calculating..." : "Calculated by AI"}
-                aria-label="AI estimated expiry time (read only)"
-              />
-            </div>
-          </div>
         </div>
       </section>
 

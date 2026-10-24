@@ -1487,30 +1487,6 @@ textarea {
 
 @media (max-width: 600px) {
 
-  .navbar {
-    height: 65px;
-
-    padding: 0 20px;
-  }
-
-  .logo {
-    font-size: 17px;
-  }
-
-  .logo-icon {
-    width: 35px;
-    height: 35px;
-  }
-
-  .login-btn {
-    padding: 8px 10px;
-  }
-
-  .signup-btn {
-    padding: 9px 15px;
-  }
-
-
   /* Hero */
 
   .hero {

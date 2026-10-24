@@ -305,6 +305,101 @@
   gap: 20px 20px;
 }
 
+/* Side-by-side Timing Grid (Preparation Date/Time & Expiry Date/Time) */
+.fs-quantity-row {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.fs-timing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.fs-timing-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fbfdfb;
+  border: 1.5px solid #dee5df;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  transition: border-color 0.18s ease;
+}
+
+.fs-timing-box:focus-within {
+  border-color: #2d6a4f;
+}
+
+.fs-timing-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 26px;
+}
+
+.fs-timing-box__header .fs-label {
+  margin: 0;
+  font-size: 0.90rem;
+  font-weight: 700;
+  color: #1b4332;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fs-timing-subgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.fs-timing-subgrid .fs-field {
+  min-width: 0;
+  gap: 0;
+}
+
+.fs-timing-subgrid .fs-input {
+  height: 46px;
+  box-sizing: border-box;
+  padding: 11px 14px 11px 40px;
+}
+
+.fs-hint-green {
+  color: #2e7d32;
+  font-size: 0.78rem;
+  margin-top: 4px;
+  display: block;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .fs-timing-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 440px) {
+  .fs-timing-box {
+    padding: 14px 12px;
+    border-radius: 12px;
+  }
+
+  .fs-timing-subgrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
 @media (max-width: 900px) {
   .fs-form-grid-3 {
     grid-template-columns: 1fr 1fr;
@@ -323,14 +418,25 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 640px) {
   .fs-donate-page .fs-container {
-    padding: 0 10px;
+    padding: 0 16px;
   }
   .fs-donate-form {
-    padding: 16px 10px;
+    padding: 20px 16px;
+    border-radius: 16px;
+    gap: 22px;
+  }
+}
+
+@media (max-width: 360px) {
+  .fs-donate-page .fs-container {
+    padding: 0 12px;
+  }
+  .fs-donate-form {
+    padding: 16px 12px;
     border-radius: 14px;
-    gap: 20px;
+    gap: 18px;
   }
   .fs-step-circle {
     width: 28px;

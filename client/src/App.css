@@ -53,25 +53,8 @@ a {
 
 
 /* =====================================================
-   NAVBAR
+   NAVBAR (managed in components/Navbar.css)
 ===================================================== */
-
-.navbar {
-  width: 100%;
-  min-height: 72px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-
-  padding: 0 5%;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
 
 .navbar-logo {
   display: flex;

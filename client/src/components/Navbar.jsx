@@ -60,6 +60,24 @@ const Navbar = () => {
         <a href="/#how-it-works" onClick={() => setMobileNavOpen(false)}>How It Works</a>
         <a href="/#features" onClick={() => setMobileNavOpen(false)}>Features</a>
         <a href="/#contact" onClick={() => setMobileNavOpen(false)}>Contact</a>
+
+        {/* Mobile drawer auth fallback */}
+        <div className="mobile-drawer-auth">
+          {!user ? (
+            <>
+              <Link to="/login" className="mobile-drawer-btn mobile-drawer-btn--login" onClick={() => setMobileNavOpen(false)}>
+                Login
+              </Link>
+              <Link to="/signup" className="mobile-drawer-btn mobile-drawer-btn--signup" onClick={() => setMobileNavOpen(false)}>
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <Link to={roleHomePath(user.role)} className="mobile-drawer-btn mobile-drawer-btn--dashboard" onClick={() => setMobileNavOpen(false)}>
+              Dashboard
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="nav-buttons">
