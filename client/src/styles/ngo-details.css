@@ -163,3 +163,25 @@
   margin-top: 28px;
   max-width: 980px;
 }
+
+@media (max-width: 600px) {
+  .ngo-details-page {
+    padding: 20px 14px 64px;
+  }
+
+  .ngo-details-page__body {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .ngo-details-page__name {
+    font-size: 1.3rem;
+  }
+
+  .ngo-details-page__cta {
+    width: 100%;
+    align-self: stretch;
+    text-align: center;
+    padding: 13px 20px;
+  }
+}

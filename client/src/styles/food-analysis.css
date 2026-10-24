@@ -484,3 +484,22 @@
 @media (max-width: 520px) {
   .fs-ai-result-summary { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 480px) {
+  .fa-page {
+    padding: 20px 12px 64px;
+  }
+
+  .fa-page__upload-section {
+    padding: 18px 14px;
+    border-radius: 14px;
+  }
+
+  .fa-analyze-btn {
+    width: 100%;
+  }
+
+  .fa-page__title {
+    font-size: 1.45rem;
+  }
+}

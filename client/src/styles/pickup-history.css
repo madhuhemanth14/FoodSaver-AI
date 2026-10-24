@@ -196,3 +196,17 @@
     gap: 14px;
   }
 }
+
+@media (max-width: 420px) {
+  .pickup-history-page {
+    padding: 20px 0 48px;
+  }
+
+  .pickup-history-header h1 {
+    font-size: 24px;
+  }
+
+  .pickup-history-card {
+    padding: 14px 12px;
+  }
+}

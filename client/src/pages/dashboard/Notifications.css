@@ -419,10 +419,7 @@
 
 @media (max-width: 650px) {
   .notifications-page {
-    padding:
-      18px
-      14px
-      30px;
+    padding: 18px 14px 80px;
   }
 
   .notifications-topbar {
@@ -431,6 +428,24 @@
 
   .notifications-topbar h1 {
     font-size: 21px;
+  }
+
+  .notification-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .notification-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 7px 12px;
   }
 
   .dashboard-link-button {
@@ -456,6 +471,10 @@
 }
 
 @media (max-width: 420px) {
+  .notifications-page {
+    padding: 14px 10px 80px;
+  }
+
   .notifications-topbar {
     flex-direction: column;
   }
@@ -465,10 +484,10 @@
   }
 
   .full-notification-content h3 {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .full-notification-content p {
-    font-size: 10px;
+    font-size: 11px;
   }
 }

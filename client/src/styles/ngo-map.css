@@ -117,3 +117,26 @@
     gap: 15px;
   }
 }
+
+@media (max-width: 480px) {
+  .ngo-map-page {
+    padding: 18px 12px 40px;
+  }
+
+  .ngo-map-page-header h1 {
+    font-size: 22px;
+  }
+
+  .ngo-map-page-badge {
+    font-size: 12px;
+    padding: 7px 12px;
+  }
+
+  .ngo-map-card-header {
+    padding: 16px 14px;
+  }
+
+  .ngo-map-card-header h2 {
+    font-size: 18px;
+  }
+}

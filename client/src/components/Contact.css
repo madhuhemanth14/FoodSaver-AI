@@ -231,3 +231,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 480px) {
+  .contact-section {
+    padding: 36px 14px 48px;
+  }
+
+  .contact-section .section-title h2 {
+    font-size: 1.6rem;
+  }
+
+  .contact-form {
+    padding: 20px 14px;
+    border-radius: 14px;
+  }
+}

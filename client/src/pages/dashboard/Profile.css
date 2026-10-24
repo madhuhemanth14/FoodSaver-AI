@@ -60,6 +60,8 @@
 .profile-card__detail-row {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
   border-bottom: 1px solid #f0f3f1;
   padding-bottom: 0.6rem;
   font-size: 0.88rem;
@@ -67,11 +69,15 @@
 
 .profile-card__detail-label {
   color: #6b8a78;
+  flex-shrink: 0;
 }
 
 .profile-card__detail-value {
   font-weight: 600;
   color: #1f2d24;
+  text-align: right;
+  word-break: break-word;
+  max-width: 65%;
 }
 
 .profile-card__edit-button {
@@ -241,3 +247,34 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 1.25rem 0.75rem 80px;
+  }
+
+  .profile-card {
+    padding: 1.5rem 1rem;
+    border-radius: 14px;
+    max-width: 100%;
+  }
+
+  .profile-card__avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 1.7rem;
+  }
+
+  .profile-card__name {
+    font-size: 1.15rem;
+  }
+
+  .profile-card__detail-row {
+    font-size: 0.84rem;
+  }
+
+  .profile-card__form-actions {
+    flex-direction: column-reverse;
+  }
+}
+

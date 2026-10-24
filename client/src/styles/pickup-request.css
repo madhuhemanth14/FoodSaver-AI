@@ -231,3 +231,17 @@
     width: 100%;
   }
 }
+
+@media (max-width: 420px) {
+  .pickup-request-page {
+    padding: 18px 12px 40px;
+  }
+
+  .pickup-request-header h1 {
+    font-size: 24px;
+  }
+
+  .pickup-request-card {
+    padding: 16px 12px;
+  }
+}
