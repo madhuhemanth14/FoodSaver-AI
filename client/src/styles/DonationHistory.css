@@ -32,3 +32,10 @@
 .fs-history-skeleton-card {
   height: 260px;
 }
+
+@media (max-width: 480px) {
+  .fs-history-skeleton-grid {
+    grid-template-columns: 1fr;
+    gap: var(--fs-space-4);
+  }
+}

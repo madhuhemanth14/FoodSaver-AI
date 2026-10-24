@@ -652,4 +652,20 @@
   .fs-upload {
     padding: var(--fs-space-4);
   }
+
+  .fs-success {
+    padding: var(--fs-space-5) var(--fs-space-2);
+  }
+
+  .fs-success h1 {
+    font-size: 1.35rem;
+  }
+
+  .fs-success-card {
+    padding: var(--fs-space-4);
+  }
+
+  .fs-success-row {
+    font-size: 0.84rem;
+  }
 }

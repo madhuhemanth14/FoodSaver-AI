@@ -26,6 +26,36 @@ function normalizeUnit(unit) {
   return "kg";
 }
 
+function normalizeDonation(doc) {
+  if (!doc) return null;
+  const id = doc.id || (doc._id ? String(doc._id) : "");
+  const foodName =
+    doc.foodName ||
+    (Array.isArray(doc.foodItems) && doc.foodItems.length > 0
+      ? doc.foodItems.join(", ")
+      : doc.foodItems || "Food Donation");
+  const unit = doc.unit || doc.quantityUnit || "kg";
+  const location = doc.location || doc.address || "";
+  const freshness = doc.freshness || doc.aiAnalysis?.freshness || "";
+  const confidence = doc.confidence != null ? doc.confidence : doc.aiAnalysis?.confidence;
+  const predictedExpiry = doc.predictedExpiry || doc.expiryDate || doc.aiAnalysis?.predictedExpiry;
+
+  return {
+    ...doc,
+    id,
+    _id: id,
+    foodName,
+    foodItems: Array.isArray(doc.foodItems) ? doc.foodItems : [foodName],
+    unit,
+    quantityUnit: unit,
+    location,
+    address: location,
+    freshness,
+    confidence,
+    predictedExpiry,
+  };
+}
+
 /**
  * POST /api/donations
  * Donor identity (name/email/phone) is derived server-side from the
@@ -60,7 +90,7 @@ export async function createDonation(payload) {
   };
 
   const response = await api.post("/donations", body);
-  return response.data.data;
+  return normalizeDonation(response.data.data);
 }
 
 /**
@@ -69,7 +99,9 @@ export async function createDonation(payload) {
  */
 export async function getMyDonations() {
   const response = await api.get("/donations");
-  return response.data.data;
+  return Array.isArray(response.data.data)
+    ? response.data.data.map(normalizeDonation)
+    : [];
 }
 
 /**
@@ -78,8 +110,16 @@ export async function getMyDonations() {
  * @returns {Promise<object|null>}
  */
 export async function getDonationById(id) {
-  const response = await api.get(`/donations/${id}`);
-  return response.data.data;
+  if (!id || id === "undefined" || id === "null") return null;
+  try {
+    const response = await api.get(`/donations/${id}`);
+    return normalizeDonation(response.data.data);
+  } catch (error) {
+    if (error.response?.status === 404 || error.response?.status === 400) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 /**

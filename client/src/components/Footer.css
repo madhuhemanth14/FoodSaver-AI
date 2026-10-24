@@ -199,4 +199,19 @@
   }
 }
 
+@media (max-width: 360px) {
+  .footer {
+    padding: 28px 12px 80px;
+  }
+
+  .footer-container {
+    gap: 20px;
+  }
+
+  .footer-brand p,
+  .footer-column a {
+    font-size: 0.8125rem;
+  }
+}
+
 

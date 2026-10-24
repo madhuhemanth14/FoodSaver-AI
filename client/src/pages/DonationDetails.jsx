@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { rolePrefix } from "../utils/roles";
-import { Sparkles, Building2, Truck } from "lucide-react";
+import { Sparkles, Building2, Truck, Leaf } from "lucide-react";
 import { StatusBadge, StatusTimeline } from "../components/DonationStatus";
 import EmptyDonations from "../components/EmptyDonations";
 import donationService from "../services/donationService";
@@ -38,15 +38,22 @@ export default function DonationDetails() {
     setLoading(true);
     setNotFound(false);
 
-    donationService.getDonationById(id).then((data) => {
-      if (cancelled) return;
-      if (data) {
-        setDonation(data);
-      } else {
+    donationService
+      .getDonationById(id)
+      .then((data) => {
+        if (cancelled) return;
+        if (data) {
+          setDonation(data);
+        } else {
+          setNotFound(true);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
         setNotFound(true);
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
 
     return () => {
       cancelled = true;
@@ -79,7 +86,14 @@ export default function DonationDetails() {
           <>
             <div className="fs-details-grid">
               <div className="fs-details-image">
-                {donation.image ? <img src={donation.image} alt={donation.foodName} /> : null}
+                {donation.image ? (
+                  <img src={donation.image} alt={donation.foodName || "Food Donation"} />
+                ) : (
+                  <div className="fs-details-no-image">
+                    <Leaf size={44} />
+                    <span>FoodSaver AI Verified</span>
+                  </div>
+                )}
               </div>
 
               <div>

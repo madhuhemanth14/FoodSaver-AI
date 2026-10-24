@@ -199,6 +199,9 @@ export default function DonateFood() {
       .createDonation({ ...formData, aiAnalysis })
       .then((created) => {
         setConfirming(false);
+        try {
+          sessionStorage.setItem("fs_last_donation", JSON.stringify(created));
+        } catch {}
         navigate(`${base}/donations/success`, { state: { donation: created } });
       })
       .catch(() => setConfirming(false));

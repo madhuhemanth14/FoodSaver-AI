@@ -104,6 +104,12 @@
   }
 }
 
+@media (max-width: 360px) {
+  .fs-container {
+    padding: var(--fs-space-4) var(--fs-space-2);
+  }
+}
+
 /* Page header */
 .fs-page-header {
   text-align: center;

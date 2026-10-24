@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CalendarDays, Clock } from "lucide-react";
 import { StatusBadge } from "./DonationStatus";
+import { useAuth } from "../context/AuthContext";
+import { rolePrefix } from "../utils/roles";
 
 function formatShortDate(isoDate) {
   if (!isoDate) return "—";
@@ -16,16 +18,19 @@ function formatShortDate(isoDate) {
  *
  * Props:
  *  - donation: object
- *  - onViewDetails: (id) => void (optional; defaults to navigating to /donations/:id)
+ *  - onViewDetails: (id) => void (optional; defaults to navigating to ${base}/donations/:id)
  */
 export default function FoodCard({ donation, onViewDetails }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
+  const donationId = donation?.id || donation?._id;
 
   const handleView = () => {
     if (onViewDetails) {
-      onViewDetails(donation.id);
+      onViewDetails(donationId);
     } else {
-      navigate(`/donations/${donation.id}`);
+      navigate(`${base}/donations/${donationId}`);
     }
   };
 

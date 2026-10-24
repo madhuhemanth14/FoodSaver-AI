@@ -6,6 +6,7 @@ import {
   Navigate,
   Outlet,
   useLocation,
+  useParams,
 } from "react-router-dom";
 
 /* COMMON */
@@ -13,6 +14,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import { useAuth } from "./context/AuthContext";
+import { rolePrefix } from "./utils/roles";
 
 /* HOME */
 import Hero from "./components/Hero";
@@ -109,6 +112,25 @@ const SiteLayout = () => {
   );
 };
 
+const RoleDonationDetailsRedirect = () => {
+  const { user } = useAuth();
+  const { id } = useParams();
+  const base = rolePrefix(user?.role);
+  return <Navigate to={`${base}/donations/${id}`} replace />;
+};
+
+const RoleDonationsRedirect = () => {
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
+  return <Navigate to={`${base}/donations`} replace />;
+};
+
+const RoleDonateRedirect = () => {
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
+  return <Navigate to={`${base}/donate`} replace />;
+};
+
 function App() {
   return (
     <BrowserRouter>
@@ -128,6 +150,24 @@ function App() {
               routes directly to the DB-verified role's dashboard. Old
               bookmarks/links to it are sent home instead of 404ing. */}
           <Route path="/role-select" element={<Navigate to="/" replace />} />
+
+          {/* Legacy & direct donation URLs redirecting to active role namespace */}
+          <Route
+            path="/donations/:id"
+            element={<ProtectedRoute allowedRoles={["donor", "ngo"]}><RoleDonationDetailsRedirect /></ProtectedRoute>}
+          />
+          <Route
+            path="/donations"
+            element={<ProtectedRoute allowedRoles={["donor", "ngo"]}><RoleDonationsRedirect /></ProtectedRoute>}
+          />
+          <Route
+            path="/donate"
+            element={<ProtectedRoute allowedRoles={["donor"]}><RoleDonateRedirect /></ProtectedRoute>}
+          />
+          <Route
+            path="/donations/success"
+            element={<ProtectedRoute allowedRoles={["donor"]}><Navigate to="/donor/donations/success" replace /></ProtectedRoute>}
+          />
 
           {/* ============== FOOD DONOR (role-gated: "donor") ============== */}
           <Route

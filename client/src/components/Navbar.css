@@ -63,6 +63,8 @@
 .navbar .nav-buttons {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
   gap: 12px;
   flex-shrink: 0;
   min-height: 40px;
@@ -295,31 +297,140 @@
   }
 }
 
-/* Very Small Mobile (<= 480px: 320px, 375px, 390px, 414px) */
+/* Mobile Viewports (<= 480px: 375px, 390px, 414px, 430px) */
 @media (max-width: 480px) {
   .navbar {
-    padding: 10px 14px;
+    padding: 9px 12px;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .navbar .logo {
-    font-size: 1.05rem;
+    font-size: 0.96rem;
     gap: 6px;
+    flex-shrink: 0;
+    min-width: 0;
   }
 
   .navbar .logo-icon {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 8px;
+  }
+
+  .navbar .logo-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .navbar .nav-buttons {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
   }
 
   .navbar .login-btn,
   .navbar .signup-btn,
   .navbar .dashboard-btn {
-    padding: 7px 12px;
-    font-size: 0.8rem;
+    padding: 6px 11px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 999px;
+    line-height: 1.1;
+  }
+
+  .navbar .nav-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.82rem;
+  }
+
+  .mobile-nav-toggle {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    margin-left: 2px;
+    border-radius: 8px;
+  }
+
+  .mobile-nav-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Extra-small Mobile Viewports (<= 360px: 320px, 360px) */
+@media (max-width: 360px) {
+  .navbar {
+    padding: 7px 8px;
+    gap: 4px;
+  }
+
+  .navbar .logo {
+    font-size: 0.85rem;
+    gap: 4px;
+  }
+
+  .navbar .logo-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border-radius: 6px;
+  }
+
+  .navbar .logo-icon svg {
+    width: 14px;
+    height: 14px;
   }
 
   .navbar .nav-buttons {
-    gap: 6px;
+    margin-left: auto;
+    gap: 4px;
+  }
+
+  .navbar .login-btn {
+    padding: 5px 7px;
+    font-size: 0.72rem;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+
+  .navbar .signup-btn {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+  }
+
+  .navbar .dashboard-btn {
+    padding: 5px 7px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .navbar .nav-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.76rem;
+  }
+
+  .mobile-nav-toggle {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    margin-left: 1px;
+    border-radius: 7px;
+  }
+
+  .mobile-nav-toggle svg {
+    width: 16px;
+    height: 16px;
   }
 }
 
