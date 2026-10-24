@@ -223,6 +223,16 @@ async function rollbackOtp(purpose, email, previous) {
 async function checkOtp({ purpose, email, otp }) {
   const doc = await OtpVerification.findOne({ purpose, email });
 
+  if (doc?.lockedUntil && doc.lockedUntil > new Date()) {
+    return {
+      ok: false,
+      status: 429,
+      code: "OTP_LOCKED",
+      retryAfterSeconds: Math.ceil((doc.lockedUntil.getTime() - Date.now()) / 1000),
+      message: "Email verification is temporarily locked after too many incorrect OTP attempts. Please try again later.",
+    };
+  }
+
   if (!doc || !doc.otpHash) {
     return {
       ok: false,
@@ -239,16 +249,6 @@ async function checkOtp({ purpose, email, otp }) {
       status: 400,
       code: "OTP_EXPIRED",
       message: "OTP has expired. Please request a new OTP.",
-    };
-  }
-
-  if (doc.lockedUntil && doc.lockedUntil > new Date()) {
-    return {
-      ok: false,
-      status: 429,
-      code: "OTP_LOCKED",
-      retryAfterSeconds: Math.ceil((doc.lockedUntil.getTime() - Date.now()) / 1000),
-      message: "Email verification is temporarily locked after too many incorrect OTP attempts. Please try again later.",
     };
   }
 

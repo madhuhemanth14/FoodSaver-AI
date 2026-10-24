@@ -43,6 +43,15 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    emailVerifiedAt: {
+      type: Date,
+    },
+
     // Legacy password-reset link fields retained for compatibility. The
     // active UI uses the OTP fields below.
     passwordResetToken: {

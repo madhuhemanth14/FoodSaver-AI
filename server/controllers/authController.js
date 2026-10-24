@@ -94,6 +94,8 @@ async function createVerifiedAccount({ name, email, passwordHash, phone, address
     phone,
     address,
     role,
+    isEmailVerified: true,
+    emailVerifiedAt: new Date(),
   });
 
   // An NGO account needs an NGO org record to manage — create a minimal
@@ -155,6 +157,48 @@ async function createVerifiedAccount({ name, email, passwordHash, phone, address
   return user;
 }
 
+const { checkMailbox } = require("../services/emailMailboxCheck");
+
+// "Verify" click: performs mailbox reachability check (DNS/MX/RCPT) before sending OTP
+const verifyRegistrationEmail = async (req, res) => {
+  const normalizedEmail = otp.normalizeEmail(req.body?.email);
+
+  if (!otp.EMAIL_REGEX.test(normalizedEmail)) {
+    return res.status(400).json({
+      success: false,
+      message: REGISTRATION_INVALID_FORMAT_MESSAGE,
+    });
+  }
+
+  const existing = await User.findOne({ email: normalizedEmail });
+  if (existing && existing.isEmailVerified !== false) {
+    return res.status(409).json({
+      success: false,
+      code: "ACCOUNT_EXISTS",
+      message: "An account with this email already exists. Please log in instead.",
+    });
+  }
+
+  // Pre-probe mailbox reachability
+  const mbCheck = await checkMailbox(normalizedEmail);
+  if (mbCheck.status === "not_safe") {
+    return res.status(422).json({
+      success: false,
+      code: "EMAIL_UNVERIFIED",
+      message: "Email doesn't exist. Please enter a correct email address.",
+    });
+  }
+  if (mbCheck.status === "unknown") {
+    return res.status(503).json({
+      success: false,
+      code: "EMAIL_CHECK_UNKNOWN",
+      message: "We couldn't verify this email right now. Please try again.",
+    });
+  }
+
+  return sendRegistrationOtp(req, res);
+};
+
 // Step 1 (and resend): email a verification OTP. No account is created.
 const sendRegistrationOtp = async (req, res) => {
   const TAG = "[register/send-otp]";
@@ -165,26 +209,26 @@ const sendRegistrationOtp = async (req, res) => {
       return res.status(400).json({ success: false, message: REGISTRATION_INVALID_FORMAT_MESSAGE });
     }
 
-    // FoodSaver AI account check only. MongoDB says nothing about whether the
-    // external mailbox exists — that is decided by actually delivering the OTP.
+    // Account check: handle already-verified vs unverified accounts
     const existing = await User.findOne({ email: normalizedEmail });
     if (existing) {
-      return res.status(409).json({
-        success: false,
-        code: "ACCOUNT_EXISTS",
-        message: "An account with this email already exists. Please log in instead.",
-      });
+      if (existing.isEmailVerified !== false) {
+        return res.status(409).json({
+          success: false,
+          code: "ACCOUNT_EXISTS",
+          message: "An account with this email already exists. Please log in instead.",
+        });
+      }
+      // If existing.isEmailVerified === false, proceed to send the registration OTP below!
     }
 
-    // Free validation: reject domains that cannot receive email at all.
-    // This checks the domain's DNS/MX records only; it does not claim that
-    // a particular mailbox exists. The OTP proves mailbox access.
+    // Reject domains that cannot receive email at all.
     const domainCanReceive = await otp.domainCanReceiveMail(normalizedEmail);
     if (!domainCanReceive) {
-      return res.status(400).json({
+      return res.status(422).json({
         success: false,
-        code: "EMAIL_DOMAIN_INVALID",
-        message: "This email address does not exist. Please enter a valid email address.",
+        code: "EMAIL_UNVERIFIED",
+        message: "Email doesn't exist. Please enter a correct email address.",
       });
     }
 
@@ -218,16 +262,23 @@ const sendRegistrationOtp = async (req, res) => {
       );
 
       const isDev = process.env.NODE_ENV !== "production";
-      console.error(`${TAG} (5/5) responding 503 — OTP box will NOT open`);
+      console.error(`${TAG} (5/5) responding ${emailResult.errorKind === "recipient" ? 422 : 503} — OTP box will NOT open`);
       const debug = isDev
         ? { kind: emailResult.errorKind, code: emailResult.errorCode, reason: emailResult.errorReason, detail: emailResult.error }
         : undefined;
 
-      // Never tell the user that an address does not exist based on SMTP
-      // recipient probing. The OTP email is the verification mechanism.
+      if (emailResult.errorKind === "recipient") {
+        return res.status(422).json({
+          success: false,
+          code: "EMAIL_UNVERIFIED",
+          message: "Email doesn't exist. Please enter a correct email address.",
+          debug,
+        });
+      }
+
       return res.status(503).json({
         success: false,
-        code: "EMAIL_SEND_FAILED",
+        code: "EMAIL_SERVICE_ERROR",
         message: REGISTRATION_SEND_FAILED_MESSAGE,
         debug,
       });
@@ -344,9 +395,10 @@ const register = async (req, res) => {
     }
 
     const existing = await User.findOne({ email: normalizedEmail });
-    if (existing) {
+    if (existing && existing.isEmailVerified !== false) {
       return res.status(409).json({
         success: false,
+        code: "ACCOUNT_EXISTS",
         message: "An account with this email already exists",
       });
     }
@@ -374,18 +426,31 @@ const register = async (req, res) => {
 
     let user;
     try {
-      user = await createVerifiedAccount({
-        name: String(name).trim(),
-        email: normalizedEmail,
-        passwordHash: await bcrypt.hash(String(password), 10),
-        phone,
-        address,
-        role: normalizedRole,
-      });
+      if (existing && existing.isEmailVerified === false) {
+        existing.name = String(name).trim();
+        existing.password = await bcrypt.hash(String(password), 10);
+        if (phone) existing.phone = phone;
+        if (address) existing.address = address;
+        existing.role = normalizedRole;
+        existing.isEmailVerified = true;
+        existing.emailVerifiedAt = new Date();
+        await existing.save();
+        user = existing;
+      } else {
+        user = await createVerifiedAccount({
+          name: String(name).trim(),
+          email: normalizedEmail,
+          passwordHash: await bcrypt.hash(String(password), 10),
+          phone,
+          address,
+          role: normalizedRole,
+        });
+      }
     } catch (createErr) {
       if (createErr?.code === 11000) {
         return res.status(409).json({
           success: false,
+          code: "ACCOUNT_EXISTS",
           message: "An account with this email already exists",
         });
       }
@@ -888,6 +953,7 @@ const deleteAccount = async (req, res) => {
 module.exports = {
   register,
   sendRegistrationOtp,
+  verifyRegistrationEmail,
   verifyRegistrationOtp,
   login,
   me,

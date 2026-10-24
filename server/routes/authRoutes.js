@@ -2,6 +2,7 @@ const express = require("express");
 const {
   register,
   sendRegistrationOtp,
+  verifyRegistrationEmail,
   verifyRegistrationOtp,
   login,
   me,
@@ -29,6 +30,7 @@ const otpLimiter = rateLimit({
 // --- Registration. The email is verified first; POST /register refuses to
 // create an account without the verificationToken that verify-otp issues.
 router.post("/register/send-otp", otpLimiter, sendRegistrationOtp); // "Resend OTP" (unchanged)
+router.post("/register/verify-email", otpLimiter, verifyRegistrationEmail);
 router.post("/register/verify-otp", otpLimiter, verifyRegistrationOtp);
 router.post("/register", otpLimiter, register);
 
