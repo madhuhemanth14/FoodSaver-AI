@@ -131,7 +131,11 @@ if (process.env.NODE_ENV !== "test" && typeof transporter?.verify === "function"
 async function sendViaResend({ to, subject, text, html, replyTo = null }) {
   if (!RESEND_API_KEY) return null;
 
-  const from = process.env.RESEND_FROM || `FoodSaver AI <${EMAIL_USER || "onboarding@resend.dev"}>`;
+  const from =
+    process.env.RESEND_FROM ||
+    (EMAIL_USER && !/@gmail\.com$/i.test(EMAIL_USER)
+      ? `FoodSaver AI <${EMAIL_USER}>`
+      : "FoodSaver AI <onboarding@resend.dev>");
   const payload = {
     from,
     to: [to],
