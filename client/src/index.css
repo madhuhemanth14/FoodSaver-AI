@@ -41,6 +41,86 @@ textarea {
   font-family: inherit;
 }
 
+/* =========================================
+   GLOBAL GREEN BUTTON THEME
+========================================= */
+
+button {
+  cursor: pointer;
+}
+
+.btn-primary-green,
+.btn-primary,
+button.btn-primary,
+.btn-action-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%);
+  color: #ffffff !important;
+  border: 1px solid #16833d;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 131, 61, 0.22);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  outline: none;
+}
+
+.btn-primary-green:hover:not(:disabled),
+.btn-primary:hover:not(:disabled),
+button.btn-primary:hover:not(:disabled),
+.btn-action-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #256b29 0%, #116a30 100%);
+  box-shadow: 0 6px 16px rgba(22, 131, 61, 0.32);
+  transform: translateY(-1px);
+}
+
+.btn-primary-green:disabled,
+.btn-primary:disabled,
+button.btn-primary:disabled,
+.btn-action-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary-green,
+.btn-secondary,
+.btn-action-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #ffffff;
+  color: #16833d !important;
+  border: 1.5px solid #16833d;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  outline: none;
+}
+
+.btn-secondary-green:hover:not(:disabled),
+.btn-secondary:hover:not(:disabled),
+.btn-action-secondary:hover:not(:disabled) {
+  background: #edf7ed;
+  color: #0e5927 !important;
+  border-color: #0e5927;
+  transform: translateY(-1px);
+}
+
 
 /* =========================================
    NAVBAR (Maintained in Navbar.css)

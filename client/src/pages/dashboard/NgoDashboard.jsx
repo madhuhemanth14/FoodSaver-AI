@@ -254,11 +254,12 @@ function NgoDashboard() {
                     <strong>{d.foodItems?.join(", ")}</strong>
                     <small>{d.quantity} {d.quantityUnit} · {d.donorName}</small>
                   </div>
-                  <div>
+                  <div className="list-row-action">
                     <span className="status active-status">{timeAgo(d.createdAt)}</span>
                     {d.expiryDate && <small style={{ display: "block" }}>Expires: {formatDateTime(d.expiryDate)}</small>}
                     <button
                       type="button"
+                      className="btn-action-primary"
                       onClick={() => runDonationAction(d._id, acceptDonation)}
                       disabled={busyDonationId === d._id}
                     >
@@ -315,15 +316,17 @@ function NgoDashboard() {
                     <p>{d.donorName} · {d.quantity} {d.quantityUnit}</p>
                     {d.expiryDate && <p>Expires: {formatDateTime(d.expiryDate)}</p>}
                     {d.status === "Accepted" && (
-                      <div style={{ marginTop: "8px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                      <div style={{ marginTop: "10px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
                         <button
                           type="button"
+                          className="btn-action-primary"
                           onClick={() => navigate("/ngo/pickups/request", { state: { donationId: d._id } })}
                         >
                           Schedule Pickup
                         </button>
                         <button
                           type="button"
+                          className="btn-action-secondary"
                           onClick={() => runDonationAction(d._id, rejectDonation)}
                           disabled={busyDonationId === d._id}
                         >

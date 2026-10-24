@@ -65,7 +65,12 @@ function PickupActions({ pickup, onUpdated }) {
   return (
     <div style={{ marginTop: "8px" }}>
       {action ? (
-        <button type="button" onClick={handleClick} disabled={busy}>
+        <button
+          type="button"
+          className="btn-action-primary"
+          onClick={handleClick}
+          disabled={busy}
+        >
           {busy ? "Updating..." : action.label}
         </button>
       ) : (
