@@ -111,7 +111,7 @@
 
 @media (max-width: 960px) {
   .about-section {
-    padding: 24px 20px 48px;
+    padding: 16px 20px 44px;
     scroll-margin-top: 60px;
   }
 
@@ -145,23 +145,23 @@
 
 @media (max-width: 700px) {
   .about-section {
-    padding: 16px 16px 40px;
+    padding: 8px 16px 36px;
     scroll-margin-top: 56px;
   }
 
   .about-label {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .about-content h2 {
-    font-size: 1.7rem;
-    margin-bottom: 12px;
+    font-size: 1.65rem;
+    margin-bottom: 10px;
   }
 }
 
 @media (max-width: 360px) {
   .about-section {
-    padding: 14px 12px 32px;
+    padding: 6px 12px 28px;
   }
 }
 

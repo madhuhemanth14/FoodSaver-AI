@@ -611,7 +611,7 @@
 @media (max-width: 1050px) {
 
   .hero {
-    padding: 38px 24px 28px;
+    padding: 34px 24px 16px;
   }
 
   .hero-content {
@@ -662,7 +662,7 @@
 @media (max-width: 700px) {
 
   .hero {
-    padding: 28px 16px 16px;
+    padding: 24px 16px 4px;
   }
 
   .hero-content {
@@ -707,8 +707,9 @@
   .hero-image-frame {
     max-width: 100%;
     margin: 0 auto;
-    padding: 12px;
+    padding: 10px;
     border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(27, 58, 29, 0.08);
   }
 
   .hero-food-image {
@@ -730,11 +731,11 @@
 @media (max-width: 430px) {
 
   .hero {
-    padding: 22px 12px 14px;
+    padding: 18px 12px 0px;
   }
 
   .hero-content {
-    gap: 22px;
+    gap: 20px;
   }
 
   .hero-left h1 {
