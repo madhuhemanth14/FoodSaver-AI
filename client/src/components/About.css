@@ -143,14 +143,15 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .about-section {
-    padding: 8px 16px 36px;
+    padding: 0px 16px 36px !important;
     scroll-margin-top: 56px;
   }
 
   .about-label {
-    margin-bottom: 4px;
+    margin: 0 0 4px !important;
+    padding-top: 0 !important;
   }
 
   .about-content h2 {
@@ -161,7 +162,7 @@
 
 @media (max-width: 360px) {
   .about-section {
-    padding: 6px 12px 28px;
+    padding: 0px 12px 28px !important;
   }
 }
 
