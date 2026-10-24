@@ -12,7 +12,7 @@
     #f8faf8 100%
   );
 
-  padding: 58px 60px 88px;
+  padding: 54px 60px 64px;
 
   font-family: "Poppins", sans-serif;
 }
@@ -611,13 +611,13 @@
 @media (max-width: 1050px) {
 
   .hero {
-    padding: 50px 30px 70px;
+    padding: 38px 24px 28px;
   }
 
   .hero-content {
     grid-template-columns: 1fr;
 
-    gap: 65px;
+    gap: 36px;
 
     max-width: 850px;
   }
@@ -646,7 +646,7 @@
   }
 
   .hero-right {
-    min-height: 470px;
+    min-height: auto;
   }
 
   .hero-image-frame {
@@ -662,11 +662,11 @@
 @media (max-width: 700px) {
 
   .hero {
-    padding: 40px 20px 60px;
+    padding: 28px 16px 16px;
   }
 
   .hero-content {
-    gap: 45px;
+    gap: 28px;
   }
 
   .hero-left h1 {
@@ -728,6 +728,14 @@
 ========================================================= */
 
 @media (max-width: 430px) {
+
+  .hero {
+    padding: 22px 12px 14px;
+  }
+
+  .hero-content {
+    gap: 22px;
+  }
 
   .hero-left h1 {
     font-size: 1.9rem;

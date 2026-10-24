@@ -1,7 +1,8 @@
 .about-section {
-  padding: 80px 48px;
+  padding: 60px 48px;
   background: #ffffff;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+  scroll-margin-top: 72px;
 }
 
 .about-container {
@@ -110,7 +111,8 @@
 
 @media (max-width: 960px) {
   .about-section {
-    padding: 56px 20px;
+    padding: 24px 20px 48px;
+    scroll-margin-top: 60px;
   }
 
   .about-container {
@@ -138,6 +140,28 @@
     margin-top: 16px;
     max-width: 100%;
     box-sizing: border-box;
+  }
+}
+
+@media (max-width: 700px) {
+  .about-section {
+    padding: 16px 16px 40px;
+    scroll-margin-top: 56px;
+  }
+
+  .about-label {
+    margin-bottom: 6px;
+  }
+
+  .about-content h2 {
+    font-size: 1.7rem;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .about-section {
+    padding: 14px 12px 32px;
   }
 }
 

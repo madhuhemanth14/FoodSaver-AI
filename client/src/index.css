@@ -323,11 +323,7 @@ textarea {
    ABOUT SECTION
 ========================================= */
 
-.about-section {
-  padding: 80px 6%;
-
-  background: #ffffff;
-}
+/* About section styles managed in components/About.css */
 
 .about-container {
   max-width: 1200px;
@@ -1452,9 +1448,6 @@ textarea {
 
   /* Sections */
 
-  .about-section {
-    padding: 60px 20px;
-  }
 
   .about-content h2 {
     font-size: 30px;
