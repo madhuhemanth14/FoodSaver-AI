@@ -1,4 +1,4 @@
-import { PackageOpen, Brain, MapPin, Truck, Heart, Leaf } from "lucide-react";
+import { PackageOpen, Brain, MapPin, Truck, Heart } from "lucide-react";
 import "./HowItWorks.css";
 
 const steps = [
@@ -40,23 +40,21 @@ const HowItWorks = () => {
       <div className="section-title">
         <p className="section-eyebrow">THE PROCESS</p>
         <h2>How FoodSaver AI Works</h2>
-        <span className="section-leaf" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-          <Leaf size={18} color="var(--primary, #2e7d32)" />
-        </span>
       </div>
 
       <div className="steps-container">
-        {steps.map((step, index) => {
+        {steps.map((step) => {
           const Icon = step.icon;
           return (
             <div className="step-card" key={step.number}>
-              <div className="step-number">{step.number}</div>
-              <div className="step-icon">
-                <Icon size={30} />
+              <div className="step-card-header">
+                <div className="step-icon">
+                  <Icon size={24} />
+                </div>
+                <div className="step-number">{step.number}</div>
               </div>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-              {index < steps.length - 1 && <span className="step-arrow" />}
+              <h3 className="step-title">{step.title}</h3>
+              <p className="step-text">{step.text}</p>
             </div>
           );
         })}
