@@ -114,7 +114,12 @@ function logMailError(context, error) {
 // One-off startup check: logs whether we can log in to the SMTP server at
 // all, so a broken EMAIL_USER / EMAIL_PASS is visible immediately instead of
 // showing up later as a failed verification email.
-if (process.env.NODE_ENV !== "test" && typeof transporter?.verify === "function") {
+if (
+  process.env.NODE_ENV !== "test" &&
+  !RESEND_API_KEY &&
+  !BREVO_API_KEY &&
+  typeof transporter?.verify === "function"
+) {
   if (!EMAIL_USER || !EMAIL_PASS) {
     console.error("[email] SMTP NOT configured: set EMAIL_USER and EMAIL_PASS (Gmail App Password) in server/.env");
   } else {
