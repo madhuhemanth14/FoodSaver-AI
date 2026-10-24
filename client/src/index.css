@@ -42,49 +42,75 @@ textarea {
 }
 
 /* =========================================
-   GLOBAL GREEN BUTTON THEME
+   UNIVERSAL GREEN BUTTON THEME
 ========================================= */
 
 button {
+  font-family: inherit;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.btn-primary-green,
-.btn-primary,
+/* Any unclassed button or primary button defaults to polished FoodSaver green */
+button:not([class]),
 button.btn-primary,
-.btn-action-primary {
+button.btn-primary-green,
+.btn-primary,
+.btn-primary-green,
+.btn-action-primary,
+button.card-header-btn,
+.card-header-btn,
+button.primary-btn,
+button.primary-button,
+.primary-button,
+input[type="submit"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%);
+  padding: 8px 18px;
+  background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%) !important;
   color: #ffffff !important;
-  border: 1px solid #16833d;
-  border-radius: 9px;
+  border: 1px solid #16833d !important;
+  border-radius: 9px !important;
   font-family: inherit;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(22, 131, 61, 0.22);
+  box-shadow: 0 3px 10px rgba(22, 131, 61, 0.22);
   transition: all 0.2s ease;
   white-space: nowrap;
   outline: none;
+  text-decoration: none;
 }
 
-.btn-primary-green:hover:not(:disabled),
-.btn-primary:hover:not(:disabled),
+button:not([class]):hover:not(:disabled),
 button.btn-primary:hover:not(:disabled),
-.btn-action-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #256b29 0%, #116a30 100%);
-  box-shadow: 0 6px 16px rgba(22, 131, 61, 0.32);
+button.btn-primary-green:hover:not(:disabled),
+.btn-primary:hover:not(:disabled),
+.btn-primary-green:hover:not(:disabled),
+.btn-action-primary:hover:not(:disabled),
+button.card-header-btn:hover:not(:disabled),
+.card-header-btn:hover:not(:disabled),
+button.primary-btn:hover:not(:disabled),
+button.primary-button:hover:not(:disabled),
+.primary-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #256b29 0%, #116a30 100%) !important;
+  box-shadow: 0 5px 14px rgba(22, 131, 61, 0.32);
   transform: translateY(-1px);
 }
 
-.btn-primary-green:disabled,
-.btn-primary:disabled,
+button:not([class]):disabled,
 button.btn-primary:disabled,
-.btn-action-primary:disabled {
+button.btn-primary-green:disabled,
+.btn-primary:disabled,
+.btn-primary-green:disabled,
+.btn-action-primary:disabled,
+button.card-header-btn:disabled,
+.card-header-btn:disabled,
+button.primary-btn:disabled,
+button.primary-button:disabled,
+.primary-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -98,11 +124,11 @@ button.btn-primary:disabled,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: #ffffff;
+  padding: 8px 18px;
+  background: #ffffff !important;
   color: #16833d !important;
-  border: 1.5px solid #16833d;
-  border-radius: 9px;
+  border: 1.5px solid #16833d !important;
+  border-radius: 9px !important;
   font-family: inherit;
   font-size: 13px;
   font-weight: 700;
@@ -110,14 +136,15 @@ button.btn-primary:disabled,
   transition: all 0.2s ease;
   white-space: nowrap;
   outline: none;
+  text-decoration: none;
 }
 
 .btn-secondary-green:hover:not(:disabled),
 .btn-secondary:hover:not(:disabled),
 .btn-action-secondary:hover:not(:disabled) {
-  background: #edf7ed;
+  background: #edf7ed !important;
   color: #0e5927 !important;
-  border-color: #0e5927;
+  border-color: #0e5927 !important;
   transform: translateY(-1px);
 }
 

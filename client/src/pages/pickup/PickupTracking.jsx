@@ -333,6 +333,8 @@ export default function PickupTracking() {
 
             <button
               type="button"
+              className="btn-action-primary"
+              style={{ width: "100%", marginTop: "12px" }}
               onClick={() =>
                 navigate(`${base}/pickups`)
               }

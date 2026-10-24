@@ -336,6 +336,7 @@ function Dashboard() {
 
                 <button
                   type="button"
+                  className="card-header-btn"
                   onClick={() =>
                     navigate(`${base}/donations`)
                   }
@@ -349,7 +350,7 @@ function Dashboard() {
 
               {!loading && activeDonations.length === 0 && (
                 <p className="dashboard-empty">
-                  No active donations yet. <button type="button" onClick={() => navigate(`${base}/donate`)}>Donate food</button>
+                  No active donations yet. <button type="button" className="btn-action-primary" style={{ padding: "4px 12px", fontSize: "11px", marginLeft: "6px" }} onClick={() => navigate(`${base}/donate`)}>Donate food</button>
                 </p>
               )}
 
@@ -432,6 +433,7 @@ function Dashboard() {
 
               <button
                 type="button"
+                className="card-header-btn"
                 onClick={() =>
                   navigate(`${base}/activity`)
                 }

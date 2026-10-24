@@ -292,11 +292,11 @@
 
 .route-card__cta {
   margin-top: 10px;
-  background: transparent;
-  border: 1px solid var(--fs-primary);
-  color: var(--fs-primary);
+  background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%);
+  border: 1px solid #16833d;
+  color: #ffffff !important;
   font-family: inherit;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.85rem;
   padding: 9px 18px;
   border-radius: 10px;
@@ -305,8 +305,39 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  box-shadow: 0 3px 10px rgba(22, 131, 61, 0.2);
+  transition: all 0.2s ease;
 }
 
 .route-card__cta:hover {
-  background: rgba(46, 125, 50, 0.08);
+  background: linear-gradient(135deg, #256b29 0%, #116a30 100%);
+  box-shadow: 0 5px 14px rgba(22, 131, 61, 0.3);
+  transform: translateY(-1px);
+}
+
+.pickup-actions button,
+button.pickup-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%);
+  color: #ffffff !important;
+  border: 1px solid #16833d;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(22, 131, 61, 0.2);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pickup-actions button:hover:not(:disabled),
+button.pickup-action-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #256b29 0%, #116a30 100%);
+  box-shadow: 0 5px 14px rgba(22, 131, 61, 0.3);
+  transform: translateY(-1px);
 }

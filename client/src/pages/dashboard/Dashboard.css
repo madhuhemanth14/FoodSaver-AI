@@ -622,27 +622,32 @@
   font-weight: 800;
 }
 
+.card-header-btn,
 .card-header button,
 .recent-header button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid #2e7d32;
-  background: #f4fbf4;
-  color: #16833d;
-  font-size: 11px;
+  border: 1px solid #16833d !important;
+  background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%) !important;
+  color: #ffffff !important;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  padding: 5px 12px;
-  border-radius: 999px;
+  padding: 6px 16px;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 8px rgba(22, 131, 61, 0.22);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
+.card-header-btn:hover,
 .card-header button:hover,
 .recent-header button:hover {
-  background: #2e7d32;
-  color: #ffffff;
-  box-shadow: 0 3px 8px rgba(46, 125, 50, 0.25);
+  background: linear-gradient(135deg, #256b29 0%, #116a30 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(22, 131, 61, 0.32);
+  transform: translateY(-1px);
 }
 
 .list-row,

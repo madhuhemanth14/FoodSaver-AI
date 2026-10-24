@@ -241,7 +241,7 @@ function NgoDashboard() {
             <div className="content-card">
               <div className="card-header">
                 <h2>Available Donations</h2>
-                <button type="button" onClick={() => navigate("/ngo/donations")}>View</button>
+                <button type="button" className="card-header-btn" onClick={() => navigate("/ngo/donations")}>View</button>
               </div>
 
               {loading && <p className="dashboard-empty">Loading…</p>}
@@ -300,7 +300,7 @@ function NgoDashboard() {
                 <h2>Assigned Donations</h2>
                 <p>Donations currently assigned to your organization</p>
               </div>
-              <button type="button" onClick={() => navigate("/ngo/donations")}>View all</button>
+              <button type="button" className="card-header-btn" onClick={() => navigate("/ngo/donations")}>View all</button>
             </div>
 
             {loading && <p className="dashboard-empty">Loading…</p>}

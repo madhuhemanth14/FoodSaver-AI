@@ -188,6 +188,7 @@ function PickupHistory() {
 
                   <button
                     type="button"
+                    className="btn-action-primary"
                     onClick={() =>
                       navigate(
                         `${base}/pickups/${pickup._id}`

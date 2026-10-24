@@ -374,11 +374,13 @@ const styles = {
 
   clearButton: {
     padding: "12px 18px",
-    border: "none",
+    border: "1.5px solid #2e7d32",
     borderRadius: "8px",
-    background: "#eeeeee",
+    background: "#f1f8f1",
+    color: "#2e7d32",
     cursor: "pointer",
-    fontWeight: 600,
+    fontWeight: 700,
+    transition: "all 0.2s ease",
   },
 
   grid: {
