@@ -146,23 +146,35 @@
 @media (max-width: 768px) {
   .about-section {
     padding: 0px 16px 36px !important;
+    margin-top: 0 !important;
     scroll-margin-top: 56px;
+  }
+
+  .about-container {
+    gap: 20px;
   }
 
   .about-label {
     margin: 0 0 4px !important;
     padding-top: 0 !important;
+    line-height: 1.2;
   }
 
   .about-content h2 {
     font-size: 1.65rem;
     margin-bottom: 10px;
+    line-height: 1.25;
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 430px) {
   .about-section {
     padding: 0px 12px 28px !important;
+    margin-top: 0 !important;
+  }
+
+  .about-content h2 {
+    font-size: 1.45rem;
   }
 }
 
