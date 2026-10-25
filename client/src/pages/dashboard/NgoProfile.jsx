@@ -4,6 +4,7 @@ import "./Profile.css";
 import { getMyNGO, updateMyNGO } from "../../services/ngoService";
 import { deleteAccount } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
+import BackButton from "../../components/common/BackButton";
 
 /**
  * Real NGO organization profile — GET/PATCH /api/ngos/me. Separate from
@@ -102,8 +103,12 @@ const NgoProfile = () => {
 
   return (
     <div className="profile-page">
-      <div className="profile-card">
-        <div className="profile-card__avatar">{(ngo?.name || "N").charAt(0).toUpperCase()}</div>
+      <div className="profile-container">
+        <div style={{ marginBottom: 16 }}>
+          <BackButton fallback="/ngo/dashboard" />
+        </div>
+        <div className="profile-card">
+          <div className="profile-card__avatar">{(ngo?.name || "N").charAt(0).toUpperCase()}</div>
         <h1 className="profile-card__name">{ngo?.name}</h1>
         <span className="profile-card__role">
           {ngo?.verified ? "Verified NGO" : "Verification pending"} · {ngo?.status}
@@ -197,6 +202,7 @@ const NgoProfile = () => {
         )}
       </div>
     </div>
+  </div>
   );
 };
 

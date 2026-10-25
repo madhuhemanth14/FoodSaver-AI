@@ -52,7 +52,7 @@ button {
 }
 
 /* Any unclassed button or primary button defaults to polished FoodSaver green */
-button:not([class]),
+button:not([class]):not([role="menuitem"]):not(.contact-social-btn):not(.social-icon-btn),
 button.btn-primary,
 button.btn-primary-green,
 .btn-primary,
@@ -84,7 +84,7 @@ input[type="submit"] {
   text-decoration: none;
 }
 
-button:not([class]):hover:not(:disabled),
+button:not([class]):not([role="menuitem"]):not(.contact-social-btn):not(.social-icon-btn):hover:not(:disabled),
 button.btn-primary:hover:not(:disabled),
 button.btn-primary-green:hover:not(:disabled),
 .btn-primary:hover:not(:disabled),
@@ -100,7 +100,7 @@ button.primary-button:hover:not(:disabled),
   transform: translateY(-1px);
 }
 
-button:not([class]):disabled,
+button:not([class]):not([role="menuitem"]):not(.contact-social-btn):not(.social-icon-btn):disabled,
 button.btn-primary:disabled,
 button.btn-primary-green:disabled,
 .btn-primary:disabled,

@@ -23,7 +23,21 @@ export default function PickupTracking() {
 
   const [pickup, setPickup] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+
+  const handleRefresh = async () => {
+    if (!id || refreshing) return;
+    try {
+      setRefreshing(true);
+      const data = await getPickup(id);
+      if (data) setPickup(data);
+    } catch (err) {
+      console.error("Failed to refresh pickup:", err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const loadPickup = async () => {
@@ -138,8 +152,11 @@ export default function PickupTracking() {
           <button
             type="button"
             className="tracking-top-button"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            style={{ cursor: refreshing ? "wait" : "pointer" }}
           >
-            Track Pickup
+            {refreshing ? "Refreshing…" : "Refresh Status"}
           </button>
         </div>
 

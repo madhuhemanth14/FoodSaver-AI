@@ -113,17 +113,17 @@ const Navbar = () => {
                     <span>{user.role === "ngo" ? "NGO Account" : "Donor Account"}</span>
                   </div>
 
-                  <button type="button" role="menuitem" onClick={() => openSettings("edit")}>
+                  <button type="button" role="menuitem" className="nav-profile-menu-item" onClick={() => openSettings("edit")}>
                     <Pencil size={17} />
                     <span>Edit Profile</span>
                   </button>
 
-                  <button type="button" role="menuitem" className="nav-profile-danger" onClick={() => openSettings("delete")}>
+                  <button type="button" role="menuitem" className="nav-profile-menu-item nav-profile-danger" onClick={() => openSettings("delete")}>
                     <Trash2 size={17} />
                     <span>Delete Profile</span>
                   </button>
 
-                  <button type="button" role="menuitem" onClick={handleLogout}>
+                  <button type="button" role="menuitem" className="nav-profile-menu-item" onClick={handleLogout}>
                     <LogOut size={17} />
                     <span>Sign Out</span>
                   </button>

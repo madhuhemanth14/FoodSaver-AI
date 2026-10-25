@@ -136,6 +136,19 @@ const RoleDonateRedirect = () => {
   return <Navigate to={`${base}/donate`} replace />;
 };
 
+const RolePickupDetailsRedirect = () => {
+  const { user } = useAuth();
+  const { id } = useParams();
+  const base = rolePrefix(user?.role);
+  return <Navigate to={`${base}/pickups/${id}`} replace />;
+};
+
+const RolePickupsRedirect = () => {
+  const { user } = useAuth();
+  const base = rolePrefix(user?.role);
+  return <Navigate to={`${base}/pickups`} replace />;
+};
+
 function App() {
   return (
     <BrowserRouter>
@@ -175,6 +188,22 @@ function App() {
           <Route
             path="/donations/success"
             element={<ProtectedRoute allowedRoles={["donor"]}><Navigate to="/donor/donations/success" replace /></ProtectedRoute>}
+          />
+          <Route
+            path="/track"
+            element={<ProtectedRoute allowedRoles={["donor", "ngo"]}><RoleDonationsRedirect /></ProtectedRoute>}
+          />
+          <Route
+            path="/track-donation"
+            element={<ProtectedRoute allowedRoles={["donor", "ngo"]}><RoleDonationsRedirect /></ProtectedRoute>}
+          />
+          <Route
+            path="/pickups/:id"
+            element={<ProtectedRoute allowedRoles={["donor", "ngo"]}><RolePickupDetailsRedirect /></ProtectedRoute>}
+          />
+          <Route
+            path="/pickups"
+            element={<ProtectedRoute allowedRoles={["donor", "ngo"]}><RolePickupsRedirect /></ProtectedRoute>}
           />
 
           {/* ============== FOOD DONOR (role-gated: "donor") ============== */}

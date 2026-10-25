@@ -78,7 +78,7 @@ const Contact = () => {
       setStatus("error");
       setStatusMessage(
         err.response?.data?.message ||
-          "Something went wrong sending your message. Please try again."
+        "Something went wrong sending your message. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -141,7 +141,7 @@ const Contact = () => {
             </div>
             <div>
               <span>PHONE</span>
-              <strong>+91 98765 43210</strong>
+              <strong>+91 99636 38052</strong>
             </div>
           </div>
 
@@ -164,7 +164,7 @@ const Contact = () => {
             <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email">
               <Mail size={16} />
             </a>
-            <button type="button" onClick={handleShare} aria-label="Share">
+            <button type="button" className="contact-social-btn" onClick={handleShare} aria-label="Share" title="Share FoodSaver AI">
               <Share2 size={16} />
             </button>
             <Link to="/" aria-label="FoodSaver AI">

@@ -115,11 +115,12 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <div style={{ maxWidth: 540, margin: "0 auto 16px", width: "100%" }}>
-        <BackButton fallback={`${base}/dashboard`} />
-      </div>
+      <div className="profile-container">
+        <div style={{ marginBottom: 16 }}>
+          <BackButton fallback={`${base}/dashboard`} />
+        </div>
 
-      <div className="profile-card">
+        <div className="profile-card">
         <div className="profile-card__avatar">
           {displayName.charAt(0).toUpperCase()}
         </div>
@@ -202,6 +203,7 @@ const Profile = () => {
         )}
       </div>
     </div>
+  </div>
   );
 };
 

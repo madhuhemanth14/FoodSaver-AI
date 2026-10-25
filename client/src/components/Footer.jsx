@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import DonationGuidelinesModal from "./common/DonationGuidelinesModal";
 import ResourcesModal from "./common/ResourcesModal";
 import TermsModal from "./common/TermsModal";
+import TrackDonationModal from "./common/TrackDonationModal";
 import "./Footer.css";
 
 const Footer = () => {
@@ -15,6 +16,7 @@ const Footer = () => {
   const [guidelinesOpen, setGuidelinesOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
+  const [trackOpen, setTrackOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Smooth-scroll immediately if already on home page, otherwise React Router navigates
@@ -146,7 +148,13 @@ const Footer = () => {
             >
               Donation Guidelines
             </button>
-            <Link to={trackPath}>Track Donation</Link>
+            <button
+              type="button"
+              className="footer-link-btn"
+              onClick={() => setTrackOpen(true)}
+            >
+              Track Donation
+            </button>
             <Link to="/#impact" onClick={handleAnchorClick("impact")}>Impact</Link>
           </div>
 
@@ -202,6 +210,12 @@ const Footer = () => {
       <TermsModal
         isOpen={termsOpen}
         onClose={() => setTermsOpen(false)}
+      />
+
+      {/* Track Donation & Pickup Modal */}
+      <TrackDonationModal
+        isOpen={trackOpen}
+        onClose={() => setTrackOpen(false)}
       />
     </>
   );
