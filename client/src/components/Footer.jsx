@@ -134,6 +134,8 @@ const Footer = () => {
             <Link to="/#about" onClick={handleAnchorClick("about")}>About Us</Link>
             <Link to="/#how-it-works" onClick={handleAnchorClick("how-it-works")}>How It Works</Link>
             <Link to="/#features" onClick={handleAnchorClick("features")}>Features</Link>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
             <Link to="/#contact" onClick={handleAnchorClick("contact")}>Contact</Link>
           </div>
 

@@ -33,6 +33,10 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
+/* LEGAL */
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+
 /* DASHBOARD (shared components, reused across donor/ngo role-scoped routes —
    no NGO-specific dashboard exists yet, so it is mounted under /ngo/* too
    per the existing project's documented fallback rather than duplicated) */
@@ -88,8 +92,6 @@ const Home = () => {
       <About />
       <HowItWorks />
       <Features />
-      <Stats />
-      <Testimonials />
       <Contact />
     </>
   );
@@ -155,8 +157,10 @@ function App() {
       <ScrollToTopOrHash />
       <Routes>
         <Route element={<SiteLayout />}>
-          {/* HOME */}
+          {/* HOME & LEGAL */}
           <Route path="/" element={<Home />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="/guidelines" element={<Navigate to="/#how-it-works" replace />} />
           <Route path="/resources" element={<Navigate to="/ngos" replace />} />
 

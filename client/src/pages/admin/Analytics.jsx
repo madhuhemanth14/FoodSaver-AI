@@ -4,6 +4,7 @@ import AdminNavbar from "../../components/admin/AdminNavbar";
 import AnalyticsCard from "../../components/admin/AnalyticsCard";
 import StatCard from "../../components/admin/StatCard";
 import { getAnalytics } from "../../services/adminService";
+import { Leaf, Truck, Building2, Users, Utensils, Cloud } from "lucide-react";
 import "./Analytics.css";
 
 /**
@@ -98,16 +99,16 @@ function Analytics() {
                   <span className="analytics-page__demo-tag">Demo / illustrative figures</span>
                 </div>
                 <div className="analytics-page__impact-grid">
-                  <StatCard title="Food Saved" value={`${data.monthlyImpact.foodSaved.toLocaleString()} kg`} icon="⚘" />
-                  <StatCard title="Successful Pickups" value={data.monthlyImpact.successfulPickups.toLocaleString()} icon="▲" />
-                  <StatCard title="Active NGOs" value={data.monthlyImpact.activeNGOs.toLocaleString()} icon="◎" />
-                  <StatCard title="Users" value={data.monthlyImpact.users.toLocaleString()} icon="◍" />
-                  <StatCard title="Meals Supported" value={data.monthlyImpact.mealsSupported.toLocaleString()} icon="◈" />
+                  <StatCard title="Food Saved" value={`${data.monthlyImpact.foodSaved.toLocaleString()} kg`} icon={<Leaf size={18} />} />
+                  <StatCard title="Successful Pickups" value={data.monthlyImpact.successfulPickups.toLocaleString()} icon={<Truck size={18} />} />
+                  <StatCard title="Active NGOs" value={data.monthlyImpact.activeNGOs.toLocaleString()} icon={<Building2 size={18} />} />
+                  <StatCard title="Users" value={data.monthlyImpact.users.toLocaleString()} icon={<Users size={18} />} />
+                  <StatCard title="Meals Supported" value={data.monthlyImpact.mealsSupported.toLocaleString()} icon={<Utensils size={18} />} />
                   <StatCard
                     title="CO₂ Impact"
                     value={`${data.monthlyImpact.co2Impact.toLocaleString()} kg CO2e`}
-                    icon="◔"
-                    description="Rough estimate, not scientifically validated"
+                    icon={<Cloud size={18} />}
+                    description="Estimated carbon offset"
                   />
                 </div>
               </section>

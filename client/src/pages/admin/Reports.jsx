@@ -3,6 +3,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import AdminNavbar from "../../components/admin/AdminNavbar";
 import StatCard from "../../components/admin/StatCard";
 import { getReports } from "../../services/adminService";
+import { Package, CheckCircle2, XCircle, Leaf, Truck, Building2, Users, UserCheck } from "lucide-react";
 import "./Reports.css";
 
 /**
@@ -61,22 +62,22 @@ function Reports() {
               <section className="reports-page__section">
                 <h2>Donation Report</h2>
                 <div className="reports-page__grid">
-                  <StatCard title="Total Donations" value={reports.donationReport.totalDonations.toLocaleString()} icon="◈" />
-                  <StatCard title="Completed Donations" value={reports.donationReport.completedDonations.toLocaleString()} icon="✔" />
-                  <StatCard title="Cancelled Donations" value={reports.donationReport.cancelledDonations.toLocaleString()} icon="✕" />
-                  <StatCard title="Food Saved" value={`${reports.donationReport.foodSaved.toLocaleString()} kg`} icon="⚘" />
-                  <StatCard title="Successful Pickups" value={reports.donationReport.successfulPickups.toLocaleString()} icon="▲" />
-                  <StatCard title="Active NGOs" value={reports.donationReport.activeNGOs.toLocaleString()} icon="◎" />
+                  <StatCard title="Total Donations" value={reports.donationReport.totalDonations.toLocaleString()} icon={<Package size={18} />} />
+                  <StatCard title="Completed Donations" value={reports.donationReport.completedDonations.toLocaleString()} icon={<CheckCircle2 size={18} />} />
+                  <StatCard title="Cancelled Donations" value={reports.donationReport.cancelledDonations.toLocaleString()} icon={<XCircle size={18} />} />
+                  <StatCard title="Food Saved" value={`${reports.donationReport.foodSaved.toLocaleString()} kg`} icon={<Leaf size={18} />} />
+                  <StatCard title="Successful Pickups" value={reports.donationReport.successfulPickups.toLocaleString()} icon={<Truck size={18} />} />
+                  <StatCard title="Active NGOs" value={reports.donationReport.activeNGOs.toLocaleString()} icon={<Building2 size={18} />} />
                 </div>
               </section>
 
               <section className="reports-page__section">
                 <h2>User Report</h2>
                 <div className="reports-page__grid">
-                  <StatCard title="Total Users" value={reports.userReport.totalUsers.toLocaleString()} icon="◍" />
-                  <StatCard title="Active Users" value={reports.userReport.activeUsers.toLocaleString()} icon="●" />
-                  <StatCard title="NGO Users" value={reports.userReport.ngoUsers.toLocaleString()} icon="◎" />
-                  <StatCard title="Donors" value={reports.userReport.donors.toLocaleString()} icon="◈" />
+                  <StatCard title="Total Users" value={reports.userReport.totalUsers.toLocaleString()} icon={<Users size={18} />} />
+                  <StatCard title="Active Users" value={reports.userReport.activeUsers.toLocaleString()} icon={<UserCheck size={18} />} />
+                  <StatCard title="NGO Users" value={reports.userReport.ngoUsers.toLocaleString()} icon={<Building2 size={18} />} />
+                  <StatCard title="Donors" value={reports.userReport.donors.toLocaleString()} icon={<Users size={18} />} />
                 </div>
               </section>
             </>

@@ -23,12 +23,12 @@ const About = () => {
 
           <div className="about-stat-row">
             <div className="about-stat-card">
-              <strong>99%</strong>
-              <span>AI quality accuracy</span>
+              <strong>Verified</strong>
+              <span>Registered NGOs & Food Banks</span>
             </div>
             <div className="about-stat-card">
-              <strong>30 min</strong>
-              <span>Average pickup time</span>
+              <strong>Safe</strong>
+              <span>Food safety & freshness checks</span>
             </div>
           </div>
         </div>

@@ -25,14 +25,13 @@ const Hero = () => {
           )}
 
           <h1>
-            Don&apos;t Waste Food —<br />
-            <span>Share Hope.</span>
+            Reduce Surplus Food.<br />
+            <span>Feed Local Communities.</span>
           </h1>
 
           <p className="hero-description">
-            FoodSaver AI connects surplus food with people in need using AI
-            technology and smart logistics to build a hunger-free,
-            waste-free world — one donation at a time.
+            FoodSaver AI connects surplus food donors with verified local NGOs through
+            real-time freshness verification and coordinated pickups.
           </p>
 
           <div className="hero-buttons">
@@ -44,20 +43,6 @@ const Hero = () => {
               Explore NGOs
               <ArrowRight size={17} />
             </Link>
-          </div>
-
-          <div className="donor-info">
-            <div className="avatars">
-              <div>JD</div>
-              <div>AK</div>
-              <div>SM</div>
-              <div>RK</div>
-              <div>PL</div>
-            </div>
-
-            <p>
-              Join <strong>5,000+</strong> donors making a difference daily
-            </p>
           </div>
         </div>
 
@@ -75,18 +60,17 @@ const Hero = () => {
 
           {/* AI CARD */}
           <div className="hero-card hero-card--analysis">
-            <div className="hero-card__icon hero-card__icon--pink">
+            <div className="hero-card__icon hero-card__icon--green">
               <Brain size={18} />
             </div>
 
             <div>
-              <strong>AI Food Analysis</strong>
+              <strong>AI Freshness Verification</strong>
 
               <p>
-                Quality:
-                <span className="hero-card__good"> Good</span>
+                Real-time quality checks
                 <br />
-                Safe to eat for <strong>12 hrs</strong>
+                <span className="hero-card__good">Safe to consume</span>
               </p>
             </div>
           </div>
@@ -98,19 +82,12 @@ const Hero = () => {
             </div>
 
             <div>
-              <strong>Pickup in Progress</strong>
+              <strong>NGO Pickup Coordination</strong>
 
               <p>
-                Estimated time <strong>30 mins</strong>
+                Direct volunteer routing
               </p>
             </div>
-          </div>
-
-          {/* FOOD SAVED */}
-          <div className="hero-food-saved">
-            <span>Food Saved</span>
-            <strong>12,540+</strong>
-            <small>kg</small>
           </div>
 
         </div>

@@ -79,7 +79,7 @@
 
 .navbar .dashboard-btn {
   padding: 9px 22px;
-  border-radius: 999px;
+  border-radius: 9px;
   border: 1px solid #16833d;
   background: linear-gradient(135deg, #2e7d32 0%, #16833d 100%);
   color: #ffffff !important;
@@ -98,7 +98,7 @@
 
 .navbar .login-btn {
   padding: 9px 20px;
-  border-radius: 999px;
+  border-radius: 9px;
   border: 1.5px solid #2e7d32;
   color: #2e7d32;
   text-decoration: none;
@@ -115,7 +115,7 @@
 
 .navbar .signup-btn {
   padding: 9px 20px;
-  border-radius: 999px;
+  border-radius: 9px;
   border: 1.5px solid #2e7d32;
   background: #2e7d32;
   color: #ffffff;
@@ -131,7 +131,7 @@
 
 .navbar .logout-btn {
   padding: 9px 18px;
-  border-radius: 999px;
+  border-radius: 9px;
   border: 1.5px solid #2e7d32;
   background: transparent;
   color: #2e7d32;
@@ -428,7 +428,7 @@
     font-size: 0.78rem;
     font-weight: 600;
     white-space: nowrap;
-    border-radius: 999px;
+    border-radius: 8px;
     line-height: 1.1;
   }
 

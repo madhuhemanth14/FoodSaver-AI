@@ -64,35 +64,22 @@
 
   font-size: 0.84rem;
   font-weight: 600;
-
   background: #eaf6ea;
-
   padding: 7px 15px;
-
-  border-radius: 999px;
-
+  border-radius: 6px;
   margin: 0 0 18px;
 }
 
-
 /* Small heading */
-
 .hero-left .small-heading {
   display: inline-block;
-
   color: #2e7d32;
-
   font-size: 0.78rem;
   font-weight: 700;
-
   letter-spacing: 0.06em;
-
   background: #eaf6ea;
-
   padding: 6px 14px;
-
-  border-radius: 999px;
-
+  border-radius: 6px;
   margin: 0 0 18px;
 }
 
@@ -169,8 +156,7 @@
   gap: 8px;
 
   padding: 0 30px;
-
-  border-radius: 30px;
+  border-radius: 10px;
 
   font-size: 0.95rem;
 
@@ -429,10 +415,9 @@
 }
 
 
-.hero-card__icon--pink {
-  background: #fce4ec;
-
-  color: #c2185b;
+.hero-card__icon--green {
+  background: #eaf6ea;
+  color: #16833d;
 }
 
 
