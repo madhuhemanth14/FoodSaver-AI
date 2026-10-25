@@ -176,13 +176,6 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p className="footer-copy">© 2026 FoodSaver AI. All rights reserved.</p>
-          <div className="footer-legal-links">
-            <button type="button" onClick={() => setTermsOpen(true)}>Privacy Policy</button>
-            <span>•</span>
-            <button type="button" onClick={() => setTermsOpen(true)}>Terms of Service</button>
-            <span>•</span>
-            <button type="button" onClick={() => setGuidelinesOpen(true)}>Food Safety Guidelines</button>
-          </div>
         </div>
 
         {copied && (
