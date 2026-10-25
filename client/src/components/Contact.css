@@ -46,12 +46,14 @@
 
 .contact-info-card--link {
   text-decoration: none;
+  color: inherit;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .contact-info-card--link:hover {
   background: #eaf6ea;
+  border-color: rgba(46, 125, 50, 0.22);
 }
 
 .contact-info-icon {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Leaf, Globe, Mail, Share2, Check } from "lucide-react";
+import { Leaf, Globe, Mail, Phone, Share2, Check } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import DonationGuidelinesModal from "./common/DonationGuidelinesModal";
 import ResourcesModal from "./common/ResourcesModal";
@@ -101,11 +101,18 @@ const Footer = () => {
                 <Globe size={16} />
               </a>
               <a
-                href="mailto:support@foodsaverai.org"
+                href="mailto:hello.foodsaverai@gmail.com"
                 aria-label="Email Support"
-                title="Email support@foodsaverai.org"
+                title="Email hello.foodsaverai@gmail.com"
               >
                 <Mail size={16} />
+              </a>
+              <a
+                href="tel:+919963638052"
+                aria-label="Call Support"
+                title="Call +91 99636 38052"
+              >
+                <Phone size={16} />
               </a>
               <button
                 type="button"

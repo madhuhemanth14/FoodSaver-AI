@@ -6,6 +6,8 @@ import ContactMap from "./ContactMap";
 import "./Contact.css";
 
 const CONTACT_EMAIL = "hello.foodsaverai@gmail.com";
+const CONTACT_PHONE = "+91 99636 38052";
+const CONTACT_TEL = "+919963638052";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validate({ name, email, message }) {
@@ -135,15 +137,20 @@ const Contact = () => {
             </div>
           </a>
 
-          <div className="contact-info-card">
+          <a
+            className="contact-info-card contact-info-card--link"
+            href={`tel:${CONTACT_TEL}`}
+            aria-label={`Call FoodSaver AI at ${CONTACT_PHONE}`}
+            title={`Call ${CONTACT_PHONE}`}
+          >
             <div className="contact-info-icon">
               <Phone size={18} />
             </div>
             <div>
               <span>PHONE</span>
-              <strong>+91 99636 38052</strong>
+              <strong>{CONTACT_PHONE}</strong>
             </div>
-          </div>
+          </a>
 
           <div className="contact-info-card">
             <div className="contact-info-icon">
@@ -158,16 +165,19 @@ const Contact = () => {
           <ContactMap />
 
           <div className="contact-socials">
-            <Link to="/" aria-label="Website">
+            <Link to="/" aria-label="Website" title="Home">
               <Globe size={16} />
             </Link>
-            <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email">
+            <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email" title={`Email ${CONTACT_EMAIL}`}>
               <Mail size={16} />
+            </a>
+            <a href={`tel:${CONTACT_TEL}`} aria-label="Phone support" title={`Call ${CONTACT_PHONE}`}>
+              <Phone size={16} />
             </a>
             <button type="button" className="contact-social-btn" onClick={handleShare} aria-label="Share" title="Share FoodSaver AI">
               <Share2 size={16} />
             </button>
-            <Link to="/" aria-label="FoodSaver AI">
+            <Link to="/" aria-label="FoodSaver AI" title="FoodSaver AI">
               <Leaf size={16} />
             </Link>
           </div>

@@ -292,7 +292,14 @@ export default function PickupTracking() {
 
               {pickup.ngo?.phone && (
                 <p style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <Phone size={14} /> {pickup.ngo.phone}
+                  <Phone size={14} />{" "}
+                  <a
+                    href={`tel:${String(pickup.ngo.phone).replace(/\s+/g, "")}`}
+                    style={{ color: "inherit", textDecoration: "none" }}
+                    title={`Call ${pickup.ngo.phone}`}
+                  >
+                    {pickup.ngo.phone}
+                  </a>
                 </p>
               )}
 
@@ -341,7 +348,17 @@ export default function PickupTracking() {
 
               <p>
                 <strong>Phone:</strong>{" "}
-                {pickup.donorPhone}
+                {pickup.donorPhone ? (
+                  <a
+                    href={`tel:${String(pickup.donorPhone).replace(/\s+/g, "")}`}
+                    style={{ color: "inherit", textDecoration: "none" }}
+                    title={`Call ${pickup.donorPhone}`}
+                  >
+                    {pickup.donorPhone}
+                  </a>
+                ) : (
+                  "Not provided"
+                )}
               </p>
 
             </div>

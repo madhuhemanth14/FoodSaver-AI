@@ -126,7 +126,17 @@ export default function NGODetails() {
             <Phone size={18} style={{ color: "var(--fs-primary)", flexShrink: 0, marginTop: 2 }} />
             <span>
               <strong>Phone</strong>
-              {ngo.phone}
+              {ngo.phone ? (
+                <a
+                  href={`tel:${String(ngo.phone).replace(/\s+/g, "")}`}
+                  style={{ color: "inherit", textDecoration: "none" }}
+                  title={`Call ${ngo.phone}`}
+                >
+                  {ngo.phone}
+                </a>
+              ) : (
+                "Not available"
+              )}
             </span>
           </div>
 

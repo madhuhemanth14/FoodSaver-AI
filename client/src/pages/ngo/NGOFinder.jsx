@@ -222,7 +222,19 @@ export default function NGOFinder() {
               {/* Phone */}
               <div style={styles.info}>
                 <Phone size={16} color="#2E7D32" style={{ flexShrink: 0, marginTop: 2 }} />
-                <span>{ngo.phone}</span>
+                <span>
+                  {ngo.phone ? (
+                    <a
+                      href={`tel:${String(ngo.phone).replace(/\s+/g, "")}`}
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      title={`Call ${ngo.phone}`}
+                    >
+                      {ngo.phone}
+                    </a>
+                  ) : (
+                    "Not available"
+                  )}
+                </span>
               </div>
 
               {/* Distance */}
