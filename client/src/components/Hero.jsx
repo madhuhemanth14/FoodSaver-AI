@@ -25,8 +25,8 @@ const Hero = () => {
           )}
 
           <h1>
-            Reduce Surplus Food.<br />
-            <span>Feed Local Communities.</span>
+            Don't Waste Food<br />
+            <span>Share Hope</span>
           </h1>
 
           <p className="hero-description">
