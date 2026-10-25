@@ -69,7 +69,14 @@ const Login = () => {
 
       login(user, token);
 
-      const landingPath = roleLoginLandingPath(user.role);
+      const targetPath = location.state?.returnTo;
+      const isRoleAppropriate =
+        targetPath &&
+        (!targetPath.startsWith("/donor") || user.role === "donor") &&
+        (!targetPath.startsWith("/ngo") || user.role === "ngo") &&
+        (!targetPath.startsWith("/admin") || user.role === "admin");
+
+      const landingPath = (isRoleAppropriate ? targetPath : null) || roleLoginLandingPath(user.role);
 
       navigate(landingPath, {
         replace: true,

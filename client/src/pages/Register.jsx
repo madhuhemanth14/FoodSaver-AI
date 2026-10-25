@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -24,6 +24,16 @@ const SEND_FAILED_MESSAGE =
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const requestedRole =
+    location.state?.role ||
+    (searchParams.get("role")?.toLowerCase() === "ngo"
+      ? "NGO / Food Bank"
+      : searchParams.get("role")?.toLowerCase() === "donor"
+      ? "Food Donor"
+      : null);
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -35,11 +45,17 @@ const Register = () => {
     fullName: "",
     email: "",
     phone: "",
-    role: "Food Donor",
+    role: requestedRole || "Food Donor",
     password: "",
     confirmPassword: "",
     terms: false,
   });
+
+  useEffect(() => {
+    if (requestedRole) {
+      setFormData((prev) => ({ ...prev, role: requestedRole }));
+    }
+  }, [requestedRole]);
 
   const handleChange = (e) => {
     const {

@@ -123,10 +123,18 @@
   text-transform: none;
 }
 
-.footer-column a {
+.footer-column a,
+.footer-column .footer-link-btn {
   display: inline-block;
-  color: #d7edd8;
-  color: rgba(255, 255, 255, 0.82);
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  cursor: pointer;
+  font-family: inherit;
+  color: #d7edd8 !important;
+  color: rgba(255, 255, 255, 0.82) !important;
   text-decoration: none;
   font-size: 0.875rem;
   line-height: 1.4;
@@ -135,13 +143,56 @@
   text-align: left;
 }
 
-.footer-column a:hover {
-  color: #ffffff;
+.footer-column a:hover,
+.footer-column .footer-link-btn:hover {
+  color: #ffffff !important;
   transform: translateX(2px);
+  background: none !important;
+}
+
+.footer-brand .social-icons button.social-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.footer-brand .social-icons button.social-icon-btn:hover {
+  background: #ffffff !important;
+  color: #1b5e20 !important;
+  border-color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.footer-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #16833d;
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.2s ease;
 }
 
 /* =========================================================
-   BOTTOM COPYRIGHT
+   BOTTOM COPYRIGHT & LEGAL LINKS
 ========================================================= */
 
 .footer-bottom {
@@ -149,7 +200,10 @@
   margin: 36px auto 0;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   box-sizing: border-box;
 }
 
@@ -160,6 +214,37 @@
   font-size: 0.8125rem;
   text-align: center;
   letter-spacing: 0.01em;
+}
+
+.footer-legal-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-legal-links button {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.footer-legal-links button:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+.footer-legal-links span {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
 }
 
 /* =========================================================

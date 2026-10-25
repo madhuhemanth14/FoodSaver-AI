@@ -14,6 +14,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import ScrollToTopOrHash from "./components/common/ScrollToTopOrHash";
 import { useAuth } from "./context/AuthContext";
 import { rolePrefix } from "./utils/roles";
 
@@ -138,10 +139,13 @@ const RoleDonateRedirect = () => {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTopOrHash />
       <Routes>
         <Route element={<SiteLayout />}>
           {/* HOME */}
           <Route path="/" element={<Home />} />
+          <Route path="/guidelines" element={<Navigate to="/#how-it-works" replace />} />
+          <Route path="/resources" element={<Navigate to="/ngos" replace />} />
 
           {/* AUTH */}
           <Route path="/login" element={<Login />} />
