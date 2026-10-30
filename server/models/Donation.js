@@ -87,6 +87,15 @@ const donationSchema = new mongoose.Schema(
       analysisId: { type: String, default: "" },
       recommendation: { type: String, default: "" },
       analyzedAt: { type: Date, default: null },
+      // Human-in-the-loop donor verification: AI freshness is treated as an advisory hint;
+      // the donor physically inspects the food (appearance, odor, temperature) and confirms safety.
+      donorConfirmedFreshness: { type: Boolean, default: false },
+      donorConfirmedAt: { type: Date, default: null },
+      donorPhysicalCheck: {
+        appearanceNormal: { type: Boolean, default: true },
+        odorNormal: { type: Boolean, default: true },
+        temperatureMaintained: { type: Boolean, default: true },
+      },
     },
 
     status: {

@@ -443,6 +443,57 @@
   font-weight: 700;
 }
 
+.fs-ai-status-tag--advisory {
+  background: #f0f7f1;
+  color: #2e6838;
+  border: 1px solid #cbe4ce;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fs-ai-disclaimer-card {
+  margin: 18px 0 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fbfcfb;
+  border: 1px solid #d9e6dc;
+  border-left: 4px solid #e08b14;
+}
+
+.fs-ai-disclaimer-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.fs-ai-disclaimer-icon {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.fs-ai-disclaimer-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.fs-ai-disclaimer-text {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #4b5563;
+  margin: 0;
+}
+
+.fs-ai-disclaimer-text strong {
+  color: #1f2937;
+}
+
 
 /* AI expiry output uses the same form language as preparation date/time. */
 .fs-ai-form-result {

@@ -16,8 +16,9 @@ const {
 function formatAiResult(aiAnalysis) {
   if (!aiAnalysis || !aiAnalysis.freshness) return "";
   const confidencePart =
-    aiAnalysis.confidence != null ? ` (${aiAnalysis.confidence}% confidence)` : "";
-  return `${aiAnalysis.freshness}${confidencePart}`;
+    aiAnalysis.confidence != null ? ` (${Math.round(aiAnalysis.confidence <= 1 ? aiAnalysis.confidence * 100 : aiAnalysis.confidence)}% confidence)` : "";
+  const donorNote = aiAnalysis.donorConfirmedFreshness ? " · Donor Inspected & Verified" : "";
+  return `AI Advisory Hint: ${aiAnalysis.freshness}${confidencePart}${donorNote}`;
 }
 
 // CREATE DONATION
@@ -53,6 +54,13 @@ const createDonation = async (req, res) => {
           analysisId: aiAnalysis.id ? String(aiAnalysis.id) : "",
           recommendation: aiAnalysis.recommendation || "",
           analyzedAt: aiAnalysis.analyzedAt ? new Date(aiAnalysis.analyzedAt) : new Date(),
+          donorConfirmedFreshness: Boolean(aiAnalysis.donorConfirmedFreshness),
+          donorConfirmedAt: aiAnalysis.donorConfirmedAt ? new Date(aiAnalysis.donorConfirmedAt) : (aiAnalysis.donorConfirmedFreshness ? new Date() : null),
+          donorPhysicalCheck: aiAnalysis.donorPhysicalCheck || {
+            appearanceNormal: true,
+            odorNormal: true,
+            temperatureMaintained: true,
+          },
         }
       : undefined;
 

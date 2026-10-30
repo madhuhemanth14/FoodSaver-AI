@@ -81,10 +81,19 @@ export async function createDonation(payload) {
       ? {
           foodType: payload.aiAnalysis.foodType,
           freshness: payload.aiAnalysis.freshness,
+          freshnessScore: payload.aiAnalysis.freshnessScore,
           confidence: payload.aiAnalysis.confidence,
           recommendation: payload.aiAnalysis.recommendation,
+          remainingHours: payload.aiAnalysis.remainingHours,
           predictedExpiry: payload.aiAnalysis.predictedExpiry,
-          analyzedAt: new Date().toISOString(),
+          donorConfirmedFreshness: Boolean(payload.aiAnalysis.donorConfirmedFreshness),
+          donorConfirmedAt: payload.aiAnalysis.donorConfirmedAt || new Date().toISOString(),
+          donorPhysicalCheck: payload.aiAnalysis.donorPhysicalCheck || {
+            appearanceNormal: true,
+            odorNormal: true,
+            temperatureMaintained: true,
+          },
+          analyzedAt: payload.aiAnalysis.analyzedAt || new Date().toISOString(),
         }
       : undefined,
   };

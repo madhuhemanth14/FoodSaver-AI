@@ -121,18 +121,26 @@ export default function DonationReview({ donation, onEdit, onConfirm, submitting
             </div>
           )}
 
-          {/* AI assessment chip */}
+          {/* AI advisory assessment + Donor inspection bar */}
           {aiAnalysis && (
             <div className="fs-review-ai-bar">
               <div className="fs-review-ai-meta">
                 <Sparkles size={14} className="fs-ai-sparkle-icon" />
                 <span>
-                  AI Quality: <strong>{aiAnalysis.freshness || "Fresh"}</strong> ({Math.round((aiAnalysis.confidence || 0) * (aiAnalysis.confidence <= 1 ? 100 : 1))}% confidence)
+                  AI Freshness Hint: <strong>{aiAnalysis.freshness || "Fresh"}</strong> ({Math.round((aiAnalysis.confidence || 0) * (aiAnalysis.confidence <= 1 ? 100 : 1))}% visual confidence)
                 </span>
               </div>
-              <span className="fs-review-ai-tag">Verified by FoodSaver AI</span>
+              <span className={`fs-review-ai-tag ${aiAnalysis.donorConfirmedFreshness ? "fs-review-ai-tag--confirmed" : ""}`}>
+                <ShieldCheck size={13} />
+                {aiAnalysis.donorConfirmedFreshness ? "Donor Inspected & Confirmed" : "AI Advisory Hint"}
+              </span>
             </div>
           )}
+
+          <div className="fs-review-safety-notice">
+            <CheckCircle2 size={14} className="fs-review-shield-icon" />
+            <span>Food Safety Commitment: You have physically checked this donation for natural smell, clean appearance, and proper storage temperature.</span>
+          </div>
         </div>
       </div>
 

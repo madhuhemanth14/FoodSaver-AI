@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, Clock, Calendar, ShieldCheck, Utensils, AlertTriangle } from "lucide-react";
+import { Sparkles, Clock, Calendar, ShieldCheck, Utensils, AlertTriangle, Info } from "lucide-react";
 import { getFreshnessMeta } from "../data/mockAnalysis";
 import "../styles/food-analysis.css";
 
@@ -29,8 +29,8 @@ const AIAnalysisCard = ({ result, preparationDate, preparationTime }) => {
           <Sparkles size={15} className="fs-ai-sparkle-icon" />
           <span>FoodSaver AI Analysis</span>
         </div>
-        <span className="fs-ai-status-tag">
-          <ShieldCheck size={14} /> Verified Quality
+        <span className="fs-ai-status-tag fs-ai-status-tag--advisory" title="Visual estimate — advisory guidance only">
+          <Info size={14} /> AI Advisory Hint
         </span>
       </div>
 
@@ -44,7 +44,7 @@ const AIAnalysisCard = ({ result, preparationDate, preparationTime }) => {
 
         <div className="fs-ai-metric-box">
           <span className="fs-ai-metric-label">
-            <ShieldCheck size={13} /> Freshness
+            <Sparkles size={13} /> Freshness Hint
           </span>
           <span className={`fs-freshness-chip fs-freshness-${(result.freshness || "fresh").toLowerCase().replace(/\s+/g, "-")}`}>
             {meta.label || result.freshness}
@@ -110,8 +110,19 @@ const AIAnalysisCard = ({ result, preparationDate, preparationTime }) => {
         </div>
       )}
 
+      {/* Safety Disclaimer Banner */}
+      <div className="fs-ai-disclaimer-card" role="note">
+        <div className="fs-ai-disclaimer-header">
+          <AlertTriangle size={15} className="fs-ai-disclaimer-icon" />
+          <span className="fs-ai-disclaimer-title">Food Safety Advisory Notice</span>
+        </div>
+        <p className="fs-ai-disclaimer-text">
+          This AI freshness assessment is an <strong>automated visual estimate (hint)</strong>, not a certified guarantee of safety. Visual AI cannot detect microbial pathogens, toxins, off-odors, or improper storage temperatures. Donors remain responsible for physically checking food condition before sharing.
+        </p>
+      </div>
+
       <p className="fs-ai-generated-note">
-        Shelf-life and expiration estimates are calculated automatically by FoodSaver AI using food category heuristics, visual analysis, and your preparation timestamp.
+        Shelf-life and expiration estimates are calculated automatically by FoodSaver AI using visual heuristics and your preparation timestamp. Always treat AI outputs as advisory hints and confirm freshness in person.
       </p>
     </div>
   );

@@ -1514,3 +1514,180 @@
   border-top-color: #2d6a4f;
 }
 
+/* AI Advisory Hint & Food Safety Disclaimer Styles */
+.fs-ai-status-tag--advisory {
+  background: #f0f7f1;
+  color: #2e6838;
+  border: 1px solid #cbe4ce;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.fs-ai-disclaimer-card {
+  margin: 18px 0 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fbfcfb;
+  border: 1px solid #d9e6dc;
+  border-left: 4px solid #e08b14;
+}
+
+.fs-ai-disclaimer-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.fs-ai-disclaimer-icon {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.fs-ai-disclaimer-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.fs-ai-disclaimer-text {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #4b5563;
+  margin: 0;
+}
+
+.fs-ai-disclaimer-text strong {
+  color: #1f2937;
+}
+
+/* Human-in-the-Loop Donor Confirmation Card */
+.fs-donor-conf-card {
+  margin-top: 24px;
+  padding: 24px 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #cfe5d3;
+  box-shadow: 0 4px 18px rgba(46, 125, 50, 0.05);
+}
+
+.fs-donor-conf-header {
+  margin-bottom: 18px;
+}
+
+.fs-donor-conf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e8f5e9;
+  color: #1b5e20;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #c8e6c9;
+  margin-bottom: 10px;
+}
+
+.fs-donor-conf-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1b4332;
+  margin: 0 0 6px;
+}
+
+.fs-donor-conf-desc {
+  font-size: 0.88rem;
+  color: #556257;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.fs-physical-checks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f7faf7;
+  border: 1px solid #e1ece2;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.fs-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.86rem;
+  color: #2d3748;
+  line-height: 1.4;
+}
+
+.fs-check-item input[type="checkbox"],
+.fs-donor-agree-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #2e7d32;
+  cursor: pointer;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.fs-donor-confirm-agree {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #edf7ee;
+  border: 1px solid #b7dfbb;
+}
+
+.fs-donor-agree-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.fs-donor-agree-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1b5e20;
+  line-height: 1.4;
+}
+
+.fs-donor-required-note {
+  font-size: 0.8rem;
+  color: #c2410c;
+  margin: 8px 0 0 4px;
+  font-weight: 500;
+}
+
+.fs-review-ai-tag--confirmed {
+  background: #e8f5e9 !important;
+  color: #1b5e20 !important;
+  border: 1px solid #a5d6a7 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.fs-review-safety-notice {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f4faf5;
+  border: 1px solid #d2ead6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #2d6a4f;
+  font-weight: 500;
+}
+
+.fs-review-shield-icon {
+  color: #2e7d32;
+  flex-shrink: 0;
+}
+

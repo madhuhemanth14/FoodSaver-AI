@@ -484,7 +484,7 @@ export default function DonationForm({
                 <span>Identified: <strong>{aiAnalysis.foodName || aiAnalysis.foodType}</strong></span>
               </div>
               <div className="fs-ai-status-pill">
-                <span>Freshness: <strong>{aiAnalysis.freshness}</strong></span>
+                <span>Freshness Hint: <strong>{aiAnalysis.freshness}</strong></span>
               </div>
               <div className="fs-ai-status-pill">
                 <span>Confidence: <strong>{Math.round((aiAnalysis.confidence || 0) * (aiAnalysis.confidence <= 1 ? 100 : 1))}%</strong></span>

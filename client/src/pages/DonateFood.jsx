@@ -8,7 +8,7 @@ import AIAnalysisCard from "../components/AIAnalysisCard";
 import DonationReview from "../components/DonationReview";
 import donationService from "../services/donationService";
 import { analyzeFoodImage } from "../services/aiAnalysisService";
-import { Sparkles, Heart, ArrowLeft, ArrowRight, RefreshCw, AlertCircle } from "lucide-react";
+import { Sparkles, Heart, ArrowLeft, ArrowRight, RefreshCw, AlertCircle, CheckCircle2, ShieldCheck, Check } from "lucide-react";
 import BackButton from "../components/common/BackButton";
 import "../styles/donation-theme.css";
 import "../styles/donation-components.css";
@@ -74,6 +74,13 @@ export default function DonateFood() {
   const [confirming, setConfirming] = useState(false);
   // Signature of the analysis whose photo/entry mismatch the donor confirmed.
   const [conflictConfirmedFor, setConflictConfirmedFor] = useState("");
+  // Human-in-the-loop donor confirmation: AI provides an advisory hint, donor verifies.
+  const [donorConfirmedFreshness, setDonorConfirmedFreshness] = useState(false);
+  const [physicalChecks, setPhysicalChecks] = useState({
+    appearanceNormal: true,
+    odorNormal: true,
+    temperatureMaintained: true,
+  });
 
   const analysisSignatureRef = useRef("");
   const aiRequestIdRef = useRef(0);
@@ -98,6 +105,16 @@ export default function DonateFood() {
       predictedExpiryTime: expiry.time,
     };
   }, [aiResult, current?.preparationDate, current?.preparationTime]);
+
+  const enrichedAiAnalysis = useMemo(() => {
+    if (!aiAnalysis) return null;
+    return {
+      ...aiAnalysis,
+      donorConfirmedFreshness,
+      donorConfirmedAt: donorConfirmedFreshness ? (aiAnalysis.donorConfirmedAt || new Date().toISOString()) : null,
+      donorPhysicalCheck: physicalChecks,
+    };
+  }, [aiAnalysis, donorConfirmedFreshness, physicalChecks]);
 
   const expiry = {
     date: aiAnalysis?.predictedExpiryDate || "",
@@ -185,7 +202,7 @@ export default function DonateFood() {
   };
 
   const handleContinueToReview = () => {
-    if (!aiAnalysis) return;
+    if (!aiAnalysis || !donorConfirmedFreshness) return;
     setStep(STEP_REVIEW);
   };
 
@@ -196,7 +213,7 @@ export default function DonateFood() {
   const handleConfirmDonation = () => {
     setConfirming(true);
     donationService
-      .createDonation({ ...formData, aiAnalysis })
+      .createDonation({ ...formData, aiAnalysis: enrichedAiAnalysis })
       .then((created) => {
         setConfirming(false);
         try {
@@ -280,6 +297,83 @@ export default function DonateFood() {
                 preparationTime={formData?.preparationTime}
               />
 
+              {/* Human-in-the-Loop Donor Freshness Confirmation Card */}
+              {!aiLoading && aiAnalysis && (
+                <div className="fs-donor-conf-card fs-fade-in" role="region" aria-label="Donor Freshness Confirmation">
+                  <div className="fs-donor-conf-header">
+                    <div className="fs-donor-conf-pill">
+                      <ShieldCheck size={15} />
+                      <span>Human-in-the-Loop Verification</span>
+                    </div>
+                    <h3>Physical Inspection &amp; Freshness Confirmation</h3>
+                    <p className="fs-donor-conf-desc">
+                      AI freshness is an advisory hint. In accordance with food safety practices, please verify your physical inspection before publishing to NGOs:
+                    </p>
+                  </div>
+
+                  <div className="fs-physical-checks-list">
+                    <label className="fs-check-item">
+                      <input
+                        type="checkbox"
+                        checked={physicalChecks.appearanceNormal}
+                        onChange={(e) =>
+                          setPhysicalChecks((prev) => ({ ...prev, appearanceNormal: e.target.checked }))
+                        }
+                      />
+                      <span>
+                        <strong>Visual Appearance:</strong> Natural color, no visible mold, discoloration, slime, or drying.
+                      </span>
+                    </label>
+
+                    <label className="fs-check-item">
+                      <input
+                        type="checkbox"
+                        checked={physicalChecks.odorNormal}
+                        onChange={(e) =>
+                          setPhysicalChecks((prev) => ({ ...prev, odorNormal: e.target.checked }))
+                        }
+                      />
+                      <span>
+                        <strong>Odor &amp; Scent:</strong> Clean and characteristic smell; free from sour, pungent, or rancid odors.
+                      </span>
+                    </label>
+
+                    <label className="fs-check-item">
+                      <input
+                        type="checkbox"
+                        checked={physicalChecks.temperatureMaintained}
+                        onChange={(e) =>
+                          setPhysicalChecks((prev) => ({ ...prev, temperatureMaintained: e.target.checked }))
+                        }
+                      />
+                      <span>
+                        <strong>Safe Storage:</strong> Stored and handled under safe temperature conditions (hot or chilled).
+                      </span>
+                    </label>
+                  </div>
+
+                  <div className="fs-donor-confirm-agree">
+                    <label className="fs-donor-agree-label">
+                      <input
+                        type="checkbox"
+                        id="donor-confirm-freshness-input"
+                        checked={donorConfirmedFreshness}
+                        onChange={(e) => setDonorConfirmedFreshness(e.target.checked)}
+                      />
+                      <span className="fs-donor-agree-text">
+                        I confirm that I have physically inspected this food and verify it is fresh, hygienic, and safe for human consumption.
+                      </span>
+                    </label>
+                  </div>
+
+                  {!donorConfirmedFreshness && (
+                    <p className="fs-donor-required-note">
+                      * Please complete the physical inspection confirmation above to unlock review and submission.
+                    </p>
+                  )}
+                </div>
+              )}
+
               {!aiLoading && aiError && (
                 <div className="fs-ai-step-actions fs-ai-step-actions--error" role="alert">
                   <div className="fs-ai-error-banner">
@@ -321,7 +415,8 @@ export default function DonateFood() {
                     type="button"
                     className="fs-btn fs-btn-primary"
                     onClick={handleContinueToReview}
-                    disabled={conflictPending}
+                    disabled={conflictPending || !donorConfirmedFreshness}
+                    title={!donorConfirmedFreshness ? "Please confirm your physical inspection before proceeding" : ""}
                   >
                     <span>Continue to Review</span>
                     <ArrowRight size={16} />
@@ -333,7 +428,7 @@ export default function DonateFood() {
 
           {step === STEP_REVIEW && formData && (
             <DonationReview
-              donation={{ ...formData, aiAnalysis }}
+              donation={{ ...formData, aiAnalysis: enrichedAiAnalysis }}
               onEdit={handleEditDetails}
               onConfirm={handleConfirmDonation}
               submitting={confirming}

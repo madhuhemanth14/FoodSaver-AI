@@ -13,7 +13,7 @@ const FreshnessIndicator = ({ score = 0, freshness = "Fresh" }) => {
   return (
     <div className="fa-freshness">
       <div className="fa-freshness__header">
-        <span className="fa-freshness__title">Freshness</span>
+        <span className="fa-freshness__title">Freshness Hint (Advisory)</span>
         <span className="fa-freshness__score">{clamped} / 100</span>
       </div>
       <div className="fa-freshness__track" role="progressbar" aria-valuenow={clamped} aria-valuemin={0} aria-valuemax={100}>

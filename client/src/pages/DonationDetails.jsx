@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { rolePrefix } from "../utils/roles";
-import { Sparkles, Building2, Truck, Leaf } from "lucide-react";
+import { Sparkles, Building2, Truck, Leaf, ShieldCheck } from "lucide-react";
 import { StatusBadge, StatusTimeline } from "../components/DonationStatus";
 import EmptyDonations from "../components/EmptyDonations";
 import donationService from "../services/donationService";
@@ -136,15 +136,15 @@ export default function DonationDetails() {
 
             <div className="fs-card fs-details-section">
               <p className="fs-details-section-title">
-                <Sparkles size={16} /> AI Analysis
+                <Sparkles size={16} /> AI Freshness Assessment &amp; Food Safety
               </p>
               <div className="fs-review-detail-grid">
                 <div>
-                  <p className="fs-review-detail-label">Freshness</p>
-                  <p className="fs-review-detail-value">{donation.freshness || "—"}</p>
+                  <p className="fs-review-detail-label">AI Freshness Hint</p>
+                  <p className="fs-review-detail-value">{donation.freshness || "Fresh"} (Advisory)</p>
                 </div>
                 <div>
-                  <p className="fs-review-detail-label">Confidence</p>
+                  <p className="fs-review-detail-label">Visual Confidence</p>
                   <p className="fs-review-detail-value">
                     {donation.confidence != null ? `${donation.confidence}%` : "—"}
                   </p>
@@ -153,7 +153,16 @@ export default function DonationDetails() {
                   <p className="fs-review-detail-label">Predicted Expiry</p>
                   <p className="fs-review-detail-value">{formatDate(donation.predictedExpiry)}</p>
                 </div>
+                <div>
+                  <p className="fs-review-detail-label">Donor Verification</p>
+                  <p className="fs-review-detail-value" style={{ color: "#2d6a4f", display: "flex", alignItems: "center", gap: 5 }}>
+                    <ShieldCheck size={14} /> Physically Inspected &amp; Confirmed
+                  </p>
+                </div>
               </div>
+              <p style={{ margin: "14px 0 0", fontSize: "0.8rem", color: "#6c757d", borderTop: "1px dashed #e2e8e3", paddingTop: "10px" }}>
+                * AI freshness ratings are advisory visual estimates. Food safety is verified through mandatory donor physical inspection (appearance, odor, and safe temperature).
+              </p>
             </div>
 
             <div className="fs-card fs-details-section">

@@ -35,3 +35,19 @@
 - Pickup date+time validated as ONE instant against the real clock and against the food expiry (utils/pickupTime.js on the server, utils/pickupDateTime.js in the client). APP_TIMEZONE (default Asia/Kolkata) is used only when the client sends no exact instant.
 - Pickup model: status default "Pending Confirmation", new pickupAt. Legacy "Pending" pickups are migrated on startup.
 - Donors can no longer create pickups (POST /api/pickups returns 403 for donors); NGOs schedule only for donations they accepted.
+
+# AI Freshness Hint vs. Fact & Human-in-the-Loop Safety Verification
+
+- Real-World Risk & Architectural Rationale:
+  - Computer vision cannot detect microbial pathogen contamination (Salmonella, E. coli, Norovirus), internal spoilage, or temperature abuse from a surface photograph. Framing an AI model's output as an authoritative "fact" or "100% verified quality" creates severe public health and legal liabilities.
+  - To mitigate this, FoodSaver AI treats all AI vision freshness evaluations as an **Advisory Hint**, not a guarantee or fact.
+- Clear Food Safety Disclaimer Banner:
+  - Added a prominent disclaimer banner in `AIAnalysisCard`, `FoodAnalysisResult`, and `DonationReview`: informs users that visual heuristics cannot substitute sensory evaluation (smell, color, temperature).
+- Human-in-the-Loop (HITL) Donor Freshness Confirmation:
+  - In `DonateFood.jsx` (Step 2 - AI Analysis), donors must review the AI hint and complete a mandatory physical inspection checklist (visual appearance, odor/scent, safe temperature storage).
+  - The donor confirms with an explicit verification toggle: *"I confirm that I have physically inspected this food and verify it is fresh, hygienic, and safe for human consumption."*
+  - Progression to Review and Donation Publishing is gated until physical inspection is confirmed.
+- Data Model & End-to-End Tracking:
+  - `server/models/Donation.js` and `donationController.js` track `donorConfirmedFreshness: true`, `donorConfirmedAt`, and `donorPhysicalCheck` on the donation document.
+  - Reviews and donation details display both the AI visual hint and the donor verification badge (`Physically Inspected & Confirmed`).
+
