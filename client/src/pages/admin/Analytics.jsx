@@ -38,14 +38,14 @@ function Analytics() {
   }, []);
 
   const safeData = data || {};
-  const pickup = safeData.pickupCompletion || { rate: 94, completed: 18, scheduled: 20 };
+  const pickup = safeData.pickupCompletion || { rate: 0, completed: 0, scheduled: 0 };
   const impact = safeData.monthlyImpact || {
-    foodSaved: 320,
-    successfulPickups: 18,
-    activeNGOs: 6,
-    users: 32,
-    mealsSupported: 800,
-    co2Impact: 576,
+    foodSaved: 0,
+    successfulPickups: 0,
+    activeNGOs: 0,
+    users: 0,
+    mealsSupported: 0,
+    co2Impact: 0,
   };
 
   return (
@@ -57,7 +57,7 @@ function Analytics() {
           <div className="admin-page-header">
             <div>
               <h1>Analytics</h1>
-              <p>Platform-wide trends and impact overview.</p>
+              <p>Platform-wide trends and live impact overview from MongoDB.</p>
             </div>
           </div>
 
@@ -68,14 +68,12 @@ function Analytics() {
               <section className="analytics-page__grid analytics-page__grid--two">
                 <AnalyticsCard
                   title="Donations Over Time"
-                  description="Monthly donation volume"
-                  trend="+24%"
+                  description="Donation volume by date"
                   chart={{ type: "line", data: safeData.donationsOverTime || [] }}
                 />
                 <AnalyticsCard
                   title="Food Saved Over Time"
-                  description="Cumulative kg saved"
-                  trend="+35%"
+                  description="Cumulative kg saved by date"
                   chart={{ type: "bar", data: safeData.foodSavedOverTime || [] }}
                 />
               </section>
@@ -101,7 +99,7 @@ function Analytics() {
                 />
                 <AnalyticsCard
                   title="NGO Activity"
-                  description="Donations received per NGO"
+                  description="Donations processed per NGO"
                   chart={{ type: "bar", data: safeData.ngoActivity || [] }}
                 />
               </section>
@@ -109,8 +107,7 @@ function Analytics() {
               <section className="analytics-page__grid analytics-page__grid--one">
                 <AnalyticsCard
                   title="User Growth"
-                  description="Registered users growth"
-                  trend="+18%"
+                  description="Platform user registrations by date"
                   chart={{ type: "line", data: safeData.userGrowth || [] }}
                 />
               </section>

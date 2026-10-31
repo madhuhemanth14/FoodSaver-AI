@@ -26,16 +26,16 @@ const getDashboard = async (req, res) => {
       User.countDocuments(),
       User.countDocuments({ role: { $ne: "admin" } }),
       Donation.countDocuments(),
-      Donation.countDocuments({ status: { $in: ["Available", "Accepted", "Assigned"] } }),
-      Donation.countDocuments({ status: "Completed" }),
+      Donation.countDocuments({ status: { $in: ["Available", "Accepted", "Assigned", "Closed", "Pending"] } }),
+      Donation.countDocuments({ status: { $regex: /^(completed|picked up|delivered)$/i } }),
       Donation.aggregate([
-        { $match: { status: "Completed" } },
+        { $match: { status: { $regex: /^(completed|picked up|delivered)$/i } } },
         { $group: { _id: null, totalKg: { $sum: "$quantity" } } },
       ]),
       NGO.countDocuments({ status: "Open" }),
       NGO.countDocuments({ verified: true }),
-      Pickup.countDocuments({ status: "Completed" }),
-      Pickup.countDocuments({ status: { $in: ["Pending Confirmation", "Pending", "Confirmed"] } }),
+      Pickup.countDocuments({ status: { $regex: /^(completed|delivered)$/i } }),
+      Pickup.countDocuments({ status: { $in: ["Pending Confirmation", "Pending", "Confirmed", "Requested", "Accepted", "On the Way", "Arrived"] } }),
     ]);
 
     res.json({
@@ -72,31 +72,38 @@ const getActivity = async (req, res) => {
     ]);
 
     const feed = [
-      ...donations.map((d) => ({
-        id: `donation-${d._id}`,
-        type: "DONATION",
-        message: `${d.donorName} listed ${d.foodItems.join(", ")} (${d.status})`,
-        createdAt: d.createdAt,
-      })),
+      ...donations.map((d) => {
+        const food = Array.isArray(d.foodItems) && d.foodItems.length > 0
+          ? d.foodItems.join(", ")
+          : (typeof d.foodItems === "string" && d.foodItems ? d.foodItems : "food package");
+        const donor = d.donorName || "Donor";
+        return {
+          id: `donation-${d._id}`,
+          type: "DONATION",
+          message: `${donor} listed ${food} (${d.status || "Available"})`,
+          createdAt: d.createdAt,
+        };
+      }),
       ...pickups.map((p) => ({
         id: `pickup-${p._id}`,
         type: "PICKUP",
-        message: `Pickup for ${p.donorName} is ${p.status}`,
+        message: `Pickup for ${p.donorName || "Donor"} is ${p.status || "Pending"}`,
         createdAt: p.createdAt,
       })),
       ...users.map((u) => ({
         id: `user-${u._id}`,
         type: "USER",
-        message: `New ${u.role} account created: ${u.email}`,
+        message: `New ${u.role || "user"} account created: ${u.email}`,
         createdAt: u.createdAt,
       })),
       ...ngos.map((n) => ({
         id: `ngo-${n._id}`,
         type: "NGO",
-        message: `${n.name} registered (${n.status})`,
+        message: `${n.name || "NGO"} registered (${n.status || "Open"})`,
         createdAt: n.createdAt,
       })),
     ]
+      .filter((item) => item.createdAt)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 12);
 
@@ -287,59 +294,75 @@ const getAnalytics = async (req, res) => {
     ]);
 
     const totalFoodKg = foodSavedAgg[0]?.totalKg || 0;
-    const rate = scheduledPickups > 0 ? Math.round((completedPickups / scheduledPickups) * 100) : 100;
+    const rate = scheduledPickups > 0 ? Math.round((completedPickups / scheduledPickups) * 100) : (completedPickups > 0 ? 100 : 0);
 
-    const formattedDonationsOverTime = donationsOverTime.length > 0
-      ? donationsOverTime.map((d) => ({ label: d._id, value: d.count }))
-      : [
-          { label: "Wk 1", value: 4 },
-          { label: "Wk 2", value: 8 },
-          { label: "Wk 3", value: 14 },
-          { label: "Wk 4", value: 22 },
-        ];
+    // Real donations over time; if current range has 0, query recent timeline
+    let formattedDonationsOverTime = donationsOverTime.map((d) => ({ label: d._id, value: d.count }));
+    if (formattedDonationsOverTime.length === 0) {
+      const allRecentDonations = await Donation.aggregate([
+        { $match: { createdAt: { $ne: null } } },
+        { $group: { _id: { $dateToString: { format: "%b %d", date: "$createdAt" } }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+        { $limit: 8 },
+      ]);
+      formattedDonationsOverTime = allRecentDonations.map((d) => ({ label: d._id, value: d.count }));
+    }
 
-    const formattedFoodSavedOverTime = foodSavedOverTime.length > 0
-      ? foodSavedOverTime.map((d) => ({ label: d._id, value: d.totalKg }))
-      : [
-          { label: "Wk 1", value: 45 },
-          { label: "Wk 2", value: 92 },
-          { label: "Wk 3", value: 160 },
-          { label: "Wk 4", value: 240 },
-        ];
+    // Real food saved over time
+    let formattedFoodSavedOverTime = foodSavedOverTime.map((d) => ({ label: d._id, value: d.totalKg }));
+    if (formattedFoodSavedOverTime.length === 0) {
+      const allRecentFood = await Donation.aggregate([
+        { $match: { createdAt: { $ne: null } } },
+        { $group: { _id: { $dateToString: { format: "%b %d", date: "$createdAt" } }, totalKg: { $sum: "$quantity" } } },
+        { $sort: { _id: 1 } },
+        { $limit: 8 },
+      ]);
+      formattedFoodSavedOverTime = allRecentFood.map((d) => ({ label: d._id, value: d.totalKg }));
+    }
 
-    const formattedCategories = categoryDistribution.length > 0
-      ? categoryDistribution.map((d) => ({ label: d._id || "Other", value: d.count }))
-      : [
-          { label: "Cooked Meals", value: 42 },
-          { label: "Vegetables", value: 25 },
-          { label: "Bakery", value: 18 },
-          { label: "Grains", value: 15 },
-        ];
+    // Real category distribution from DB
+    let formattedCategories = categoryDistribution.map((d) => ({ label: d._id || "Other", value: d.count }));
+    if (formattedCategories.length === 0) {
+      const allCategories = await Donation.aggregate([
+        { $group: { _id: "$category", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 6 },
+      ]);
+      formattedCategories = allCategories
+        .filter((c) => c._id)
+        .map((c) => ({ label: c._id, value: c.count }));
+    }
 
-    const formattedStatus = statusDistribution.length > 0
-      ? statusDistribution.map((d) => ({ label: d._id, value: d.count }))
-      : [
-          { label: "Available", value: 6 },
-          { label: "Accepted", value: 4 },
-          { label: "Completed", value: 18 },
-        ];
+    // Real status distribution from DB
+    let formattedStatus = statusDistribution.map((d) => ({ label: d._id, value: d.count }));
+    if (formattedStatus.length === 0) {
+      const allStatuses = await Donation.aggregate([
+        { $group: { _id: "$status", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+      ]);
+      formattedStatus = allStatuses
+        .filter((s) => s._id)
+        .map((s) => ({ label: s._id, value: s.count }));
+    }
 
-    const formattedNgoActivity = ngoActivityAgg.length > 0
-      ? ngoActivityAgg.map((n) => ({ label: n.ngoDoc[0]?.name || "Partner NGO", value: n.count }))
-      : [
-          { label: "Hope Foundation", value: 12 },
-          { label: "Seva Kitchen", value: 9 },
-          { label: "Anna Trust", value: 6 },
-        ];
+    // Real NGO activity from DB
+    let formattedNgoActivity = ngoActivityAgg.map((n) => ({ label: n.ngoDoc[0]?.name || "Partner NGO", value: n.count }));
+    if (formattedNgoActivity.length === 0) {
+      const realNgos = await NGO.find({ status: "Open" }).limit(5).select("name");
+      formattedNgoActivity = realNgos.map((n) => ({ label: n.name, value: 1 }));
+    }
 
-    const formattedUserGrowth = userGrowthAgg.length > 0
-      ? userGrowthAgg.map((u) => ({ label: u._id, value: u.count }))
-      : [
-          { label: "Wk 1", value: 5 },
-          { label: "Wk 2", value: 11 },
-          { label: "Wk 3", value: 19 },
-          { label: "Wk 4", value: Math.max(totalUsers, 28) },
-        ];
+    // Real user growth from DB
+    let formattedUserGrowth = userGrowthAgg.map((u) => ({ label: u._id, value: u.count }));
+    if (formattedUserGrowth.length === 0) {
+      const allUserGrowth = await User.aggregate([
+        { $match: { createdAt: { $ne: null } } },
+        { $group: { _id: { $dateToString: { format: "%b %d", date: "$createdAt" } }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } },
+        { $limit: 8 },
+      ]);
+      formattedUserGrowth = allUserGrowth.map((u) => ({ label: u._id, value: u.count }));
+    }
 
     res.json({
       success: true,
@@ -350,19 +373,19 @@ const getAnalytics = async (req, res) => {
       donationCategories: formattedCategories,
       donationStatus: formattedStatus,
       pickupCompletion: {
-        rate: rate || 94,
-        completed: completedPickups || 18,
-        scheduled: scheduledPickups || 20,
+        rate,
+        completed: completedPickups,
+        scheduled: scheduledPickups,
       },
       ngoActivity: formattedNgoActivity,
       userGrowth: formattedUserGrowth,
       monthlyImpact: {
-        foodSaved: totalFoodKg || 320,
-        successfulPickups: completedPickups || 18,
-        activeNGOs: activeNgosCount || 6,
-        users: totalUsers || 32,
-        mealsSupported: Math.round((totalFoodKg || 320) * 2.5),
-        co2Impact: Math.round((totalFoodKg || 320) * 1.8),
+        foodSaved: totalFoodKg,
+        successfulPickups: completedPickups,
+        activeNGOs: activeNgosCount,
+        users: totalUsers,
+        mealsSupported: Math.round(totalFoodKg * 2.5),
+        co2Impact: Math.round(totalFoodKg * 1.8),
       },
     });
   } catch (error) {
@@ -389,10 +412,10 @@ const getReports = async (req, res) => {
       foodSavedAgg,
     ] = await Promise.all([
       Donation.countDocuments(),
-      Donation.countDocuments({ status: "Completed" }),
-      Donation.countDocuments({ status: "Cancelled" }),
+      Donation.countDocuments({ status: { $regex: /^(completed|picked up|delivered)$/i } }),
+      Donation.countDocuments({ status: { $regex: /^cancelled$/i } }),
       Pickup.countDocuments(),
-      Pickup.countDocuments({ status: "Completed" }),
+      Pickup.countDocuments({ status: { $regex: /^(completed|delivered)$/i } }),
       User.countDocuments(),
       User.countDocuments({ isBlocked: { $ne: true } }),
       User.countDocuments({ role: "ngo" }),
@@ -400,7 +423,7 @@ const getReports = async (req, res) => {
       NGO.countDocuments(),
       NGO.countDocuments({ status: "Open" }),
       Donation.aggregate([
-        { $match: { status: "Completed" } },
+        { $match: { status: { $regex: /^(completed|picked up|delivered)$/i } } },
         { $group: { _id: null, totalKg: { $sum: "$quantity" } } },
       ]),
     ]);
