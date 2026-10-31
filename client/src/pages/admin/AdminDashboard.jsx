@@ -74,13 +74,24 @@ function AdminDashboard() {
     };
   }, []);
 
+  const safeStats = stats || {
+    totalUsers: 0,
+    activeUsers: 0,
+    totalDonations: 0,
+    pendingDonations: 0,
+    completedDonations: 0,
+    foodSaved: 0,
+    activeNGOs: 0,
+    successfulPickups: 0,
+  };
+
   return (
-    <div className="admin-shell">
+    <div className="admin-layout admin-dashboard-page">
       <AdminSidebar />
-      <div className="admin-shell__main">
+      <div className="admin-layout__main">
         <AdminNavbar admin={user} unreadCount={unreadCount} />
-        <main className="admin-dashboard">
-          <div className="admin-dashboard__header">
+        <main className="admin-layout__content admin-dashboard">
+          <div className="admin-page-header admin-dashboard__header">
             <div>
               <h1 className="admin-dashboard__title">Overview</h1>
               <p className="admin-dashboard__subtitle">Platform-wide statistics and activity</p>
@@ -95,14 +106,14 @@ function AdminDashboard() {
             <div className="admin-dashboard__stats-loading">Loading statistics…</div>
           ) : (
             <div className="admin-dashboard__stats-grid">
-              <StatCard title="Total Users" value={stats.totalUsers.toLocaleString()} icon={<Users size={18} />} />
-              <StatCard title="Active Users" value={stats.activeUsers.toLocaleString()} icon={<UserCheck size={18} />} />
-              <StatCard title="Total Donations" value={stats.totalDonations.toLocaleString()} icon={<Package size={18} />} />
-              <StatCard title="Pending Donations" value={stats.pendingDonations.toLocaleString()} icon={<Clock size={18} />} />
-              <StatCard title="Completed Donations" value={stats.completedDonations.toLocaleString()} icon={<CheckCircle2 size={18} />} />
-              <StatCard title="Food Saved" value={`${stats.foodSaved.toLocaleString()} kg`} icon={<Leaf size={18} />} />
-              <StatCard title="Active NGOs" value={stats.activeNGOs.toLocaleString()} icon={<Building2 size={18} />} />
-              <StatCard title="Successful Pickups" value={stats.successfulPickups.toLocaleString()} icon={<Truck size={18} />} />
+              <StatCard title="Total Users" value={safeStats.totalUsers.toLocaleString()} icon={<Users size={18} />} />
+              <StatCard title="Active Users" value={safeStats.activeUsers.toLocaleString()} icon={<UserCheck size={18} />} />
+              <StatCard title="Total Donations" value={safeStats.totalDonations.toLocaleString()} icon={<Package size={18} />} />
+              <StatCard title="Pending Donations" value={safeStats.pendingDonations.toLocaleString()} icon={<Clock size={18} />} />
+              <StatCard title="Completed Donations" value={safeStats.completedDonations.toLocaleString()} icon={<CheckCircle2 size={18} />} />
+              <StatCard title="Food Saved" value={`${safeStats.foodSaved.toLocaleString()} kg`} icon={<Leaf size={18} />} />
+              <StatCard title="Active NGOs" value={safeStats.activeNGOs.toLocaleString()} icon={<Building2 size={18} />} />
+              <StatCard title="Successful Pickups" value={safeStats.successfulPickups.toLocaleString()} icon={<Truck size={18} />} />
             </div>
           )}
 

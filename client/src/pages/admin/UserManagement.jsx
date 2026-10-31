@@ -3,7 +3,9 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import AdminNavbar from "../../components/admin/AdminNavbar";
 import FilterPanel from "../../components/admin/FilterPanel";
 import DataTable from "../../components/admin/DataTable";
-import { getUsers } from "../../services/adminService";
+import { getUsers, updateUserStatus } from "../../services/adminService";
+import { getUnreadCount } from "../../services/notificationService";
+import { useAuth } from "../../context/AuthContext";
 import "./UserManagement.css";
 
 const PAGE_SIZE = 6;
@@ -19,18 +21,27 @@ const STATUS_OPTIONS = [
   { value: "ALL", label: "All Statuses" },
   { value: "ACTIVE", label: "Active" },
   { value: "BLOCKED", label: "Blocked" },
-  { value: "PENDING", label: "Pending" },
 ];
+
+function normalizeUser(u) {
+  return {
+    ...u,
+    id: u._id || u.id,
+    name: u.name || "Unknown",
+    email: u.email || "No email",
+    role: (u.role || "donor").toUpperCase(),
+    location: u.location || u.address || (u.city ? `${u.city}${u.state ? `, ${u.state}` : ""}` : "Not specified"),
+    status: u.isBlocked ? "BLOCKED" : "ACTIVE",
+    joinedDate: u.createdAt ? new Date(u.createdAt).toISOString().slice(0, 10) : "Recent",
+  };
+}
 
 /**
  * UserManagement
  * Route: /admin/users
- *
- * Block/unblock actions here are frontend mock UI only — no real backend
- * mutation is performed. A confirmation prompt is shown before "changing"
- * status, and the change is applied to local state only.
  */
 function UserManagement() {
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -38,20 +49,34 @@ function UserManagement() {
   const [status, setStatus] = useState("ALL");
   const [page, setPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    getUsers().then((data) => {
-      setUsers(data);
-      setLoading(false);
+    let isMounted = true;
+    Promise.all([
+      getUsers().catch(() => []),
+      getUnreadCount().catch(() => 0),
+    ]).then(([data, unread]) => {
+      if (isMounted) {
+        const list = Array.isArray(data) ? data : (data?.data || []);
+        setUsers(list.map(normalizeUser));
+        setUnreadCount(unread);
+        setLoading(false);
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
+      const term = (search || "").trim().toLowerCase();
       const matchesSearch =
-        !search ||
-        u.name.toLowerCase().includes(search.toLowerCase()) ||
-        u.email.toLowerCase().includes(search.toLowerCase());
+        !term ||
+        (u.name || "").toLowerCase().includes(term) ||
+        (u.email || "").toLowerCase().includes(term);
       const matchesRole = role === "ALL" || u.role === role;
       const matchesStatus = status === "ALL" || u.status === status;
       return matchesSearch && matchesRole && matchesStatus;
@@ -61,30 +86,42 @@ function UserManagement() {
   const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
   const pagedUsers = filteredUsers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const handleToggleStatus = (user) => {
-    const nextStatus = user.status === "BLOCKED" ? "ACTIVE" : "BLOCKED";
+  const handleToggleStatus = async (targetUser) => {
+    const nextBlocked = targetUser.status !== "BLOCKED";
+    const nextStatus = nextBlocked ? "BLOCKED" : "ACTIVE";
+    const action = nextBlocked ? "block" : "unblock";
     const confirmed = window.confirm(
-      `${nextStatus === "BLOCKED" ? "Block" : "Unblock"} ${user.name}? This is a demo action only — no backend change will be made.`
+      `Are you sure you want to ${action} ${targetUser.name}?`
     );
     if (!confirmed) return;
 
-    setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, status: nextStatus } : u)));
+    try {
+      await updateUserStatus(targetUser.id, nextBlocked);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === targetUser.id ? { ...u, status: nextStatus, isBlocked: nextBlocked } : u))
+      );
+      if (selectedUser?.id === targetUser.id) {
+        setSelectedUser((prev) => ({ ...prev, status: nextStatus, isBlocked: nextBlocked }));
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || `Failed to ${action} user.`);
+    }
   };
 
   const columns = [
-    { key: "id", label: "ID" },
+    { key: "id", label: "User ID" },
     { key: "name", label: "Name" },
     { key: "email", label: "Email" },
     {
       key: "role",
       label: "Role",
-      render: (row) => <span className={`role-badge role-badge--${row.role.toLowerCase()}`}>{row.role}</span>,
+      render: (row) => <span className={`role-badge role-badge--${(row.role || "").toLowerCase()}`}>{row.role}</span>,
     },
     { key: "location", label: "Location" },
     {
       key: "status",
       label: "Status",
-      render: (row) => <span className={`status-badge status-badge--${row.status.toLowerCase()}`}>{row.status}</span>,
+      render: (row) => <span className={`status-badge status-badge--${(row.status || "").toLowerCase()}`}>{row.status}</span>,
     },
     { key: "joinedDate", label: "Joined Date" },
   ];
@@ -93,11 +130,13 @@ function UserManagement() {
     <div className="admin-layout user-management">
       <AdminSidebar />
       <div className="admin-layout__main">
-        <AdminNavbar adminName="Admin" notificationCount={3} />
+        <AdminNavbar admin={user} unreadCount={unreadCount} />
         <main className="admin-layout__content">
           <div className="admin-page-header">
-            <h1>User Management</h1>
-            <p>View and manage donor, NGO, and admin accounts.</p>
+            <div>
+              <h1>User Management</h1>
+              <p>View and manage donor, NGO, and admin accounts.</p>
+            </div>
           </div>
 
           <FilterPanel

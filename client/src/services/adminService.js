@@ -75,7 +75,12 @@ export async function getDonations(params = {}) {
 
 export async function getReports() {
   const { data } = await api.get("/admin/reports");
-  return data.summary;
+  return {
+    summary: data?.summary || {},
+    donationReport: data?.donationReport || {},
+    userReport: data?.userReport || {},
+    ...data,
+  };
 }
 
 export default {

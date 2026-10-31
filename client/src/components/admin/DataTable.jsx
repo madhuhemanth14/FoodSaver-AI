@@ -37,8 +37,8 @@ const DataTable = ({ columns, rows, loading = false, emptyMessage = "No results.
               </td>
             </tr>
           ) : (
-            rows.map((row) => (
-              <tr key={row.id}>
+            rows.map((row, idx) => (
+              <tr key={row.id || row._id || `row-${idx}`}>
                 {columns.map((col) => (
                   <td key={col.key}>{col.render ? col.render(row) : row[col.key]}</td>
                 ))}

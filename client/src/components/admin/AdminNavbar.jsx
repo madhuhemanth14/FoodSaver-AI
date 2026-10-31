@@ -6,7 +6,20 @@ import "./AdminNavbar.css";
  * Admin top bar. The profile and notification controls are real navigation
  * links rather than decorative buttons.
  */
-const AdminNavbar = ({ adminName = "Admin", notificationCount = 0 }) => {
+const AdminNavbar = ({
+  adminName,
+  admin,
+  notificationCount,
+  unreadCount,
+}) => {
+  const resolvedName = adminName || admin?.name || "Admin";
+  const resolvedCount = Number.isInteger(notificationCount)
+    ? notificationCount
+    : Number.isInteger(unreadCount)
+    ? unreadCount
+    : 0;
+  const initial = resolvedName.trim().charAt(0).toUpperCase() || "A";
+
   return (
     <header className="admin-navbar">
       <div className="admin-navbar__title">Admin Panel</div>
@@ -15,12 +28,12 @@ const AdminNavbar = ({ adminName = "Admin", notificationCount = 0 }) => {
         <Link
           to="/admin/notifications"
           className="admin-navbar__bell"
-          aria-label={`${notificationCount} notifications`}
+          aria-label={`${resolvedCount} notifications`}
           title="Notifications"
         >
           <Bell size={20} />
-          {notificationCount > 0 && (
-            <span className="admin-navbar__badge">{notificationCount}</span>
+          {resolvedCount > 0 && (
+            <span className="admin-navbar__badge">{resolvedCount}</span>
           )}
         </Link>
 
@@ -31,11 +44,13 @@ const AdminNavbar = ({ adminName = "Admin", notificationCount = 0 }) => {
           aria-label="Edit Profile"
         >
           <span className="admin-navbar__avatar" aria-hidden="true">
-            {adminName.charAt(0).toUpperCase()}
+            {initial}
           </span>
           <span className="admin-navbar__profile-text">
-            <span className="admin-navbar__name">{adminName}</span>
-            <span className="admin-navbar__edit-label"><Pencil size={11} /> Edit Profile</span>
+            <span className="admin-navbar__name">{resolvedName}</span>
+            <span className="admin-navbar__edit-label">
+              <Pencil size={11} /> Edit Profile
+            </span>
           </span>
         </Link>
       </div>

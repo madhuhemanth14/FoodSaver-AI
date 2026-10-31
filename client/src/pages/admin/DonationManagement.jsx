@@ -4,6 +4,8 @@ import AdminNavbar from "../../components/admin/AdminNavbar";
 import FilterPanel from "../../components/admin/FilterPanel";
 import DataTable from "../../components/admin/DataTable";
 import { getDonations } from "../../services/adminService";
+import { getUnreadCount } from "../../services/notificationService";
+import { useAuth } from "../../context/AuthContext";
 import "./DonationManagement.css";
 
 const PAGE_SIZE = 6;
@@ -29,11 +31,39 @@ const CATEGORY_OPTIONS = [
   { value: "Other", label: "Other" },
 ];
 
+function normalizeDonation(d) {
+  const foodName = Array.isArray(d.foodItems)
+    ? d.foodItems.join(", ")
+    : (d.foodItems || d.food || "Food package");
+  const donorName = d.donorName || d.donor || d.donorUser?.name || "Donor";
+  const ngoName = d.ngo?.name || (typeof d.ngo === "string" ? d.ngo : "Unassigned");
+  const pickupStatus = d.pickup?.status || (typeof d.pickup === "string" ? d.pickup : "Pending");
+  const dateStr = d.createdAt
+    ? new Date(d.createdAt).toISOString().slice(0, 10)
+    : (d.date || "Recent");
+  const displayStatus = (d.status || "Available").toUpperCase().replace(/\s+/g, "_");
+
+  return {
+    ...d,
+    id: d._id || d.id,
+    food: foodName,
+    donor: donorName,
+    quantity: typeof d.quantity === "number" ? `${d.quantity} kg` : (d.quantity || "1 item"),
+    category: d.category || "Cooked Food",
+    status: displayStatus,
+    rawStatus: d.status || "Available",
+    date: dateStr,
+    ngo: ngoName,
+    pickup: pickupStatus,
+  };
+}
+
 /**
  * DonationManagement
  * Route: /admin/donations
  */
 function DonationManagement() {
+  const { user } = useAuth();
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -42,22 +72,42 @@ function DonationManagement() {
   const [date, setDate] = useState("");
   const [page, setPage] = useState(1);
   const [selectedDonation, setSelectedDonation] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    getDonations().then((data) => {
-      setDonations(data);
-      setLoading(false);
+    let isMounted = true;
+    Promise.all([
+      getDonations().catch(() => []),
+      getUnreadCount().catch(() => 0),
+    ]).then(([data, unread]) => {
+      if (isMounted) {
+        const list = Array.isArray(data) ? data : (data?.data || []);
+        setDonations(list.map(normalizeDonation));
+        setUnreadCount(unread);
+        setLoading(false);
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const filtered = useMemo(() => {
     return donations.filter((d) => {
+      const term = (search || "").trim().toLowerCase();
       const matchesSearch =
-        !search ||
-        d.food.toLowerCase().includes(search.toLowerCase()) ||
-        d.donor.toLowerCase().includes(search.toLowerCase());
-      const matchesStatus = status === "ALL" || d.status === status;
-      const matchesCategory = category === "ALL" || d.category === category;
+        !term ||
+        (d.food || "").toLowerCase().includes(term) ||
+        (d.donor || "").toLowerCase().includes(term) ||
+        (d.ngo || "").toLowerCase().includes(term);
+      const matchesStatus =
+        status === "ALL" ||
+        d.status === status ||
+        (d.rawStatus || "").toUpperCase() === status;
+      const matchesCategory =
+        category === "ALL" ||
+        (d.category || "").toLowerCase() === category.toLowerCase();
       const matchesDate = !date || d.date === date;
       return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
@@ -76,8 +126,8 @@ function DonationManagement() {
       key: "status",
       label: "Status",
       render: (row) => (
-        <span className={`donation-status donation-status--${row.status.toLowerCase()}`}>
-          {row.status.replace(/_/g, " ")}
+        <span className={`donation-status donation-status--${(row.status || "").toLowerCase()}`}>
+          {(row.status || "").replace(/_/g, " ")}
         </span>
       ),
     },
@@ -90,11 +140,13 @@ function DonationManagement() {
     <div className="admin-layout donation-management">
       <AdminSidebar />
       <div className="admin-layout__main">
-        <AdminNavbar adminName="Admin" notificationCount={3} />
+        <AdminNavbar admin={user} unreadCount={unreadCount} />
         <main className="admin-layout__content">
           <div className="admin-page-header">
-            <h1>Donation Management</h1>
-            <p>Monitor every donation from listing through pickup.</p>
+            <div>
+              <h1>Donation Management</h1>
+              <p>Monitor every donation from listing through pickup.</p>
+            </div>
           </div>
 
           <FilterPanel
@@ -175,7 +227,7 @@ function DonationManagement() {
               <dt>Category</dt>
               <dd>{selectedDonation.category}</dd>
               <dt>Status</dt>
-              <dd>{selectedDonation.status.replace(/_/g, " ")}</dd>
+              <dd>{(selectedDonation.status || "").replace(/_/g, " ")}</dd>
               <dt>Date</dt>
               <dd>{selectedDonation.date}</dd>
               <dt>NGO</dt>
