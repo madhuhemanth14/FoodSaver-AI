@@ -233,8 +233,8 @@ const getDonations = async (req, res) => {
   }
 };
 
-// GET /api/admin/analytics?range=7d|30d|90d|12m
-const RANGE_DAYS = { "7d": 7, "30d": 30, "90d": 90, "12m": 365 };
+// GET /api/admin/analytics?range=7d|30d|90d|12m|all
+const RANGE_DAYS = { "7d": 7, "30d": 30, "90d": 90, "12m": 365, all: 3650 };
 const getAnalytics = async (req, res) => {
   try {
     const days = RANGE_DAYS[req.query.range] || 30;
