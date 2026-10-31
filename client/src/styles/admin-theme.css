@@ -101,9 +101,10 @@
 
 .admin-table-wrap {
   background: #ffffff;
-  border: 1px solid rgba(46, 125, 50, 0.12);
-  border-radius: 12px;
+  border: 1px solid rgba(46, 125, 50, 0.14);
+  border-radius: 14px;
   overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(27, 58, 29, 0.04);
 }
 
 .admin-table {
@@ -115,20 +116,29 @@
 
 .admin-table th {
   text-align: left;
-  padding: 12px 14px;
-  background: #eef6ee;
+  padding: 13px 16px;
+  background: #f4f8f4;
   color: #1b3a1d;
   font-weight: 600;
+  font-size: 0.84rem;
   white-space: nowrap;
-  border-bottom: 1px solid rgba(46, 125, 50, 0.12);
+  border-bottom: 1px solid rgba(46, 125, 50, 0.14);
 }
 
 .admin-table td {
-  padding: 12px 14px;
+  padding: 13px 16px;
   border-bottom: 1px solid rgba(46, 125, 50, 0.08);
-  color: #33402f;
+  color: #2e3a2a;
   vertical-align: middle;
   white-space: nowrap;
+}
+
+.admin-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: #f8faf8;
 }
 
 .admin-table tr:last-child td {

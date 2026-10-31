@@ -11,10 +11,15 @@
 .activity-table__row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 14px;
+  padding: 14px 18px;
   border-bottom: 1px solid rgba(46, 125, 50, 0.08);
-  font-size: 0.86rem;
+  font-size: 0.88rem;
+  transition: background 0.15s ease;
+}
+
+.activity-table__row:hover {
+  background: #f7faf7;
 }
 
 .activity-table__row:last-child {
@@ -22,8 +27,8 @@
 }
 
 .activity-table__icon {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   border-radius: 50%;
   background: #eef6ee;
@@ -31,37 +36,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
 }
 
 .activity-table__message {
   flex: 1;
-  color: #33402f;
+  color: #2b3827;
+  font-weight: 500;
   min-width: 0;
 }
 
 .activity-table__time {
-  color: #8a978a;
-  font-size: 0.76rem;
+  color: #7d8c7e;
+  font-size: 0.78rem;
+  font-weight: 500;
   white-space: nowrap;
 }
 
 .activity-table__loading,
 .activity-table__empty {
-  padding: 32px;
+  padding: 36px;
   text-align: center;
   color: #5b6b5c;
   background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.12);
   border-radius: 12px;
-  border: 1px solid rgba(46, 125, 50, 0.1);
-}
-
-@media (max-width: 560px) {
-  .activity-table__row {
-    flex-wrap: wrap;
-  }
-
-  .activity-table__time {
-    margin-left: 38px;
-  }
+  font-size: 0.9rem;
 }

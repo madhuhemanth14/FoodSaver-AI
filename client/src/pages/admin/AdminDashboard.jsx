@@ -91,10 +91,14 @@ function AdminDashboard() {
       <div className="admin-layout__main">
         <AdminNavbar admin={user} unreadCount={unreadCount} />
         <main className="admin-layout__content admin-dashboard">
-          <div className="admin-page-header admin-dashboard__header">
+          <div className="admin-dashboard__welcome-banner">
             <div>
-              <h1 className="admin-dashboard__title">Overview</h1>
-              <p className="admin-dashboard__subtitle">Platform-wide statistics and activity</p>
+              <div className="admin-status-pill">
+                <span className="admin-status-dot"></span>
+                <span>MongoDB Atlas Real-Time Synced</span>
+              </div>
+              <h1 className="admin-dashboard__title">Welcome back, {user?.name || "Administrator"}</h1>
+              <p className="admin-dashboard__subtitle">Platform-wide statistics and live community activity across FoodSaver AI.</p>
             </div>
           </div>
 
@@ -103,23 +107,24 @@ function AdminDashboard() {
           )}
 
           {loadingStats ? (
-            <div className="admin-dashboard__stats-loading">Loading statistics…</div>
+            <div className="admin-dashboard__stats-loading">Loading live platform statistics…</div>
           ) : (
             <div className="admin-dashboard__stats-grid">
-              <StatCard title="Total Users" value={safeStats.totalUsers.toLocaleString()} icon={<Users size={18} />} />
-              <StatCard title="Active Users" value={safeStats.activeUsers.toLocaleString()} icon={<UserCheck size={18} />} />
-              <StatCard title="Total Donations" value={safeStats.totalDonations.toLocaleString()} icon={<Package size={18} />} />
-              <StatCard title="Pending Donations" value={safeStats.pendingDonations.toLocaleString()} icon={<Clock size={18} />} />
-              <StatCard title="Completed Donations" value={safeStats.completedDonations.toLocaleString()} icon={<CheckCircle2 size={18} />} />
-              <StatCard title="Food Saved" value={`${safeStats.foodSaved.toLocaleString()} kg`} icon={<Leaf size={18} />} />
-              <StatCard title="Active NGOs" value={safeStats.activeNGOs.toLocaleString()} icon={<Building2 size={18} />} />
-              <StatCard title="Successful Pickups" value={safeStats.successfulPickups.toLocaleString()} icon={<Truck size={18} />} />
+              <StatCard title="Total Users" value={safeStats.totalUsers.toLocaleString()} icon={<Users size={18} />} description="Registered accounts" />
+              <StatCard title="Active Users" value={safeStats.activeUsers.toLocaleString()} icon={<UserCheck size={18} />} description="Donors & partner NGOs" />
+              <StatCard title="Total Donations" value={safeStats.totalDonations.toLocaleString()} icon={<Package size={18} />} description="All-time listings" />
+              <StatCard title="Pending Donations" value={safeStats.pendingDonations.toLocaleString()} icon={<Clock size={18} />} description="Awaiting pickup/claim" />
+              <StatCard title="Completed Donations" value={safeStats.completedDonations.toLocaleString()} icon={<CheckCircle2 size={18} />} description="Successfully delivered" />
+              <StatCard title="Food Saved" value={`${safeStats.foodSaved.toLocaleString()} kg`} icon={<Leaf size={18} />} description="Cumulative rescued food" />
+              <StatCard title="Active NGOs" value={safeStats.activeNGOs.toLocaleString()} icon={<Building2 size={18} />} description="Verified charity partners" />
+              <StatCard title="Successful Pickups" value={safeStats.successfulPickups.toLocaleString()} icon={<Truck size={18} />} description="Completed logistics" />
             </div>
           )}
 
           <section className="admin-dashboard__activity">
             <div className="admin-dashboard__section-header">
-              <h2>Recent Activity</h2>
+              <h2>Recent Community Activity</h2>
+              <span className="admin-dashboard__activity-hint">Real-time audit log</span>
             </div>
             <ActivityTable activities={activity} loading={loadingActivity} />
           </section>

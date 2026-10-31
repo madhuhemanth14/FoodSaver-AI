@@ -1,47 +1,95 @@
-.admin-dashboard__welcome {
-  margin-bottom: 22px;
+/* AdminDashboard.css — Clean, neat & attractive styling */
+
+.admin-dashboard__welcome-banner {
+  background: linear-gradient(135deg, #ffffff 0%, #f4f9f4 100%);
+  border: 1px solid rgba(46, 125, 50, 0.16);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 10px rgba(27, 58, 29, 0.04);
 }
 
-.admin-dashboard__welcome h1 {
-  margin: 0 0 4px;
-  font-size: 1.5rem;
+.admin-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #eef6ee;
+  color: #2e7d32;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(46, 125, 50, 0.18);
+}
+
+.admin-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+.admin-dashboard__title {
+  margin: 0 0 6px;
+  font-size: 1.45rem;
+  font-weight: 700;
   color: #1b3a1d;
+  letter-spacing: -0.01em;
 }
 
-.admin-dashboard__welcome p {
+.admin-dashboard__subtitle {
   margin: 0;
   color: #5b6b5c;
   font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .admin-dashboard__stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 28px;
+  margin-bottom: 30px;
 }
 
 .admin-dashboard__stats-loading {
-  padding: 40px;
+  padding: 44px;
   text-align: center;
   color: #5b6b5c;
   background: #ffffff;
   border-radius: 12px;
-  border: 1px solid rgba(46, 125, 50, 0.1);
+  border: 1px solid rgba(46, 125, 50, 0.12);
   margin-bottom: 28px;
+  font-size: 0.92rem;
 }
 
 .admin-dashboard__section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .admin-dashboard__section-header h2 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.12rem;
+  font-weight: 600;
   color: #1b3a1d;
+}
+
+.admin-dashboard__activity-hint {
+  font-size: 0.8rem;
+  color: #6d7d6e;
+  font-weight: 500;
+}
+
+.admin-dashboard__activity {
+  background: #ffffff;
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 10px rgba(27, 58, 29, 0.03);
 }
 
 @media (max-width: 1100px) {
@@ -50,8 +98,16 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 560px) {
   .admin-dashboard__stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .admin-dashboard__welcome-banner {
+    padding: 16px 18px;
+  }
+
+  .admin-dashboard__title {
+    font-size: 1.22rem;
   }
 }
