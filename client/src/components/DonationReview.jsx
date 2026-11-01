@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, MapPin, Calendar, Layers, Scale, Edit3, CheckCircle2, ShieldCheck, FileText } from "lucide-react";
+import { Sparkles, MapPin, Calendar, Layers, Scale, Edit3, CheckCircle2, ShieldCheck, FileText, AlertCircle } from "lucide-react";
 
 function formatDateTime(dateValue, timeValue) {
   if (!dateValue) return "—";
@@ -28,7 +28,7 @@ function formatDateTime(dateValue, timeValue) {
  *  - onConfirm: () => void
  *  - submitting: boolean
  */
-export default function DonationReview({ donation, onEdit, onConfirm, submitting }) {
+export default function DonationReview({ donation, onEdit, onConfirm, submitting, error }) {
   const { aiAnalysis } = donation;
   const hasPhoto = Boolean(donation.imagePreviewUrl);
 
@@ -143,6 +143,29 @@ export default function DonationReview({ donation, onEdit, onConfirm, submitting
           </div>
         </div>
       </div>
+
+      {error && (
+        <div
+          className="fs-review-error-banner"
+          style={{
+            margin: "0 0 16px 0",
+            padding: "12px 16px",
+            background: "#fef2f2",
+            border: "1px solid #fecaca",
+            borderRadius: "8px",
+            color: "#b91c1c",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            fontSize: "0.9rem",
+            fontWeight: "600",
+          }}
+          role="alert"
+        >
+          <AlertCircle size={18} style={{ flexShrink: 0 }} />
+          <span>{error}</span>
+        </div>
+      )}
 
       <div className="fs-review-footer">
         <button

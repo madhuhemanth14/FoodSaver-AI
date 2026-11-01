@@ -83,6 +83,40 @@ export async function createDonation(payload) {
     photo = "";
   }
 
+  // Safety guard: ensure base64 photo is well under the 100KB default express body limit
+  if (typeof photo === "string" && photo.startsWith("data:image/") && photo.length > 70000) {
+    try {
+      photo = await new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            let { width, height } = img;
+            const maxDim = 540;
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL("image/jpeg", 0.55));
+          } catch {
+            resolve(photo);
+          }
+        };
+        img.onerror = () => resolve(photo);
+        img.src = photo;
+      });
+    } catch {}
+  }
+
   const body = {
     foodItems: [payload.foodName],
     category: payload.category,
@@ -118,8 +152,18 @@ export async function createDonation(payload) {
       : undefined,
   };
 
-  const response = await api.post("/donations", body);
-  return normalizeDonation(response.data.data);
+  try {
+    const response = await api.post("/donations", body);
+    return normalizeDonation(response.data.data);
+  } catch (error) {
+    if (error.response?.status === 413 && (body.imageUrl || body.image)) {
+      console.warn("Payload rejected with 413. Retrying donation without image binary...");
+      const compact = { ...body, imageUrl: "", image: "" };
+      const fallback = await api.post("/donations", compact);
+      return normalizeDonation(fallback.data.data);
+    }
+    throw error;
+  }
 }
 
 /**

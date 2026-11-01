@@ -72,6 +72,7 @@ export default function DonateFood() {
   const [aiResult, setAiResult] = useState(null);
   const [aiError, setAiError] = useState("");
   const [confirming, setConfirming] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   // Signature of the analysis whose photo/entry mismatch the donor confirmed.
   const [conflictConfirmedFor, setConflictConfirmedFor] = useState("");
   // Human-in-the-loop donor confirmation: AI provides an advisory hint, donor verifies.
@@ -212,6 +213,7 @@ export default function DonateFood() {
 
   const handleConfirmDonation = () => {
     setConfirming(true);
+    setSubmitError("");
     donationService
       .createDonation({ ...formData, aiAnalysis: enrichedAiAnalysis })
       .then((created) => {
@@ -221,7 +223,17 @@ export default function DonateFood() {
         } catch {}
         navigate(`${base}/donations/success`, { state: { donation: created } });
       })
-      .catch(() => setConfirming(false));
+      .catch((err) => {
+        setConfirming(false);
+        const msg =
+          err.response?.data?.message ||
+          (err.response?.status === 401
+            ? "Your session has expired. Please log in again to publish your donation."
+            : err.response?.status === 413
+              ? "Image file is too large. Please select a smaller photo."
+              : "Failed to publish donation. Please check your connection and try again.");
+        setSubmitError(msg);
+      });
   };
 
   const retryAnalysis = () => {
@@ -432,6 +444,7 @@ export default function DonateFood() {
               onEdit={handleEditDetails}
               onConfirm={handleConfirmDonation}
               submitting={confirming}
+              error={submitError}
             />
           )}
         </div>
