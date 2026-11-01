@@ -39,6 +39,16 @@ const ForgotPassword = () => {
     setSubmitting(true);
     try {
       const result = await forgotPassword(trimmed);
+      // If the backend response indicates un-registered account (from legacy or new server response)
+      if (
+        result?.notRegistered ||
+        (result?.message && /if an account exists/i.test(result.message))
+      ) {
+        setIsNotRegistered(true);
+        setSubmitError("This email is not registered. Please create an account.");
+        return;
+      }
+
       localStorage.setItem("fs_reset_email", trimmed);
       setSent(true);
       setTimeout(
