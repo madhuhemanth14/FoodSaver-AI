@@ -37,7 +37,11 @@ const createDonation = async (req, res) => {
       preparationDate,
       expiryDate,
       aiAnalysis,
+      imageUrl,
+      image,
     } = req.body;
+
+    const savedImage = imageUrl || image || "";
 
     // aiAnalysis, if present, is the donor's own real AI-analysis result for
     // this exact upload (produced by POST /api/ai/analyze moments earlier) —
@@ -78,6 +82,8 @@ const createDonation = async (req, res) => {
       preparationDate,
       expiryDate: expiryDate || (cleanAiAnalysis && aiAnalysis.predictedExpiry) || undefined,
       aiAnalysis: cleanAiAnalysis,
+      imageUrl: savedImage,
+      image: savedImage,
     });
 
     const commonData = {

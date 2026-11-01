@@ -55,6 +55,8 @@ function normalizeDonation(d) {
     date: dateStr,
     ngo: ngoName,
     pickup: pickupStatus,
+    image: d.image || d.imageUrl || d.photo || "",
+    imageUrl: d.imageUrl || d.image || d.photo || "",
   };
 }
 
@@ -217,6 +219,24 @@ function DonationManagement() {
         <div className="admin-modal-backdrop" onClick={() => setSelectedDonation(null)}>
           <div className="admin-modal" role="dialog" aria-modal="true" aria-label="Donation details" onClick={(e) => e.stopPropagation()}>
             <h2>{selectedDonation.food}</h2>
+            {(selectedDonation.image || selectedDonation.imageUrl) && (
+              <div
+                style={{
+                  width: "100%",
+                  maxHeight: "220px",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  marginBottom: "16px",
+                  border: "1px solid #e2e8f0",
+                }}
+              >
+                <img
+                  src={selectedDonation.image || selectedDonation.imageUrl}
+                  alt={selectedDonation.food}
+                  style={{ width: "100%", height: "220px", objectFit: "cover", display: "block" }}
+                />
+              </div>
+            )}
             <dl className="admin-modal__list">
               <dt>Donation ID</dt>
               <dd>{selectedDonation.id}</dd>

@@ -11,6 +11,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [fieldError, setFieldError] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const [isNotRegistered, setIsNotRegistered] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -18,6 +19,7 @@ const ForgotPassword = () => {
     setEmail(e.target.value);
     setFieldError("");
     setSubmitError("");
+    setIsNotRegistered(false);
   };
 
   const handleSubmit = async (e) => {
@@ -47,9 +49,15 @@ const ForgotPassword = () => {
         700
       );
     } catch (err) {
+      const message = err.response?.data?.message || "";
+      const notReg = Boolean(
+        err.response?.data?.notRegistered ||
+        err.response?.status === 404 ||
+        /not registered|create account/i.test(message)
+      );
+      setIsNotRegistered(notReg);
       setSubmitError(
-        err.response?.data?.message ||
-          "We could not send the OTP. Please try again."
+        message || (notReg ? "This email is not registered. Please create an account." : "We could not send the OTP. Please try again.")
       );
     } finally {
       setSubmitting(false);
@@ -72,7 +80,7 @@ const ForgotPassword = () => {
 
           <div className="auth-heading">
             <h1>Forgot your password?</h1>
-            <p>Enter the email address registered with FoodSaver AI. We will send a one-time OTP to that email.</p>
+            <p>Enter your registered email address. We will send a one-time OTP to that email to reset your password.</p>
           </div>
 
           {sent ? (
@@ -84,7 +92,34 @@ const ForgotPassword = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="auth-form" noValidate>
-              {submitError && <p className="auth-error-banner">{submitError}</p>}
+              {submitError && (
+                <div
+                  className="auth-error-banner"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "6px",
+                    alignItems: "flex-start",
+                    textAlign: "left",
+                  }}
+                >
+                  <span>{submitError}</span>
+                  {isNotRegistered && (
+                    <Link
+                      to="/signup"
+                      style={{
+                        color: "#166534",
+                        fontWeight: "700",
+                        textDecoration: "underline",
+                        fontSize: "0.9rem",
+                        marginTop: "2px",
+                      }}
+                    >
+                      Please create an account →
+                    </Link>
+                  )}
+                </div>
+              )}
 
               <div className="form-group">
                 <label htmlFor="email">Email address</label>
@@ -106,7 +141,7 @@ const ForgotPassword = () => {
               </button>
 
               <p className="forgot-password-help">
-                We will send a 6-digit verification code to this address if an account exists.
+                We will send a 6-digit verification code to your registered email address.
               </p>
             </form>
           )}

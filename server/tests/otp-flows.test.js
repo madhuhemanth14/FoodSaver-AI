@@ -379,13 +379,13 @@ test("registration: NGO role gets its NGO record only when the account is create
 
 // ------------------------------------------------------------------ FORGOT PASSWORD
 
-test("forgot password: unregistered email -> generic success without account enumeration, no OTP sent", async () => {
+test("forgot password: unregistered email -> returns 404 please create account, no OTP sent", async () => {
   const sentBefore = outbox.length;
   const r = await post("/forgot-password", { email: "ghost@example.com" });
-  assert.equal(r.status, 200);
+  assert.equal(r.status, 404);
   assert.equal(
     r.body.message,
-    "If an account exists with this email, an OTP has been sent. Check your email and enter the OTP to reset your password."
+    "This email is not registered. Please create an account."
   );
   assert.equal(outbox.length, sentBefore);
 });

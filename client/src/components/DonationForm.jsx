@@ -46,6 +46,46 @@ const displayTime = (hhmm) => {
   return `${pad2(h % 12 === 0 ? 12 : h % 12)}:${m[2]} ${h >= 12 ? "PM" : "AM"}`;
 };
 
+const compressImageToDataUrl = (file, maxWidth = 1200, quality = 0.82) => {
+  return new Promise((resolve) => {
+    if (!file || !file.type?.startsWith("image/")) {
+      resolve("");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onerror = () => resolve("");
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => resolve(e.target.result);
+      img.onload = () => {
+        try {
+          let { width, height } = img;
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxWidth) / height);
+              height = maxWidth;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/jpeg", quality);
+          resolve(dataUrl);
+        } catch {
+          resolve(e.target.result);
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 function validate(form, imageFile, conflictPending) {
   const errors = {};
 
@@ -145,7 +185,14 @@ export default function DonationForm({
     });
 
     if (Object.keys(validationErrors).length === 0) {
-      onSubmit({ ...form, quantity: Number(form.quantity), imageFile, imagePreviewUrl });
+      onSubmit({
+        ...form,
+        quantity: Number(form.quantity),
+        imageFile,
+        imagePreviewUrl,
+        imageUrl: imagePreviewUrl,
+        image: imagePreviewUrl,
+      });
     }
   };
 
@@ -602,13 +649,15 @@ export default function DonationForm({
           <FoodImageUpload
             image={imageFile}
             previewUrl={imagePreviewUrl}
-            onImageSelect={(file) => {
-              const url = URL.createObjectURL(file);
-              handleImageChange(file, url);
+            onImageSelect={async (file) => {
+              const dataUrl = await compressImageToDataUrl(file);
+              handleImageChange(file, dataUrl || URL.createObjectURL(file));
               setTouched((prev) => ({ ...prev, image: true }));
             }}
             onImageRemove={() => {
-              if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+              if (imagePreviewUrl && imagePreviewUrl.startsWith("blob:")) {
+                URL.revokeObjectURL(imagePreviewUrl);
+              }
               handleImageChange(null, null);
               setTouched((prev) => ({ ...prev, image: true }));
             }}

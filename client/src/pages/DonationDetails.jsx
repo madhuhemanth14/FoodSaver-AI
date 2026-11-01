@@ -86,8 +86,8 @@ export default function DonationDetails() {
           <>
             <div className="fs-details-grid">
               <div className="fs-details-image">
-                {donation.image ? (
-                  <img src={donation.image} alt={donation.foodName || "Food Donation"} />
+                {donation.image || donation.imageUrl ? (
+                  <img src={donation.image || donation.imageUrl} alt={donation.foodName || "Food Donation"} />
                 ) : (
                   <div className="fs-details-no-image">
                     <Leaf size={44} />

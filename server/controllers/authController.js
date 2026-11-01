@@ -648,14 +648,10 @@ const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
-      // Security: Do NOT reveal whether an email address belongs to a registered account.
-      // Return a generic success response so attackers cannot enumerate valid user emails.
-      return res.json({
-        success: true,
-        message: "If an account exists with this email, an OTP has been sent. Check your email and enter the OTP to reset your password.",
-        email: normalizedEmail,
-        expiresInSeconds: otp.OTP_TTL_MS / 1000,
-        resendAvailableInSeconds: otp.RESEND_COOLDOWN_MS / 1000,
+      return res.status(404).json({
+        success: false,
+        notRegistered: true,
+        message: "This email is not registered. Please create an account.",
       });
     }
 

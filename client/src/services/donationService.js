@@ -39,6 +39,7 @@ function normalizeDonation(doc) {
   const freshness = doc.freshness || doc.aiAnalysis?.freshness || "";
   const confidence = doc.confidence != null ? doc.confidence : doc.aiAnalysis?.confidence;
   const predictedExpiry = doc.predictedExpiry || doc.expiryDate || doc.aiAnalysis?.predictedExpiry;
+  const photo = doc.image || doc.imageUrl || doc.photo || "";
 
   return {
     ...doc,
@@ -53,6 +54,8 @@ function normalizeDonation(doc) {
     freshness,
     confidence,
     predictedExpiry,
+    image: photo,
+    imageUrl: photo,
   };
 }
 
@@ -65,6 +68,21 @@ function normalizeDonation(doc) {
  * @returns {Promise<object>} the created donation record
  */
 export async function createDonation(payload) {
+  let photo = payload.imageUrl || payload.imagePreviewUrl || payload.image || "";
+  if ((!photo || (typeof photo === "string" && photo.startsWith("blob:"))) && payload.imageFile instanceof File) {
+    try {
+      photo = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result || "");
+        reader.onerror = () => resolve("");
+        reader.readAsDataURL(payload.imageFile);
+      });
+    } catch {}
+  }
+  if (typeof photo === "string" && photo.startsWith("blob:")) {
+    photo = "";
+  }
+
   const body = {
     foodItems: [payload.foodName],
     category: payload.category,
@@ -72,6 +90,8 @@ export async function createDonation(payload) {
     quantityUnit: normalizeUnit(payload.unit),
     description: payload.description || "",
     address: payload.location,
+    imageUrl: photo,
+    image: photo,
     preparationDate:
       payload.preparationDate && payload.preparationTime
         ? `${payload.preparationDate}T${payload.preparationTime}:00`

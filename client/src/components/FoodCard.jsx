@@ -37,8 +37,8 @@ export default function FoodCard({ donation, onViewDetails }) {
   return (
     <article className="fs-card fs-food-card">
       <div className="fs-food-card-image">
-        {donation.image ? (
-          <img src={donation.image} alt={donation.foodName} loading="lazy" />
+        {donation.image || donation.imageUrl ? (
+          <img src={donation.image || donation.imageUrl} alt={donation.foodName} loading="lazy" />
         ) : null}
       </div>
       <div className="fs-food-card-body">
