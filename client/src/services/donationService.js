@@ -39,7 +39,10 @@ function normalizeDonation(doc) {
   const freshness = doc.freshness || doc.aiAnalysis?.freshness || "";
   const confidence = doc.confidence != null ? doc.confidence : doc.aiAnalysis?.confidence;
   const predictedExpiry = doc.predictedExpiry || doc.expiryDate || doc.aiAnalysis?.predictedExpiry;
-  const photo = doc.image || doc.imageUrl || doc.photo || "";
+  const localPhoto =
+    (id && (localStorage.getItem(`fs_donation_img_${id}`) || localStorage.getItem(`fs_img_${id}`))) ||
+    "";
+  const photo = doc.image || doc.imageUrl || doc.photo || localPhoto || "";
 
   return {
     ...doc,
@@ -154,13 +157,41 @@ export async function createDonation(payload) {
 
   try {
     const response = await api.post("/donations", body);
-    return normalizeDonation(response.data.data);
+    const normalized = normalizeDonation(response.data.data);
+    const photoToSave = photo || payload.imageUrl || payload.imagePreviewUrl || payload.image || "";
+    if (photoToSave && normalized) {
+      const dId = String(normalized.id || normalized._id || "");
+      if (dId) {
+        try {
+          localStorage.setItem(`fs_donation_img_${dId}`, photoToSave);
+          localStorage.setItem(`fs_img_${dId}`, photoToSave);
+          localStorage.setItem("fs_latest_donation_image", photoToSave);
+        } catch {}
+      }
+      normalized.image = normalized.image || photoToSave;
+      normalized.imageUrl = normalized.imageUrl || photoToSave;
+    }
+    return normalized;
   } catch (error) {
     if (error.response?.status === 413 && (body.imageUrl || body.image)) {
       console.warn("Payload rejected with 413. Retrying donation without image binary...");
       const compact = { ...body, imageUrl: "", image: "" };
       const fallback = await api.post("/donations", compact);
-      return normalizeDonation(fallback.data.data);
+      const normalized = normalizeDonation(fallback.data.data);
+      const photoToSave = photo || payload.imageUrl || payload.imagePreviewUrl || payload.image || "";
+      if (photoToSave && normalized) {
+        const dId = String(normalized.id || normalized._id || "");
+        if (dId) {
+          try {
+            localStorage.setItem(`fs_donation_img_${dId}`, photoToSave);
+            localStorage.setItem(`fs_img_${dId}`, photoToSave);
+            localStorage.setItem("fs_latest_donation_image", photoToSave);
+          } catch {}
+        }
+        normalized.image = photoToSave;
+        normalized.imageUrl = photoToSave;
+      }
+      return normalized;
     }
     throw error;
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { rolePrefix } from "../utils/roles";
 import { Sparkles, Building2, Truck, Leaf, ShieldCheck } from "lucide-react";
@@ -18,6 +18,28 @@ function formatDate(isoDate) {
   return d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
 }
 
+const getStoredImage = (donationId) => {
+  if (!donationId) return "";
+  try {
+    const byId =
+      localStorage.getItem(`fs_donation_img_${donationId}`) ||
+      localStorage.getItem(`fs_img_${donationId}`);
+    if (byId) return byId;
+
+    const lastStored = sessionStorage.getItem("fs_last_donation");
+    if (lastStored) {
+      const parsed = JSON.parse(lastStored);
+      if (parsed?.id === donationId || parsed?._id === donationId) {
+        return parsed.image || parsed.imageUrl || "";
+      }
+    }
+
+    return localStorage.getItem("fs_latest_donation_image") || "";
+  } catch {
+    return "";
+  }
+};
+
 /**
  * DonationDetails (Member 3)
  * Full detail view for a single donation: food info, AI analysis,
@@ -27,15 +49,29 @@ function formatDate(isoDate) {
 export default function DonationDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const navDonation = location.state?.donation;
+
   const { user } = useAuth();
   const base = rolePrefix(user?.role);
-  const [donation, setDonation] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  const [donation, setDonation] = useState(() => {
+    if (navDonation) {
+      const img =
+        navDonation.image ||
+        navDonation.imageUrl ||
+        getStoredImage(navDonation.id || navDonation._id || id);
+      return { ...navDonation, image: img, imageUrl: img };
+    }
+    return null;
+  });
+
+  const [loading, setLoading] = useState(!navDonation);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    if (!navDonation) setLoading(true);
     setNotFound(false);
 
     donationService
@@ -43,7 +79,19 @@ export default function DonationDetails() {
       .then((data) => {
         if (cancelled) return;
         if (data) {
-          setDonation(data);
+          const img =
+            data.image ||
+            data.imageUrl ||
+            navDonation?.image ||
+            navDonation?.imageUrl ||
+            getStoredImage(id);
+          setDonation({
+            ...data,
+            image: img,
+            imageUrl: img,
+          });
+        } else if (navDonation) {
+          // Keep existing donation from navigation state
         } else {
           setNotFound(true);
         }
@@ -51,14 +99,14 @@ export default function DonationDetails() {
       })
       .catch(() => {
         if (cancelled) return;
-        setNotFound(true);
+        if (!navDonation) setNotFound(true);
         setLoading(false);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, navDonation]);
 
   return (
     <div className="fs-module">

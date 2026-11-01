@@ -31,7 +31,7 @@ export default function DonationSuccess({ donation }) {
 
   const handleViewDonation = () => {
     if (donationId) {
-      navigate(`${base}/donations/${donationId}`);
+      navigate(`${base}/donations/${donationId}`, { state: { donation } });
     } else {
       navigate(`${base}/donations`);
     }

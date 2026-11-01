@@ -30,7 +30,9 @@ export default function FoodCard({ donation, onViewDetails }) {
     if (onViewDetails) {
       onViewDetails(donationId);
     } else {
-      navigate(`${base}/donations/${donationId}`);
+      navigate(`${base}/donations/${donationId}`, {
+        state: { donation: { ...donation, image: donation.image || donation.imageUrl } },
+      });
     }
   };
 

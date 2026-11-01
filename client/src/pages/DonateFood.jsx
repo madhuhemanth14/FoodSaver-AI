@@ -214,14 +214,31 @@ export default function DonateFood() {
   const handleConfirmDonation = () => {
     setConfirming(true);
     setSubmitError("");
+    const photoToPreserve = formData?.imageUrl || formData?.imagePreviewUrl || formData?.image || "";
     donationService
       .createDonation({ ...formData, aiAnalysis: enrichedAiAnalysis })
       .then((created) => {
         setConfirming(false);
+        const completeDonation = {
+          ...created,
+          image: created?.image || photoToPreserve,
+          imageUrl: created?.imageUrl || photoToPreserve,
+        };
         try {
-          sessionStorage.setItem("fs_last_donation", JSON.stringify(created));
+          sessionStorage.setItem("fs_last_donation", JSON.stringify(completeDonation));
+          if (completeDonation.id) {
+            localStorage.setItem(`fs_donation_img_${completeDonation.id}`, photoToPreserve);
+            localStorage.setItem(`fs_img_${completeDonation.id}`, photoToPreserve);
+          }
+          if (completeDonation._id) {
+            localStorage.setItem(`fs_donation_img_${completeDonation._id}`, photoToPreserve);
+            localStorage.setItem(`fs_img_${completeDonation._id}`, photoToPreserve);
+          }
+          if (photoToPreserve) {
+            localStorage.setItem("fs_latest_donation_image", photoToPreserve);
+          }
         } catch {}
-        navigate(`${base}/donations/success`, { state: { donation: created } });
+        navigate(`${base}/donations/success`, { state: { donation: completeDonation } });
       })
       .catch((err) => {
         setConfirming(false);
