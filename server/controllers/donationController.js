@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Donation = require("../models/Donation");
+const AnalysisResult = require("../models/AnalysisResult");
 const Notification = require("../models/Notification");
 const Activity = require("../models/Activity");
 const NGO = require("../models/NGO");
@@ -43,11 +44,59 @@ const createDonation = async (req, res) => {
 
     const savedImage = imageUrl || image || "";
 
-    // aiAnalysis, if present, is the donor's own real AI-analysis result for
-    // this exact upload (produced by POST /api/ai/analyze moments earlier) —
-    // whitelisted field-by-field rather than trusted wholesale.
-    const cleanAiAnalysis = aiAnalysis
-      ? {
+    // Server-side AI verification: If an analysisId is supplied, verify it
+    // against the user's authentic AnalysisResult in MongoDB to prevent
+    // tampering with freshness scores, confidence, or remaining shelf life.
+    let cleanAiAnalysis = undefined;
+    if (aiAnalysis) {
+      const candidateId = aiAnalysis.analysisId || aiAnalysis.id;
+      let verifiedDoc = null;
+
+      if (candidateId && mongoose.Types.ObjectId.isValid(candidateId)) {
+        verifiedDoc = await AnalysisResult.findOne({
+          _id: candidateId,
+          user: req.user._id,
+        });
+      }
+
+      if (candidateId && !verifiedDoc) {
+        return res.status(400).json({
+          success: false,
+          message: "Referenced AI analysis record not found or does not belong to your account.",
+        });
+      }
+
+      if (verifiedDoc) {
+        if (verifiedDoc.freshness === "Spoiled" || verifiedDoc.safeToConsume === false) {
+          return res.status(400).json({
+            success: false,
+            message: "Food assessed as spoiled or unsafe cannot be listed for donation.",
+          });
+        }
+
+        cleanAiAnalysis = {
+          foodType: verifiedDoc.foodType,
+          freshness: verifiedDoc.freshness,
+          freshnessScore: verifiedDoc.freshnessScore,
+          confidence: verifiedDoc.confidence,
+          remainingHours: verifiedDoc.remainingHours,
+          warnings: Array.isArray(verifiedDoc.warnings) ? verifiedDoc.warnings : [],
+          imageMatchesEntry: verifiedDoc.imageMatchesEntry !== false,
+          analysisId: verifiedDoc._id.toString(),
+          recommendation: verifiedDoc.recommendation || "",
+          analyzedAt: verifiedDoc.createdAt || new Date(),
+          donorConfirmedFreshness: Boolean(aiAnalysis.donorConfirmedFreshness),
+          donorConfirmedAt: aiAnalysis.donorConfirmedAt
+            ? new Date(aiAnalysis.donorConfirmedAt)
+            : (aiAnalysis.donorConfirmedFreshness ? new Date() : null),
+          donorPhysicalCheck: aiAnalysis.donorPhysicalCheck || {
+            appearanceNormal: true,
+            odorNormal: true,
+            temperatureMaintained: true,
+          },
+        };
+      } else {
+        cleanAiAnalysis = {
           foodType: aiAnalysis.foodType || "",
           freshness: aiAnalysis.freshness || "",
           freshnessScore: aiAnalysis.freshnessScore != null ? aiAnalysis.freshnessScore : null,
@@ -55,18 +104,21 @@ const createDonation = async (req, res) => {
           remainingHours: aiAnalysis.remainingHours != null ? aiAnalysis.remainingHours : null,
           warnings: Array.isArray(aiAnalysis.warnings) ? aiAnalysis.warnings.map(String) : [],
           imageMatchesEntry: aiAnalysis.imageMatchesEntry !== false,
-          analysisId: aiAnalysis.id ? String(aiAnalysis.id) : "",
+          analysisId: "",
           recommendation: aiAnalysis.recommendation || "",
-          analyzedAt: aiAnalysis.analyzedAt ? new Date(aiAnalysis.analyzedAt) : new Date(),
+          analyzedAt: new Date(),
           donorConfirmedFreshness: Boolean(aiAnalysis.donorConfirmedFreshness),
-          donorConfirmedAt: aiAnalysis.donorConfirmedAt ? new Date(aiAnalysis.donorConfirmedAt) : (aiAnalysis.donorConfirmedFreshness ? new Date() : null),
+          donorConfirmedAt: aiAnalysis.donorConfirmedAt
+            ? new Date(aiAnalysis.donorConfirmedAt)
+            : (aiAnalysis.donorConfirmedFreshness ? new Date() : null),
           donorPhysicalCheck: aiAnalysis.donorPhysicalCheck || {
             appearanceNormal: true,
             odorNormal: true,
             temperatureMaintained: true,
           },
-        }
-      : undefined;
+        };
+      }
+    }
 
     const donation = await Donation.create({
       donor: req.user._id,

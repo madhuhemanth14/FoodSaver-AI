@@ -9,6 +9,12 @@
     "seed:admin": "node seed/seedAdmin.js",
     "check:email": "node scripts/check-email.js",
     "test": "node --test tests/otp-flows.test.js",
+    "test:security": "node --test tests/email-security.test.js",
+    "test:lifecycle": "node --test tests/donation-pickup-lifecycle.test.js",
+    "test:cache": "node --test tests/ai-cache.test.js",
+    "test:eval": "node --test tests/food-freshness-eval.test.js",
+    "eval:freshness": "node eval/evaluate-freshness.js",
+    "test:tickets": "node --test tests/email-security.test.js tests/donation-pickup-lifecycle.test.js tests/ai-cache.test.js tests/food-freshness-eval.test.js",
     "test:probe": "node --test tests/recipient-probe.test.js",
     "test:mx": "node --test tests/mx-check.test.js",
     "test:mailbox": "node --test tests/mailbox-check.test.js"

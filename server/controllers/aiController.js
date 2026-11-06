@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const AnalysisResult = require("../models/AnalysisResult");
 const Notification = require("../models/Notification");
 const Activity = require("../models/Activity");
-const { analyzeFoodImage: runVisionAnalysis } = require("../services/aiVisionService");
+const aiVisionService = require("../services/aiVisionService");
 
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_BYTES = 8 * 1024 * 1024; // 8MB
@@ -35,7 +35,23 @@ const PLACEHOLDER_IMAGE =
       "</svg>"
   );
 
-function toContractShape(doc) {
+function computePredictedExpiry(doc, preparationDate, preparationTime) {
+  const prepDate = typeof preparationDate === "string" ? preparationDate.trim() : "";
+  const prepTime = typeof preparationTime === "string" ? preparationTime.trim() : "";
+
+  if (prepDate || prepTime) {
+    const base = prepDate
+      ? new Date(`${prepDate}T${prepTime || "00:00"}:00`)
+      : new Date();
+    if (!Number.isNaN(base.getTime()) && Number.isFinite(doc.remainingHours)) {
+      return new Date(base.getTime() + doc.remainingHours * 60 * 60 * 1000);
+    }
+  }
+  return doc.predictedExpiry || null;
+}
+
+function toContractShape(doc, preparationDate, preparationTime) {
+  const predictedExpiry = computePredictedExpiry(doc, preparationDate, preparationTime);
   return {
     success: true,
     id: doc._id.toString(),
@@ -52,13 +68,13 @@ function toContractShape(doc) {
     confidence: doc.confidence,
     remainingDays: doc.remainingDays,
     remainingHours: doc.remainingHours,
-    predictedExpiry: doc.predictedExpiry ? doc.predictedExpiry.toISOString() : null,
-    predictedExpiryDate: doc.predictedExpiry ? doc.predictedExpiry.toISOString().split("T")[0] : null,
-    predictedExpiryTime: doc.predictedExpiry ? doc.predictedExpiry.toISOString().split("T")[1].slice(0, 5) : null,
+    predictedExpiry: predictedExpiry ? predictedExpiry.toISOString() : null,
+    predictedExpiryDate: predictedExpiry ? predictedExpiry.toISOString().split("T")[0] : null,
+    predictedExpiryTime: predictedExpiry ? predictedExpiry.toISOString().split("T")[1].slice(0, 5) : null,
     safeToConsume: doc.safeToConsume,
     warnings: doc.warnings,
     recommendation: doc.recommendation,
-    analyzedAt: doc.createdAt.toISOString().split("T")[0],
+    analyzedAt: doc.createdAt ? doc.createdAt.toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
     image: PLACEHOLDER_IMAGE,
   };
 }
@@ -130,12 +146,23 @@ const analyzeFood = async (req, res) => {
 
     const cached = await AnalysisResult.findOne({ analysisKey });
     if (cached) {
-      return res.status(200).json(toContractShape(cached));
+      if (preparationDate || preparationTime) {
+        const recalculated = computePredictedExpiry(cached, preparationDate, preparationTime);
+        if (recalculated) {
+          cached.predictedExpiry = recalculated;
+          try {
+            await AnalysisResult.findByIdAndUpdate(cached._id, { predictedExpiry: recalculated });
+          } catch (updateErr) {
+            console.error("Failed to update cached predictedExpiry:", updateErr.message);
+          }
+        }
+      }
+      return res.status(200).json(toContractShape(cached, preparationDate, preparationTime));
     }
 
     let analysis;
     try {
-      analysis = await runVisionAnalysis(
+      analysis = await aiVisionService.analyzeFoodImage(
         req.file ? req.file.buffer : null,
         req.file ? req.file.mimetype : null,
         preparationDate || null,

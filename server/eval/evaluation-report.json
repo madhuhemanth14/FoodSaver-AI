@@ -1,0 +1,142 @@
+{
+  "totalSamples": 25,
+  "correctCount": 21,
+  "accuracy": 84,
+  "maeHours": 1.3,
+  "confusionMatrix": {
+    "Fresh": {
+      "Fresh": 10,
+      "Ripe": 0,
+      "Moderate": 0,
+      "Spoiled": 0
+    },
+    "Ripe": {
+      "Fresh": 0,
+      "Ripe": 1,
+      "Moderate": 0,
+      "Spoiled": 0
+    },
+    "Moderate": {
+      "Fresh": 0,
+      "Ripe": 0,
+      "Moderate": 2,
+      "Spoiled": 1
+    },
+    "Spoiled": {
+      "Fresh": 0,
+      "Ripe": 0,
+      "Moderate": 3,
+      "Spoiled": 8
+    }
+  },
+  "classMetrics": {
+    "Fresh": {
+      "truePositives": 10,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "precision": 100,
+      "recall": 100,
+      "f1Score": 100
+    },
+    "Ripe": {
+      "truePositives": 1,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "precision": 100,
+      "recall": 100,
+      "f1Score": 100
+    },
+    "Moderate": {
+      "truePositives": 2,
+      "falsePositives": 3,
+      "falseNegatives": 1,
+      "precision": 40,
+      "recall": 66.7,
+      "f1Score": 50
+    },
+    "Spoiled": {
+      "truePositives": 8,
+      "falsePositives": 1,
+      "falseNegatives": 3,
+      "precision": 88.9,
+      "recall": 72.7,
+      "f1Score": 80
+    }
+  },
+  "safetyAnalysis": {
+    "totalUnsafeSamples": 11,
+    "falseSafeDetections": 3,
+    "falseSafeRatePercent": 27.3,
+    "totalSafeSamples": 14,
+    "falseSpoilageDetections": 1,
+    "falseSpoilageRatePercent": 7.1
+  },
+  "criticalFindings": [
+    {
+      "pattern": "Invisible Bacterial Proliferation in High-Risk Cooked Foods",
+      "affectedSamples": [
+        "FS-002",
+        "FS-014",
+        "FS-022"
+      ],
+      "explanation": "Cooked rice, lentils, and pasta kept at room temperature (> 20°C) for over 12 hours develop hazardous levels of Bacillus cereus and other enterotoxins without dramatic visible discoloration or overt surface mold. Visual AI models rate them as Moderate or Fresh.",
+      "severity": "CRITICAL_FOOD_SAFETY_RISK",
+      "systemMitigation": "Enforce mandatory thermal-time check: If cooked food elapsed time > 4 hours in the temperature danger zone (4°C–60°C), the system must reject donation regardless of image visual rating."
+    },
+    {
+      "pattern": "Over-penalization of Cosmetic Imperfections",
+      "affectedSamples": [
+        "FS-016"
+      ],
+      "explanation": "Apples and stone fruits with superficial skin bruising or dry superficial scars are frequently classified as 'Spoiled' by visual models, despite inner flesh being safe for cooking or trimming.",
+      "severity": "UNNECESSARY_FOOD_WASTE",
+      "systemMitigation": "Provide donor guidance asking for cut-surface verification or allow donor confirmation of physical integrity."
+    }
+  ],
+  "failureCases": [
+    {
+      "id": "FS-002",
+      "foodName": "Cooked Rice (stored at room temperature 18h)",
+      "category": "Cooked Meal",
+      "storageCondition": "Ambient (28°C)",
+      "elapsedHours": 18,
+      "groundTruthFreshness": "Spoiled",
+      "aiPredictedFreshness": "Moderate",
+      "failureType": "FALSE_SAFE_CRITICAL",
+      "notes": "High risk: Bacillus cereus heat-stable emetic toxin develops rapidly at room temperature. Visual inspection alone fails to detect invisible bacterial proliferation."
+    },
+    {
+      "id": "FS-014",
+      "foodName": "Cooked Lentil Dal (room temperature 14h)",
+      "category": "Cooked Meal",
+      "storageCondition": "Ambient (30°C)",
+      "elapsedHours": 14,
+      "groundTruthFreshness": "Spoiled",
+      "aiPredictedFreshness": "Moderate",
+      "failureType": "FALSE_SAFE_CRITICAL",
+      "notes": "Fermentation bubbles in dal indicate active bacterial growth at tropical temperatures. AI vision can miss subtle froth without close-up inspection."
+    },
+    {
+      "id": "FS-016",
+      "foodName": "Apple with brown internal rot around core (externally bruised)",
+      "category": "Fruit",
+      "storageCondition": "Ambient (22°C)",
+      "elapsedHours": 240,
+      "groundTruthFreshness": "Moderate",
+      "aiPredictedFreshness": "Spoiled",
+      "failureType": "FALSE_SPOILAGE_WASTE",
+      "notes": "External bruise looks severe to visual model, but flesh can be trimmed and fruit is still edible. AI over-penalized cosmetic bruising."
+    },
+    {
+      "id": "FS-022",
+      "foodName": "Pasta with Marinara (left in pot at room temp for 24h)",
+      "category": "Cooked Meal",
+      "storageCondition": "Ambient (26°C)",
+      "elapsedHours": 24,
+      "groundTruthFreshness": "Spoiled",
+      "aiPredictedFreshness": "Moderate",
+      "failureType": "FALSE_SAFE_CRITICAL",
+      "notes": "Dried sauce layer masks internal bacterial colonization. AI predicts Moderate based on visible sauce color, missing the thermal danger zone violation."
+    }
+  ]
+}
